@@ -1,0 +1,21 @@
+#!/bin/bash
+
+protected_branch_master='master'
+protected_branch_dev='dev'
+remote_branch_prefix="refs/heads/"
+protected_remote_master_branch=$remote_branch_prefix$protected_branch_master
+protected_remote_dev_branch=$remote_branch_prefix$protected_branch_dev
+
+while read local_ref local_sha remote_ref remote_sha
+do
+  if [ "$protected_remote_master_branch" == "$remote_ref" ]; then
+	  echo " git hooks: Do not push to $protected_branch_master branch"
+	  exit 1
+  fi
+  if [ "$protected_remote_dev_branch" == "$remote_ref" ]; then
+	  echo " git hooks: Do not push to $protected_branch_dev branch"
+	  exit 1
+  fi
+done
+
+exit 0
