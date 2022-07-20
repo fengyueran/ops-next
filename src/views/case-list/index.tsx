@@ -1,5 +1,7 @@
 import React from 'react';
 import { Table } from 'antd';
+import styled from 'styled-components';
+import { FormattedMessage } from 'react-intl';
 
 const dataSource = [
   {
@@ -34,6 +36,20 @@ const columns = [
   },
 ];
 
+const Header = styled.div`
+  height: 56px;
+`;
+
 export const CaseList = () => {
-  return <Table dataSource={dataSource} columns={columns} />;
+  return (
+    <div>
+      <Header>
+        <FormattedMessage
+          defaultMessage="共{count}个任务"
+          values={{ count: 66 }}
+        />
+      </Header>
+      <Table dataSource={dataSource} columns={columns} />
+    </div>
+  );
 };
