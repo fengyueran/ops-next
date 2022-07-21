@@ -6,10 +6,12 @@
     "@formatjs/cli": "^5.0.6",
     "@reduxjs/toolkit": "^1.8.3",
     "antd": "^4.21.7",
+    "axios": "^0.27.2",
     "qiankun": "^2.7.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.0.5",
+    "react-redux": "^8.0.2",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.5",
@@ -20,6 +22,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
+    "create:case": "ts-node --project ./node.tsconfig.json scripts/create-case.ts",
     "extract:message": "formatjs extract 'src/**/*.ts*' --ignore='**/*.d.ts' --out-file translations/zh.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile:message": "sh scripts/compile-message.sh"
   },
@@ -52,8 +55,10 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/styled-components": "^5.1.25",
+    "@types/uuid": "^8.3.4",
     "husky": "^8.0.1",
     "ts-loader": "^9.3.1",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "uuid": "^8.3.2"
   }
 }

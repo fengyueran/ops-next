@@ -15,21 +15,21 @@ const StyledHeader = styled(Layout.Header)`
   background: green;
 `;
 
+const StyledContent = styled(Layout.Content)`
+  padding: 0 25px 25px 25px;
+`;
+
 interface Props {
   sider: React.ReactNode;
   header: React.ReactNode;
   content: React.ReactNode;
 }
-export const IndexPageLayout: React.FC<Props> = ({
-  sider,
-  header,
-  content,
-}) => (
+export const IndexPageLayout: React.FC<Props> = ({ sider, header, content }) => (
   <StyledLayout>
     <StyledSider>{sider}</StyledSider>
     <Layout>
       <StyledHeader>{header}</StyledHeader>
-      <Layout.Content>{content}</Layout.Content>
+      <StyledContent>{content}</StyledContent>
     </Layout>
   </StyledLayout>
 );
