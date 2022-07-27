@@ -3,6 +3,8 @@ import { Table } from 'antd';
 import styled from 'styled-components';
 import { FormattedMessage, useIntl, IntlFormatters } from 'react-intl';
 
+import { OpenToolBtn } from 'src/views/open-tool-btn';
+
 const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     title: formatMessage({ defaultMessage: '姓名' }),
@@ -15,6 +17,13 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     title: 'WorkflowID',
     dataIndex: ['attributes', 'workflowID'],
+  },
+  {
+    title: 'Tool',
+    dataIndex: ['attributes', 'workflowID'],
+    render: () => {
+      return <OpenToolBtn toolName={'qc' as any} />;
+    },
   },
 ];
 

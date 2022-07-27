@@ -16,6 +16,6 @@ export const caseFilterSlice = createSlice({
   },
 });
 
-export const actions = caseFilterSlice.actions;
+export const caseFilterActions = caseFilterSlice.actions;
 
 export type caseFilterSliceType = typeof caseFilterSlice;
