@@ -20,9 +20,10 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   },
   {
     title: 'Tool',
-    dataIndex: ['attributes', 'workflowID'],
-    render: () => {
-      return <OpenToolBtn toolName={'qc' as any} />;
+    dataIndex: ['attributes', 'status'],
+    render: (status: string) => {
+      if (status) return <OpenToolBtn toolName={status as any} />;
+      return null;
     },
   },
 ];

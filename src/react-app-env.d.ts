@@ -93,7 +93,11 @@ interface AutoQCInfo {
   failed: BaseQCInfo[];
 }
 
-type GetDicom = (seriesPath: string) => Promise<ArrayBuffer>;
+type GetDicom = (seriesPath: string) => Promise<ArrayBuffer[]>;
+
+type GetNifti = () => Promise<ArrayBuffer>;
+
+type GetMask = () => Promise<ArrayBuffer>;
 
 type GetAutoQCResultFile = () => Promise<AutoQCInfo>;
 
@@ -102,4 +106,10 @@ interface QCToolInput {
   seriesList: string[];
   thumbnailList: string[];
   getAutoQCResultFile: GetAutoQCResultFile;
+}
+
+interface MaskEditToolInput {
+  getNifti: GetNifti;
+  getMask: GetMask;
+  editType: string;
 }

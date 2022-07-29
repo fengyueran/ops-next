@@ -19,8 +19,11 @@ const StyledHeader = styled.div`
 
 const ToolMountNode = styled.div`
   width: 100vw;
-  height: calc(100vh - 64px);
   background: #000;
+  height: calc(100vh - 64px);
+  #root {
+    height: calc(100vh - 64px);
+  }
 `;
 
 interface Props {
