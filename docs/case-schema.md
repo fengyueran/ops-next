@@ -1,47 +1,46 @@
 ### Case Schema
 
 ```ts
-type Status = 'ToBeAnalyze' | 'Analysing' | 'ToBeReturn' | 'Returned';
+type Status = 'Failed' | 'Completed' | 'Pending' | 'Running';
 
-type DVTool = 'QC' | 'Segment' | 'Refine' | 'Review' | 'ValidateFFR' | 'Report';
+type Step = 'QC' | 'Segment' | 'Refine' | 'Review' | 'Report' | 'ToReturn' | 'Returned';
 
 interface Operator {
-  status: 'Pending' | 'Failed' | 'Completed';
+  status: Status;
   input: any;
   output?: any;
 }
 
+type Priority = 'High' | 'Medium' | 'Low';
+
 interface Base {
-  uploadedAt: number;
+  uploadedAt: number; //number?
   resultReturnedAt?: number;
-  deadline: number;
-  tags: string[];
-  caseOrigin?: string; //病例来源，手动录入
+  tags?: string[];
   narrowDegree?: number; //狭窄程度
-  status: Status;
-  description?: string;
-  isPositive: boolean; //阴阳性
-  ffrAccessionNumber: string; //CTFFR检查号，手动录入
-  ctaAccessionNumber: string; //CTA检查号，手动录入
+  status?: Status;
+  step: Step;
+  isReaded: boolean; //是否已读，默认false
+  priority: Priority;
+  isPositive?: boolean; //阴阳性
+  ffrAccessionNumber?: string; //CTFFR检查号，手动录入
+  name?: string; //手动录入
   workflowID: string;
+  caseID: string;
 }
 
 interface DicomTag {
+  StudyDate?: string;
+  PatientID?: string;
+  PatientSex?: string;
+  PatientAge?: string;
+  PatientName?: string;
+  AccessionNumber: string;
+  InstitutionName?: string;
   StudyInstanceUID: string;
-  StudyDate: string;
-  PatientID: string;
-  PatientSex: string;
-  PatientAge: string;
-  PatientName: string;
-  PatientBirthDate: string;
-  InstitutionName: string;
+  PatientBirthDate?: string;
+  Description?: string;
 }
 
-type Case = Base & {
-  dicomTag: DicomTag;
-};
-
-interface Patient {
-  cases: Case[];
-}
+type Case = Base & DicomTag;
 ```
