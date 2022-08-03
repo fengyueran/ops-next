@@ -1,23 +1,51 @@
 /// <reference types="react-scripts" />
 
-interface DicomTag {
-  StudyInstanceUID: string;
-  StudyDate: string;
-  PatientID: string;
-  PatientSex: string;
-  PatientAge: string;
-  PatientName: string;
-  PatientBirthDate: string;
-  InstitutionName: string;
+type Status = 'Failed' | 'Completed' | 'Pending' | 'Running';
+
+type Step = 'QC' | 'Segment' | 'Refine' | 'Review' | 'Report' | 'ToReturn' | 'Returned';
+
+interface Operator {
+  status: Status;
+  input: any;
+  output?: any;
 }
 
-interface CaseInfo {
+type Priority = 'High' | 'Medium' | 'Low';
+
+interface Base {
+  uploadedAt: number; //number?
+  resultReturnedAt?: number;
+  tags?: string[];
+  narrowDegree?: number; //狭窄程度
+  status?: Status;
+  step: Step;
+  isReaded: boolean; //是否已读，默认false
+  priority: Priority;
+  isPositive?: boolean; //阴阳性
+  ffrAccessionNumber?: string; //CTFFR检查号，手动录入
+  name?: string; //手动录入
+  workflowID: string;
+  caseID: string;
+}
+
+interface DicomTag {
+  StudyDate?: string;
+  PatientID?: string;
+  PatientSex?: string;
+  PatientAge?: string;
+  PatientName?: string;
+  AccessionNumber: string;
+  InstitutionName?: string;
+  StudyInstanceUID: string;
+  PatientBirthDate?: string;
+  Description?: string;
+}
+
+type CaseInfo = Base & DicomTag;
+
+interface CaseData {
   id: string;
-  attributes: {
-    status: string;
-    workflowID: string;
-    dicomTag: DicomTag;
-  };
+  attributes: CaseInfo;
 }
 
 interface Pagination {
@@ -28,7 +56,7 @@ interface Pagination {
 }
 
 interface CaseFetchResponse {
-  data: CaseInfo[];
+  data: CaseData[];
   meta: {
     pagination: Pagination;
   };
@@ -99,6 +127,10 @@ type GetNifti = () => Promise<ArrayBuffer>;
 
 type GetMask = () => Promise<ArrayBuffer>;
 
+type GetPly = () => Promise<string>;
+
+type GetCenterlines = () => Promise<string[]>;
+
 type GetAutoQCResultFile = () => Promise<AutoQCInfo>;
 
 interface QCToolInput {
@@ -112,4 +144,19 @@ interface MaskEditToolInput {
   getNifti: GetNifti;
   getMask: GetMask;
   editType: string;
+}
+
+interface ReviewToolInput {
+  caseInfo: {
+    PatientName: string;
+    PatientSex: string;
+    PatientAge: string;
+    PatientID: string;
+    StudyDate: string;
+    AccessionNumber: string;
+  };
+  getNifti: GetNifti;
+  getMask: GetMask;
+  getPly: GetPly;
+  getCenterlines: GetCenterlines;
 }

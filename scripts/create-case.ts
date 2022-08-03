@@ -5,29 +5,56 @@ const HOST = 'http://localhost';
 const PORT = '1337';
 const CREATE_CASE_PATH = '/api/cases';
 
+const step = ['QC', 'MaskEdit', 'Review'];
+
+const getStep = (i: number) => {
+  return step[i % 3];
+};
+
+const handleError = (error: any) => {
+  console.log('Error----------------------');
+  if (error.response) {
+    console.log(JSON.stringify(error.response.data));
+    // console.log(error.response.headers);
+  } else if (error.request) {
+    console.log(error.request);
+  }
+  console.log('Error', error.message);
+};
+
 const makeCases = () => {
-  const CASE_COUNT = 100;
+  const CASE_COUNT = 40;
 
   const cases: any[] = [];
 
   const caseInfo: any = {
     uploadedAt: Date.now(),
-    dicomTag: {
-      StudyInstanceUID: '1',
-      StudyDate: '20171003',
-      PatientID: '495090',
-      PatientSex: 'M',
-      PatientAge: '45',
-      PatientName: '张三',
-      PatientBirthDate: '19491003',
-      InstitutionName: '重庆西南医院',
-    },
+    tags: ['门诊'],
+    narrowDegree: 1,
+    priority: 'High',
+    isPositive: true,
+    ffrAccessionNumber: 'asdfasd2342323',
+    name: 'xxx',
+
+    StudyDate: '20210928',
+    PatientID: 'jjk443534',
+    PatientSex: 'M',
+    PatientAge: '18',
+    PatientName: '张三',
+    AccessionNumber: 'd343543jdsalkfj2',
+    InstitutionName: '重庆西南医院',
+    StudyInstanceUID: '3475934509438053840958324',
+    PatientBirthDate: '19890216',
+    Description: 'xxxxx',
   };
 
   for (let i = 0; i < CASE_COUNT; i += 1) {
     cases.push({
-      workflowID: v4(),
       ...caseInfo,
+      caseID: v4(),
+      workflowID: v4(),
+      step: getStep(i),
+      PatientName: `${caseInfo.PatientName}${i}`,
     });
   }
 
@@ -51,7 +78,7 @@ const createCases = async () => {
         tasks.push(
           axios.post(URI, {
             data: caseInfo,
-          })
+          }),
         );
       }
 
@@ -65,7 +92,7 @@ const createCases = async () => {
 
     console.log('Create cases success!!!');
   } catch (error) {
-    console.error((error as Error).message);
+    handleError(error);
   }
 };
 

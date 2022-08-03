@@ -56,3 +56,23 @@ export const getAutoQCResultFile = async () => {
   const data = await res.json();
   return data;
 };
+
+export const getPly = async (): Promise<string> => {
+  const PLY_FILE_URL = `${HOST}/ffr/aorta+both.ply`;
+  const res = await fetch(PLY_FILE_URL);
+  const data = await res.text();
+  return data;
+};
+
+export const getCenterline = async (path: string): Promise<string> => {
+  const VTP_FILE_URL = `${HOST}/ffr/${path}`;
+  const res = await fetch(VTP_FILE_URL);
+  const data = await res.text();
+  return data;
+};
+
+export const getCenterlines = async (): Promise<string[]> => {
+  const left = await getCenterline('_Left_cl_1Dmesh.vtp');
+  const right = await getCenterline('_Right_cl_1Dmesh.vtp');
+  return [left, right];
+};

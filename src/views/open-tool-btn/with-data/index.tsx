@@ -8,21 +8,26 @@ import {
   getMask,
   seriesList,
   thumbnailList,
+  getPly,
+  getCenterlines,
   getAutoQCResultFile,
 } from 'src/mock';
 import * as other from 'src/redux/other';
 
 interface Props {
-  toolName: MicroApp;
+  caseInfo: CaseInfo;
 }
+
 export const withData =
   <P extends object>(WrappedComponent: React.ComponentType<P>): React.FC<Props> =>
   ({ ...props }) => {
-    const { toolName } = props;
+    const { caseInfo } = props;
+
     const dispatch = useDispatch();
 
     const onClick = useCallback(() => {
-      switch (toolName) {
+      const step = caseInfo.step as MicroApp;
+      switch (step) {
         case MicroApp.QC:
           microAppMgr.loadQCTool({
             getDicom,
@@ -40,10 +45,27 @@ export const withData =
           });
           dispatch(other.otherActions.toggleMicroAppVisible(true));
           break;
-        default:
+        case MicroApp.Review:
+          microAppMgr.loadReviewTool({
+            caseInfo: {
+              PatientName: caseInfo.PatientName!,
+              PatientSex: caseInfo.PatientSex!,
+              PatientAge: caseInfo.PatientAge!,
+              PatientID: caseInfo.PatientID!,
+              StudyDate: caseInfo.StudyDate!,
+              AccessionNumber: caseInfo.AccessionNumber,
+            },
+            getNifti,
+            getMask,
+            getPly,
+            getCenterlines,
+          });
+          dispatch(other.otherActions.toggleMicroAppVisible(true));
           break;
+        default:
+          throw new Error('There is no corresponding tool!');
       }
-    }, [dispatch, toolName]);
+    }, [dispatch, caseInfo]);
 
-    return <WrappedComponent {...(props as P)} toolName={props.toolName} onClick={onClick} />;
+    return <WrappedComponent {...(props as P)} toolName={caseInfo.step} onClick={onClick} />;
   };

@@ -8,22 +8,20 @@ import { OpenToolBtn } from 'src/views/open-tool-btn';
 const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     title: formatMessage({ defaultMessage: '姓名' }),
-    dataIndex: ['attributes', 'dicomTag', 'PatientName'],
+    dataIndex: ['attributes', 'PatientName'],
   },
   {
     title: '年龄',
-    dataIndex: ['attributes', 'dicomTag', 'PatientAge'],
-  },
-  {
-    title: 'WorkflowID',
-    dataIndex: ['attributes', 'workflowID'],
+    dataIndex: ['attributes', 'PatientAge'],
   },
   {
     title: 'Tool',
-    dataIndex: ['attributes', 'status'],
-    render: (status: string) => {
-      if (status) return <OpenToolBtn toolName={status as any} />;
-      return null;
+    dataIndex: ['attributes'],
+    render: (caseInfo: CaseInfo) => {
+
+
+       return <OpenToolBtn caseInfo={caseInfo} />;
+  
     },
   },
 ];
@@ -37,7 +35,7 @@ const Header = styled.div`
 `;
 
 interface Props {
-  cases: CaseInfo[];
+  cases: CaseData[];
   pagination: Pagination;
 }
 
