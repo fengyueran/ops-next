@@ -131,6 +131,14 @@ type GetPly = () => Promise<string>;
 
 type GetCenterlines = () => Promise<string[]>;
 
+type GetPlyBuffer = () => Promise<ArrayBuffer>;
+
+type GetCenterlineBuffers = () => Promise<ArrayBuffer[]>;
+
+type GetCPR = (path: string) => Promise<ArrayBuffer>;
+
+type GetSphere = () => Promise<ArrayBuffer>;
+
 type GetAutoQCResultFile = () => Promise<AutoQCInfo>;
 
 interface QCToolInput {
@@ -159,4 +167,23 @@ interface ReviewToolInput {
   getMask: GetMask;
   getPly: GetPly;
   getCenterlines: GetCenterlines;
+}
+
+interface ReportToolInput {
+  caseInfo: {
+    caseId: string;
+    reportId: string;
+    id: string;
+    checkDate: string;
+    reportDate: string;
+    patientName: string;
+    gender: string;
+    age: string;
+    hospital: string;
+  };
+  cprFilePathList: string[];
+  getPly: GetPlyBuffer;
+  getCPR: GetCPR;
+  getSphere: GetSphere;
+  getCenterlines: GetCenterlineBuffers;
 }

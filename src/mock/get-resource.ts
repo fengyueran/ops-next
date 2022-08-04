@@ -64,6 +64,12 @@ export const getPly = async (): Promise<string> => {
   return data;
 };
 
+export const getPlyBuffer = async (): Promise<ArrayBuffer> => {
+  const PLY_FILE_URL = `${HOST}/report/_aorta+both.ply`;
+  const res = await fetch(PLY_FILE_URL);
+  return res.arrayBuffer();
+};
+
 export const getCenterline = async (path: string): Promise<string> => {
   const VTP_FILE_URL = `${HOST}/ffr/${path}`;
   const res = await fetch(VTP_FILE_URL);
@@ -71,8 +77,32 @@ export const getCenterline = async (path: string): Promise<string> => {
   return data;
 };
 
+export const getCenterlineBuffer = async (path: string): Promise<ArrayBuffer> => {
+  const VTP_FILE_URL = `${HOST}/report/${path}`;
+  const res = await fetch(VTP_FILE_URL);
+  return res.arrayBuffer();
+};
+
 export const getCenterlines = async (): Promise<string[]> => {
   const left = await getCenterline('_Left_cl_1Dmesh.vtp');
   const right = await getCenterline('_Right_cl_1Dmesh.vtp');
   return [left, right];
+};
+
+export const getCenterlineBuffers = async (): Promise<ArrayBuffer[]> => {
+  const left = await getCenterlineBuffer('_Left_cl_1Dmesh.vtp');
+  const right = await getCenterlineBuffer('_Right_cl_1Dmesh.vtp');
+  return [left, right];
+};
+
+export const getCPR = async (path: string): Promise<ArrayBuffer> => {
+  const CPR_FILE_URL = `${HOST}/report/${path}`;
+  const res = await fetch(CPR_FILE_URL);
+  return res.arrayBuffer();
+};
+
+export const getSphere = async (): Promise<ArrayBuffer> => {
+  const SPHERE_FILE_URL = `${HOST}/report/_CPR_sphere_Im_MIP.nii.gz`;
+  const res = await fetch(SPHERE_FILE_URL);
+  return res.arrayBuffer();
 };

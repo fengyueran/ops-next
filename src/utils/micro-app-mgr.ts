@@ -4,6 +4,7 @@ export enum MicroApp {
   QC = 'QC',
   MaskEdit = 'MaskEdit',
   Review = 'Review',
+  Report = 'Report',
 }
 
 export enum MaskEditType {
@@ -15,6 +16,7 @@ const MicroAppHostMap = {
   [MicroApp.QC]: '//localhost:8081',
   [MicroApp.MaskEdit]: '//localhost:8082',
   [MicroApp.Review]: '//localhost:3000',
+  [MicroApp.Report]: '//localhost:3000',
 };
 
 const MOUNT_NODE = '#tool-mount-node';
@@ -41,6 +43,10 @@ class MicroAppMgr {
 
   loadReviewTool = (props: ReviewToolInput) => {
     this.loadMicroApp(MicroApp.Review, props);
+  };
+
+  loadReportTool = (props: ReportToolInput) => {
+    this.loadMicroApp(MicroApp.Report, props);
   };
 
   unmount = () => {

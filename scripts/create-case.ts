@@ -5,10 +5,10 @@ const HOST = 'http://localhost';
 const PORT = '1337';
 const CREATE_CASE_PATH = '/api/cases';
 
-const step = ['QC', 'MaskEdit', 'Review'];
+const step = ['QC', 'MaskEdit', 'Review', 'Report'];
 
 const getStep = (i: number) => {
-  return step[i % 3];
+  return step[i % 4];
 };
 
 const handleError = (error: any) => {

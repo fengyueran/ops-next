@@ -11,6 +11,11 @@ import {
   getPly,
   getCenterlines,
   getAutoQCResultFile,
+  getPlyBuffer,
+  getCenterlineBuffers,
+  getCPR,
+  getSphere,
+  cprFilePathList,
 } from 'src/mock';
 import * as other from 'src/redux/other';
 
@@ -59,6 +64,28 @@ export const withData =
             getMask,
             getPly,
             getCenterlines,
+          });
+          dispatch(other.otherActions.toggleMicroAppVisible(true));
+          break;
+
+        case MicroApp.Report:
+          microAppMgr.loadReportTool({
+            caseInfo: {
+              caseId: 'HT-HFDK8G',
+              reportId: 'HT-HFDK8G',
+              id: 'PatientID',
+              checkDate: '09/09/2020',
+              reportDate: '09/09/2020',
+              patientName: '张三',
+              gender: 'M',
+              age: '17',
+              hospital: '重庆西南医院',
+            },
+            getPly: getPlyBuffer,
+            getCPR,
+            getSphere,
+            getCenterlines: getCenterlineBuffers,
+            cprFilePathList,
           });
           dispatch(other.otherActions.toggleMicroAppVisible(true));
           break;
