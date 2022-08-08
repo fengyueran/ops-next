@@ -141,11 +141,21 @@ type GetSphere = () => Promise<ArrayBuffer>;
 
 type GetAutoQCResultFile = () => Promise<AutoQCInfo>;
 
+type QCSubmitInput = {
+  serie: string;
+  qcReport?: string;
+  isQCFailed: string;
+  clipStartIndex?: string;
+  clipCount?: string;
+};
+
+type QCSubmit = (input: QCSubmitInput) => void;
 interface QCToolInput {
   getDicom: GetDicom;
   seriesList: string[];
   thumbnailList: string[];
   getAutoQCResultFile: GetAutoQCResultFile;
+  submit: QCSubmit;
 }
 
 interface MaskEditToolInput {
@@ -186,4 +196,9 @@ interface ReportToolInput {
   getCPR: GetCPR;
   getSphere: GetSphere;
   getCenterlines: GetCenterlineBuffers;
+}
+
+interface Message {
+  type: string;
+  data: any;
 }

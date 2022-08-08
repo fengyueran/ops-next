@@ -8,7 +8,7 @@ const Sider = () => <div>Sider</div>;
 
 export const IndexPage = () => {
   return (
-    <div>
+    <>
       <IndexPageLayout
         header={<Header />}
         sider={<Sider />}
@@ -20,6 +20,6 @@ export const IndexPage = () => {
         }
       />
       <ToolWrapper />
-    </div>
+    </>
   );
 };

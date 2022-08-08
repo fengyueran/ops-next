@@ -53,7 +53,7 @@ master 分支为最稳定的分支，随时都是一个预备生产状态，因�
 #### 标题
 
 格式如下：
-需要注意的是 task 与 subject 间的**空格**是必须要有的。
+需要注意的是 task 与 subject 间的**空格**是必须要有的(否则自动生成 changelog 的工具无法识别)。
 
 ```
 <type><task>: <subject>
@@ -74,7 +74,6 @@ docs(T23321): add docs
   refactor：重构（即不是新增功能，也不是修改 bug 的代码变动）
   test：增加测试
   chore：构建过程或辅助工具的变动
-
   ```
 
 - subject

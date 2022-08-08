@@ -1,4 +1,4 @@
-import { loadMicroApp, MicroApp as MicApp } from 'qiankun';
+import { loadMicroApp, MicroApp as MicApp, initGlobalState, MicroAppStateActions } from 'qiankun';
 
 export enum MicroApp {
   QC = 'QC',
@@ -13,24 +13,46 @@ export enum MaskEditType {
 }
 
 const MicroAppHostMap = {
-  [MicroApp.QC]: '//localhost:8081',
-  [MicroApp.MaskEdit]: '//localhost:8082',
-  [MicroApp.Review]: '//localhost:3000',
-  [MicroApp.Report]: '//localhost:3000',
+  [MicroApp.QC]: '//localhost:3001',
+  [MicroApp.MaskEdit]: '//localhost:3002',
+  [MicroApp.Review]: '//localhost:3003',
+  [MicroApp.Report]: '//localhost:3004',
 };
 
 const MOUNT_NODE = '#tool-mount-node';
 
+export const MessageType = {
+  TOOL_READY: 'TOOL_READY',
+};
+
 class MicroAppMgr {
+  private currentTool?: string;
   private microApp?: MicApp;
 
+  actions: MicroAppStateActions = initGlobalState({});
+
+  submit = () => {
+    this.actions.setGlobalState({ type: 'SUBMIT', data: { tool: this.currentTool } });
+  };
+
   private loadMicroApp = (name: MicroApp, props: any) => {
-    this.microApp = loadMicroApp({
-      name,
-      entry: MicroAppHostMap[name],
-      container: MOUNT_NODE,
-      props,
-    });
+    this.currentTool = name;
+    this.microApp = loadMicroApp(
+      {
+        name,
+        entry: MicroAppHostMap[name],
+        container: MOUNT_NODE,
+        props: {
+          ...props,
+          setState: this.actions.setGlobalState,
+        },
+      },
+      {
+        sandbox: {
+          experimentalStyleIsolation: true,
+        },
+      },
+    );
   };
 
   loadQCTool = (props: QCToolInput) => {
@@ -47,6 +69,17 @@ class MicroAppMgr {
 
   loadReportTool = (props: ReportToolInput) => {
     this.loadMicroApp(MicroApp.Report, props);
+  };
+
+  subscribe = (handler: (data: any) => void) => {
+    this.actions.onGlobalStateChange((state: Record<string, any>, prev: Record<string, any>) => {
+      console.log('Main App onGlobalStateChange', state, prev);
+      handler(state);
+    });
+  };
+
+  unsubscribe = () => {
+    this.actions.offGlobalStateChange();
   };
 
   unmount = () => {

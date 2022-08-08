@@ -31,6 +31,7 @@ export const withData =
     const dispatch = useDispatch();
 
     const onClick = useCallback(() => {
+      dispatch(other.otherActions.toggleMicroAppVisible(true));
       const step = caseInfo.step as MicroApp;
       switch (step) {
         case MicroApp.QC:
@@ -39,8 +40,11 @@ export const withData =
             seriesList,
             thumbnailList,
             getAutoQCResultFile,
+            submit: (data: QCSubmitInput) => {
+              console.log('QC Submit', data);
+            },
           });
-          dispatch(other.otherActions.toggleMicroAppVisible(true));
+
           break;
         case MicroApp.MaskEdit:
           microAppMgr.loadMaskEditTool({
@@ -48,7 +52,6 @@ export const withData =
             getMask,
             editType: MaskEditType.Segment,
           });
-          dispatch(other.otherActions.toggleMicroAppVisible(true));
           break;
         case MicroApp.Review:
           microAppMgr.loadReviewTool({
@@ -65,7 +68,6 @@ export const withData =
             getPly,
             getCenterlines,
           });
-          dispatch(other.otherActions.toggleMicroAppVisible(true));
           break;
 
         case MicroApp.Report:
@@ -87,7 +89,6 @@ export const withData =
             getCenterlines: getCenterlineBuffers,
             cprFilePathList,
           });
-          dispatch(other.otherActions.toggleMicroAppVisible(true));
           break;
         default:
           throw new Error('There is no corresponding tool!');
