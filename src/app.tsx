@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
 import { Routes, Route, HashRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 
@@ -17,13 +19,15 @@ const Container = styled.div`
 export const App = () => (
   <Provider store={store}>
     <IntlProvider locale="zh" messages={getLocale('zh')}>
-      <Container>
-        <HashRouter>
-          <Routes>
-            <Route path={'/'} element={<IndexPage />} />
-          </Routes>
-        </HashRouter>
-      </Container>
+      <ConfigProvider locale={zhCN}>
+        <Container>
+          <HashRouter>
+            <Routes>
+              <Route path={'/'} element={<IndexPage />} />
+            </Routes>
+          </HashRouter>
+        </Container>
+      </ConfigProvider>
     </IntlProvider>
   </Provider>
 );

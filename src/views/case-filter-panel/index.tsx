@@ -4,7 +4,8 @@ import styled from 'styled-components';
 const Container = styled.div`
   width: 100%;
   height: 136px;
-  border: 1px solid;
+  background: #fff;
+  margin-bottom: 24px;
 `;
 
 export const CaseFilterPanel = () => {

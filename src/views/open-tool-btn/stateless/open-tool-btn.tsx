@@ -6,5 +6,5 @@ interface Props {
 }
 
 export const OpenToolBtn: React.FC<Props> = ({ toolName, onClick }) => {
-  return <button onClick={onClick}>{`Open ${toolName} Tool`}</button>;
+  return <button onClick={onClick}>{toolName}</button>;
 };
