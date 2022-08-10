@@ -71,7 +71,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
       return (
         <TagContainer>
           {tags.map((tagName) => (
-            <Tag>{tagName}</Tag>
+            <Tag key={tagName}>{tagName}</Tag>
           ))}
         </TagContainer>
       );

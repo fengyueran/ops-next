@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const HOST = process.env.REACT_APP_STRAPI_CMS_URL || '';
+export const HOST = (window as any).STRAPI_CMS_URL || '';
 
 export const FETCH_CASE_PATH = '/api/cases';
 

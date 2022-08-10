@@ -1,11 +1,53 @@
 {
-  "+4lD9e": {
-    "defaultMessage": "姓名"
+  "1TF9b/": {
+    "defaultMessage": "全部任务"
+  },
+  "5bSjlJ": {
+    "defaultMessage": "患者姓名"
+  },
+  "9UefLp": {
+    "defaultMessage": "标签"
+  },
+  "CLqPBU": {
+    "defaultMessage": "编辑"
+  },
+  "D8tPZv": {
+    "defaultMessage": "CTFFR检查号"
+  },
+  "DLNq1y": {
+    "defaultMessage": "阴阳性"
   },
   "ENPgS/": {
     "defaultMessage": "提交"
   },
+  "MUbb2Q": {
+    "defaultMessage": "阴性"
+  },
+  "NA026K": {
+    "defaultMessage": "截止时间"
+  },
+  "PoiFu7": {
+    "defaultMessage": "加载中..."
+  },
+  "QV3pnn": {
+    "defaultMessage": "状态"
+  },
+  "RyXQqJ": {
+    "defaultMessage": "上传时间"
+  },
+  "Tr5xVl": {
+    "defaultMessage": "阳性"
+  },
+  "UtE0dS": {
+    "defaultMessage": "操作"
+  },
+  "ncq348": {
+    "defaultMessage": "优先级"
+  },
   "x+2Be4": {
     "defaultMessage": "共{count}个任务"
+  },
+  "x6HYY+": {
+    "defaultMessage": "返还时间"
   }
 }
