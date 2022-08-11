@@ -11,6 +11,12 @@
       "value": "患者姓名"
     }
   ],
+  "61mMjf": [
+    {
+      "type": 0,
+      "value": "待粗分"
+    }
+  ],
   "9UefLp": [
     {
       "type": 0,
@@ -71,6 +77,12 @@
       "value": "上传时间"
     }
   ],
+  "TCIc6h": [
+    {
+      "type": 0,
+      "value": "待审查"
+    }
+  ],
   "Tr5xVl": [
     {
       "type": 0,
@@ -83,10 +95,40 @@
       "value": "操作"
     }
   ],
+  "YYSyMs": [
+    {
+      "type": 0,
+      "value": "待精分"
+    }
+  ],
+  "ZRIpuA": [
+    {
+      "type": 0,
+      "value": "已返还"
+    }
+  ],
+  "cZsBR8": [
+    {
+      "type": 0,
+      "value": "待质检"
+    }
+  ],
+  "jcZC7+": [
+    {
+      "type": 0,
+      "value": "待报告"
+    }
+  ],
   "ncq348": [
     {
       "type": 0,
       "value": "优先级"
+    }
+  ],
+  "qJX95g": [
+    {
+      "type": 0,
+      "value": "待返还"
     }
   ],
   "x+2Be4": [

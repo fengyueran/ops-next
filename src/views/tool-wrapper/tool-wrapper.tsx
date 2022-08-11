@@ -1,12 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button } from 'antd';
-import { FormattedMessage } from 'react-intl';
 
-import { CloseMicroAppBtn } from 'src/views/close-micro-app-btn';
 import { Loading } from 'src/views/tool-loading';
-import { microAppMgr } from 'src/utils';
 import { Row, ElasticBox } from 'src/components';
+import { CloseMicroAppBtn } from 'src/views/close-micro-app-btn';
+import { SubmitButton } from 'src/views/submit-btn';
 
 const Container = styled.div<{ visible: boolean }>`
   width: 100vw;
@@ -22,11 +20,6 @@ const StyledHeader = styled(Row)`
   height: 64px;
   align-items: center;
   padding: 0 32px;
-`;
-
-const SubmitButton = styled(Button)`
-  width: 116px;
-  height: 32px;
 `;
 
 const ToolContainer = styled.div`
@@ -55,9 +48,7 @@ export const ToolWrapper: React.FC<Props> = ({ visible }) => {
       <StyledHeader>
         <CloseMicroAppBtn />
         <ElasticBox />
-        <SubmitButton type="primary" onClick={microAppMgr.submit}>
-          <FormattedMessage defaultMessage="提交" />
-        </SubmitButton>
+        <SubmitButton />
       </StyledHeader>
       <ToolContainer>
         <ToolMountNode id="tool-mount-node" />

@@ -8,6 +8,7 @@ import { Routes, Route, HashRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 
 import { IndexPage } from './pages';
+import { Loading } from './views/global-loading';
 import { getLocale } from './locales';
 import { store } from './store';
 
@@ -26,6 +27,7 @@ export const App = () => (
               <Route path={'/'} element={<IndexPage />} />
             </Routes>
           </HashRouter>
+          <Loading />
         </Container>
       </ConfigProvider>
     </IntlProvider>

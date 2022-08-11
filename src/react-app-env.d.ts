@@ -1,8 +1,11 @@
 /// <reference types="react-scripts" />
 
-type Status = 'Failed' | 'Completed' | 'Pending' | 'Running';
+interface Window {
+  STRAPI_CMS_HOST?: string;
+  WORKFLOW_SERVER_URL?: string;
+}
 
-type Step = 'QC' | 'Segment' | 'Refine' | 'Review' | 'Report' | 'ToReturn' | 'Returned';
+type Status = 'Failed' | 'Completed' | 'Pending' | 'Running';
 
 interface Operator {
   status: Status;
@@ -142,11 +145,11 @@ type GetSphere = () => Promise<ArrayBuffer>;
 type GetAutoQCResultFile = () => Promise<AutoQCInfo>;
 
 type QCSubmitInput = {
-  serie: string;
-  qcReport?: string;
-  isQCFailed: string;
-  clipStartIndex?: string;
-  clipCount?: string;
+  pdf_json?: string;
+  qcf: string;
+  startIndex: string;
+  count: string;
+  targetSeries: string;
 };
 
 type QCSubmit = (input: QCSubmitInput) => void;
@@ -201,4 +204,37 @@ interface ReportToolInput {
 interface Message {
   type: string;
   data: any;
+}
+
+interface NodeInput {
+  Name: string;
+  Type: string;
+  Path: string;
+  Value: string;
+  Optional: boolean;
+}
+
+interface OperationData {
+  id: string;
+  attributes: {
+    input: [NodeInput, NodeInput, NodeInput, NodeInput];
+  };
+}
+
+interface OperationFetchResponse {
+  data: OperationData[];
+  meta: {
+    pagination: Pagination;
+  };
+}
+
+interface UntarFile {
+  buffer: ArrayBuffer;
+}
+
+interface EditOperationFetchResponse {
+  step: string;
+  activityID: string;
+  workflowID: string;
+  input: NodeInput[];
 }

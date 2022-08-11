@@ -5,6 +5,9 @@
   "5bSjlJ": {
     "defaultMessage": "患者姓名"
   },
+  "61mMjf": {
+    "defaultMessage": "待粗分"
+  },
   "9UefLp": {
     "defaultMessage": "标签"
   },
@@ -35,14 +38,32 @@
   "RyXQqJ": {
     "defaultMessage": "上传时间"
   },
+  "TCIc6h": {
+    "defaultMessage": "待审查"
+  },
   "Tr5xVl": {
     "defaultMessage": "阳性"
   },
   "UtE0dS": {
     "defaultMessage": "操作"
   },
+  "YYSyMs": {
+    "defaultMessage": "待精分"
+  },
+  "ZRIpuA": {
+    "defaultMessage": "已返还"
+  },
+  "cZsBR8": {
+    "defaultMessage": "待质检"
+  },
+  "jcZC7+": {
+    "defaultMessage": "待报告"
+  },
   "ncq348": {
     "defaultMessage": "优先级"
+  },
+  "qJX95g": {
+    "defaultMessage": "待返还"
   },
   "x+2Be4": {
     "defaultMessage": "共{count}个任务"

@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useSWRConfig } from 'swr';
 import { io } from 'socket.io-client';
 
-import { HOST } from 'src/api';
+import { STRAPI_CMS_HOST } from 'src/api';
 
 export const CaseRealtime = () => {
   const { mutate } = useSWRConfig();
@@ -24,7 +24,7 @@ export const CaseRealtime = () => {
   );
 
   useEffect(() => {
-    const socket = io(HOST);
+    const socket = io(STRAPI_CMS_HOST);
     socket.on('connect', () => {
       console.log('connect success');
       socket.on('case:update', handleCaseUpdated);

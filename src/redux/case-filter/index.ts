@@ -1,1 +1,1 @@
-export * from './case-filter-slice';
+export * from './slice';

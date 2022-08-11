@@ -4,7 +4,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 
 const CloseButton = styled(Button)`
-  background: transparent;
+  background: transparent !important;
   border: none;
   :hover {
     background: #40a9ff;

@@ -4,10 +4,6 @@ import * as fflate from 'fflate';
 
 const HOST = 'http://localhost:8080';
 
-interface UntarFile {
-  buffer: ArrayBuffer;
-}
-
 const unZip = (ab: ArrayBuffer): Promise<Uint8Array> => {
   const u = new Uint8Array(ab);
   return new Promise((resolve, reject) => {

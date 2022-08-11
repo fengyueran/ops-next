@@ -1,10 +1,12 @@
 import React, { useMemo } from 'react';
-import { Table, Button } from 'antd';
+import { Table } from 'antd';
 import styled from 'styled-components';
 import { FormattedMessage, useIntl, IntlFormatters } from 'react-intl';
 
 import { ColorTag } from 'src/components';
 import { OpenToolBtn } from 'src/views/open-tool-btn';
+import { StatusTag } from 'src/views/status-tag';
+import { NodeStep } from 'src/type';
 
 const TagContainer = styled.div`
   display: flex;
@@ -88,9 +90,9 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   },
   {
     title: formatMessage({ defaultMessage: '状态' }),
-    dataIndex: ['attributes', 'status'],
-    render: (status: string) => {
-      return status;
+    dataIndex: ['attributes', 'step'],
+    render: (step: NodeStep) => {
+      return <StatusTag step={step} />;
     },
   },
   {
@@ -105,13 +107,6 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     dataIndex: ['attributes'],
     render: (caseInfo: CaseInfo) => {
       return <OpenToolBtn caseInfo={caseInfo} />;
-    },
-  },
-  {
-    title: '',
-    dataIndex: ['attributes'],
-    render: (caseInfo: CaseInfo) => {
-      return <Button>{formatMessage({ defaultMessage: '编辑' })}</Button>;
     },
   },
   {

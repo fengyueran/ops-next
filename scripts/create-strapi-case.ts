@@ -23,12 +23,12 @@ const handleError = (error: any) => {
 };
 
 const makeCases = () => {
-  const CASE_COUNT = 40;
+  const CASE_COUNT = 1;
 
   const cases: any[] = [];
 
   const caseInfo: any = {
-    uploadedAt: Date.now(),
+    uploadedAt: '2022-08-12T12:21Z',
     tags: ['门诊'],
     narrowDegree: 1,
     priority: 'High',

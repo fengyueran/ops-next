@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Spin } from 'antd';
-import { FormattedMessage } from 'react-intl';
 
 const Container = styled.div`
   width: 100%;
@@ -18,13 +17,14 @@ const Container = styled.div`
 
 interface Props {
   loading: boolean;
+  tip: string | React.ReactElement;
 }
 
-export const Loading: React.FC<Props> = ({ loading }) => {
+export const Loading: React.FC<Props> = ({ loading, tip }) => {
   if (!loading) return null;
   return (
     <Container>
-      <Spin tip={<FormattedMessage defaultMessage="加载中..." />} />
+      <Spin tip={tip} />
     </Container>
   );
 };

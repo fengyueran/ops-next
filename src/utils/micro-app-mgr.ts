@@ -1,4 +1,15 @@
-import { loadMicroApp, MicroApp as MicApp, initGlobalState, MicroAppStateActions } from 'qiankun';
+import { message } from 'antd';
+import {
+  loadMicroApp,
+  MicroApp as MicApp,
+  initGlobalState,
+  MicroAppStateActions,
+  addGlobalUncaughtErrorHandler,
+} from 'qiankun';
+
+addGlobalUncaughtErrorHandler((event) => {
+  message.error(`Load error: ${(event as any).reason}`);
+});
 
 export enum MicroApp {
   QC = 'QC',
@@ -23,6 +34,7 @@ const MOUNT_NODE = '#tool-mount-node';
 
 export const MessageType = {
   TOOL_READY: 'TOOL_READY',
+  SERIES_CHANGE: 'SERIES_CHANGE',
 };
 
 class MicroAppMgr {

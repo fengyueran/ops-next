@@ -20,7 +20,7 @@ const Tip = styled.span`
 
 interface Props {
   color: string;
-  tip: string;
+  tip: string | React.ReactElement;
 }
 
 export const ColorTag: React.FC<Props> = ({ color, tip }) => {
