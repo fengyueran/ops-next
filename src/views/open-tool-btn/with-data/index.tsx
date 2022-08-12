@@ -25,35 +25,27 @@ import {
   // uploadFile,
   fullPath,
   completeNode,
+  // fetchGzipFile,
   fetchEditOperation,
-  fetchCompressedFileWithCache,
+  fetchGzipAndTarFileWithCache,
+  fetchGzipFileWithCache,
+  uploadFile,
 } from 'src/api';
 
 interface Props {
   caseInfo: CaseInfo;
 }
 
-const CanEditSteps = [
-  NodeStep.QC,
-  NodeStep.SEGMENT_EDIT,
-  NodeStep.REFINE_EDIT,
-  NodeStep.VALIDATE_FFR,
-  NodeStep.REPORT,
-];
-
 const findFileByName = (name: string, inputs: NodeInput[]) => {
   const found = inputs.find(({ Name }) => Name === name);
   return found;
 };
 
-const makeQCToolInput = (
-  data: EditOperationFetchResponse,
-  submitCallback: (res: [data: any, error?: Error]) => void,
-) => {
-  const inputs = data.input;
+const makeQCToolInput = (operation: EditOperationData, submit: QCSubmit) => {
+  const inputs = operation.input;
   const getDicom = async (dicomPath: string) => {
-    const fileList: UntarFile[] = await fetchCompressedFileWithCache(dicomPath);
-    const validFiles = fileList.filter(({ buffer }) => buffer.byteLength > 0);
+    const fileList = await fetchGzipAndTarFileWithCache(dicomPath);
+    const validFiles = (fileList as UntarFile[]).filter(({ buffer }) => buffer.byteLength > 0);
     const bufferList = validFiles.map(({ buffer }) => buffer);
 
     return bufferList;
@@ -70,16 +62,6 @@ const makeQCToolInput = (
     (thumbPath: string) => fullPath(thumbPath),
   );
 
-  const submit = async (submitInput: QCSubmitInput) => {
-    try {
-      console.log('QC Submit', data);
-      await completeNode(data.workflowID, data.activityID, submitInput);
-      submitCallback(['success']);
-    } catch (error) {
-      submitCallback(['error', error as Error]);
-    }
-  };
-
   return {
     getDicom,
     seriesList,
@@ -89,12 +71,47 @@ const makeQCToolInput = (
   };
 };
 
-const makeMaskEditToolInput = (inputs: NodeInput[], editType: MaskEditType) => {
+const makeMaskEditToolInput = (
+  operation: EditOperationData,
+  editType: MaskEditType,
+  submit: SegSubmit,
+) => {
+  const inputs = operation.input;
+
+  const getNifti = async () => {
+    const node = findFileByName('nifti_file', inputs);
+    const data = await fetchGzipFileWithCache(node?.Value!);
+    return data as ArrayBuffer;
+  };
+
+  const getMask = async () => {
+    const node = findFileByName('aorta_and_arteries_comp', inputs);
+    const data = await fetchGzipFileWithCache(node?.Value!);
+    return data as ArrayBuffer;
+  };
+
   return {
     getNifti,
     getMask,
     editType,
+    submit,
   };
+};
+
+const makeQCSubmitInput = async (data: QCToolOutput) => {
+  return data;
+};
+
+const makeSegSubmitInput = async (data: SegToolOutput) => {
+  const { mask } = data;
+  const { path } = await uploadFile('segMask.nii.gz', mask);
+  return { edited_aorta_and_arteries_comp: path };
+};
+
+const makeRefineSubmitInput = async (data: SegToolOutput) => {
+  const { mask } = data;
+  const { path } = await uploadFile('refineMask.nii.gz', mask);
+  return { edited_refine_aorta_and_arteries: path };
 };
 
 const makeReivewToolInput = (inputs: NodeInput[], caseInfo: CaseInfo) => {
@@ -140,35 +157,47 @@ export const withData =
   ({ ...props }) => {
     const { caseInfo } = props;
     const step: NodeStep = caseInfo.step;
-    const canEdit = CanEditSteps.find((s) => s === step);
 
     const dispatch = useDispatch();
 
     const onClick = useCallback(async () => {
       try {
         dispatch(microApp.actions.toggleMicroAppVisible(true));
-        const res = await fetchEditOperation(caseInfo.caseID);
-        const inputs = res.input;
+        const operation = await fetchEditOperation(caseInfo.caseID);
 
-        const submitCallback = (res: [data: any, error?: Error]) => {
-          const [, error] = res;
-          if (error) {
+        const submit = async (output: object, makeSubmitInput: (output: any) => Promise<any>) => {
+          try {
+            console.log('Submit', operation);
+            const submitInput = await makeSubmitInput(output);
+            await completeNode(operation.workflowID, operation.activityID, submitInput);
+            dispatch(microApp.actions.toggleMicroAppVisible(false));
+          } catch (error) {
             message.error(`Submit  error: ${(error as Error).message}`);
             dispatch(microApp.actions.toggleSubmitPending(false));
-          } else {
-            dispatch(microApp.actions.toggleMicroAppVisible(false));
           }
         };
 
+        const inputs = operation.input;
+
         switch (step) {
           case NodeStep.QC:
-            microAppMgr.loadQCTool(makeQCToolInput(res, submitCallback));
+            microAppMgr.loadQCTool(
+              makeQCToolInput(operation, (output) => submit(output, makeQCSubmitInput)),
+            );
             break;
           case NodeStep.SEGMENT_EDIT:
-            microAppMgr.loadMaskEditTool(makeMaskEditToolInput(inputs, MaskEditType.Segment));
+            microAppMgr.loadMaskEditTool(
+              makeMaskEditToolInput(operation, MaskEditType.Segment, (output) =>
+                submit(output, makeSegSubmitInput),
+              ),
+            );
             break;
           case NodeStep.REFINE_EDIT:
-            microAppMgr.loadMaskEditTool(makeMaskEditToolInput(inputs, MaskEditType.Refine));
+            microAppMgr.loadMaskEditTool(
+              makeMaskEditToolInput(operation, MaskEditType.Refine, (output) =>
+                submit(output, makeRefineSubmitInput),
+              ),
+            );
             break;
           case NodeStep.VALIDATE_FFR:
             microAppMgr.loadReviewTool(makeReivewToolInput(inputs, caseInfo));
@@ -184,5 +213,5 @@ export const withData =
       }
     }, [dispatch, step, caseInfo]);
 
-    return <WrappedComponent {...(props as P)} disabled={!canEdit} onClick={onClick} />;
+    return <WrappedComponent {...(props as P)} disabled={!caseInfo.enableEdit} onClick={onClick} />;
   };

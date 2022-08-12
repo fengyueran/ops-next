@@ -5,7 +5,7 @@ import { Button } from 'antd';
 
 const CloseButton = styled(Button)`
   background: transparent !important;
-  border: none;
+  border: none !important;
   :hover {
     background: #40a9ff;
   }

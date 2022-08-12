@@ -35,11 +35,11 @@ interface QC extends Node {
     dicomInfo: Parse['output']['dicomInfo'];
   };
   output: {
-    serie: Directory; //选中的serie
-    qcReport: File; //qc报告(json文件)
-    isQCFailed: string; //QC是否不通过
-    clipStartIndex: string; //裁剪起始slice(从0开始)
-    clipCount: string; //裁剪的slice数量
+    pdf_json?: string; //qc失败的报告(json文件)
+    qcf: string; //QC是否失败
+    startIndex: string; //裁剪起始slice(从0开始)
+    count: string; //裁剪的slice数量
+    targetSeries: string; //选中的serie
   };
 }
 

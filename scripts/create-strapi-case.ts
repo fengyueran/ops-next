@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { v4 } from 'uuid';
 
+import { createCaseID } from './utils';
+
 const HOST = 'http://localhost';
 const PORT = '1337';
 const CREATE_CASE_PATH = '/api/cases';
@@ -28,7 +30,7 @@ const makeCases = () => {
   const cases: any[] = [];
 
   const caseInfo: any = {
-    uploadedAt: '2022-08-12T12:21Z',
+    uploadedAt: '2022-08-12 12:21',
     tags: ['门诊'],
     narrowDegree: 1,
     priority: 'High',
@@ -51,7 +53,7 @@ const makeCases = () => {
   for (let i = 0; i < CASE_COUNT; i += 1) {
     cases.push({
       ...caseInfo,
-      caseID: v4(),
+      caseID: createCaseID(v4()),
       workflowID: v4(),
       step: getStep(i),
       PatientName: `${caseInfo.PatientName}${i}`,

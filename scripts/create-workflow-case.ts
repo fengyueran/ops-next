@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { v4 } from 'uuid';
 
+import { createCaseID } from './utils';
+
 const HOST = 'http://192.168.201.243';
 const PORT = '8008';
 const CREATE_CASE_PATH = '/v1/ops/case/create';
@@ -22,6 +24,7 @@ const makeCases = () => {
   const cases: any[] = [];
 
   const caseInfo: any = {
+    status: 'waiting-qc',
     uploadedAt: '2022-08-12 12:21:34',
     tags: ['门诊'],
     narrowDegree: 1,
@@ -43,11 +46,12 @@ const makeCases = () => {
   };
 
   for (let i = 0; i < CASE_COUNT; i += 1) {
+    const caseName = createCaseID(v4());
     cases.push({
       ...caseInfo,
-      caseID: v4(),
-      workflowID: v4(),
-      PatientName: `${caseInfo.PatientName}${i}`,
+      caseID: caseName,
+      workflowID: caseName,
+      PatientName: caseName,
     });
   }
 

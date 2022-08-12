@@ -29,6 +29,7 @@ interface Base {
   name?: string; //手动录入
   workflowID: string;
   caseID: string;
+  enableEdit: boolean;
 }
 
 interface DicomTag {
@@ -144,15 +145,38 @@ type GetSphere = () => Promise<ArrayBuffer>;
 
 type GetAutoQCResultFile = () => Promise<AutoQCInfo>;
 
-type QCSubmitInput = {
+interface QCSubmitInput {
   pdf_json?: string;
   qcf: string;
   startIndex: string;
   count: string;
   targetSeries: string;
-};
+}
 
-type QCSubmit = (input: QCSubmitInput) => void;
+type QCToolOutput = QCSubmitInput;
+
+interface SegSubmitInput {
+  edited_aorta_and_arteries_comp: string;
+}
+
+interface SegToolOutput {
+  mask: ArrayBuffer;
+}
+
+interface RefineSubmitInput {
+  edited_refine_aorta_and_arteries: string;
+}
+
+interface RefineToolOutput {
+  mask: string;
+}
+
+type QCSubmit = (input: QCToolOutput) => void;
+type SegSubmit = (input: SegToolOutput) => void;
+type RefineSubmit = (input: RefineToolOutput) => void;
+
+type SubmitInput = QCSubmitInput | SegSubmitInput;
+
 interface QCToolInput {
   getDicom: GetDicom;
   seriesList: string[];
@@ -165,6 +189,7 @@ interface MaskEditToolInput {
   getNifti: GetNifti;
   getMask: GetMask;
   editType: string;
+  submit: SegSubmit;
 }
 
 interface ReviewToolInput {
@@ -232,9 +257,15 @@ interface UntarFile {
   buffer: ArrayBuffer;
 }
 
-interface EditOperationFetchResponse {
+interface EditOperationData {
   step: string;
   activityID: string;
   workflowID: string;
   input: NodeInput[];
+}
+
+interface EditOperationFetchResponse {
+  code: number;
+  data: EditOperationData;
+  message?: string;
 }

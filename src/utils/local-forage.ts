@@ -25,7 +25,6 @@ export const saveDataToLocalForage = async (key: string, arrayBuffer: ArrayBuffe
 };
 
 export const loadDataFromLocalForage = async (key: string) => {
-  console.log(`load data from cache,key=${key}`);
   const item = await localForage.getItem(key);
 
   if (typeof item === 'string') {

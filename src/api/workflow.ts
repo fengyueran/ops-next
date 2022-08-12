@@ -2,7 +2,13 @@
 import untar from 'js-untar';
 import axios from 'axios';
 
-import { unZip, loadDataFromLocalForage, saveDataToLocalForage } from 'src/utils';
+import { unZip, withCache } from 'src/utils';
+
+interface UploadFileResponse {
+  content: string;
+  fileId: string;
+  path: string;
+}
 
 const WORKFLOW_HOST = window.WORKFLOW_SERVER_URL || '';
 
@@ -17,37 +23,34 @@ export const fetchFile = async (filePath: string): Promise<any> => {
   return data;
 };
 
-export const fetchEditOperation = async (caseID: string): Promise<EditOperationFetchResponse> => {
+export const fetchEditOperation = async (caseID: string): Promise<EditOperationData> => {
   const url = `${WORKFLOW_HOST}${OPERATION_PATH}/${caseID}`;
-  const { data } = await axios.get(url);
-  return data;
+  const { data } = await axios.get<EditOperationFetchResponse>(url);
+  if (data.code !== 200) {
+    throw new Error(`Get Edit operation error:${data.message}`);
+  }
+  return data.data;
 };
 
-export const fetchCompressedFile = async (filePath: string): Promise<any> => {
+export const fetchGzipFile = async (filePath: string): Promise<ArrayBuffer> => {
   const url = `${WORKFLOW_HOST}${FILE_PATH}/${filePath}`;
   const { data } = await axios.get(url, {
     responseType: 'arraybuffer',
   });
 
   const unZipped = await unZip(data);
-  const untared = await untar(unZipped.buffer);
+  return unZipped.buffer;
+};
+
+export const fetchGzipAndTarFile = async (filePath: string): Promise<any> => {
+  const unZipped = await fetchGzipFile(filePath);
+  const untared = await untar(unZipped);
   return untared;
 };
 
-export const fetchCompressedFileWithCache = async (filePath: string): Promise<any> => {
-  const isDev = process.env.NODE_ENV === 'development';
-  if (isDev) {
-    const res = await loadDataFromLocalForage(filePath);
-    if (res) return res as ArrayBuffer;
-  }
+export const fetchGzipFileWithCache = withCache(fetchGzipFile);
 
-  const data = await fetchCompressedFile(filePath);
-  if (isDev) {
-    await saveDataToLocalForage(filePath, data);
-  }
-
-  return data;
-};
+export const fetchGzipAndTarFileWithCache = withCache(fetchGzipAndTarFile);
 
 export const completeNode = async (workflowID: string, activityID: string, results: object) => {
   const completeUrl = `${WORKFLOW_HOST}${COMPLETE_PATH}/${workflowID}/${activityID}/complete`;
@@ -61,8 +64,8 @@ export const uploadFile = async (name: string, buffer: ArrayBuffer | string) => 
   const blob = new Blob([buffer], { type: 'application/octet-stream' });
   const formData = new FormData();
   formData.append(name, blob);
-  const { data } = await axios.post(uploadUrl, {
-    data: formData,
+  const { data } = await axios.post<UploadFileResponse>(uploadUrl, formData, {
+    headers: { 'Content-Type': `multipart/form-data` },
   });
   return data;
 };
