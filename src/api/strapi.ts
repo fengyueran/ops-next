@@ -7,17 +7,22 @@ export const FETCH_CASE_PATH = '/api/cases';
 
 const FETCH_OPERATION_PATH = '/api/operations';
 
-export const strapifetcher = (path: string) => {
-  const url = `${STRAPI_CMS_HOST}${path}`;
+interface Query {
+  pagenation: {
+    page: number;
+    pageSize: number;
+  };
+}
+export const strapifetcher = (path: string, query: Query) => {
+  const queryStr = qs.stringify(query);
+  const url = `${STRAPI_CMS_HOST}${path}?${queryStr}`;
   return axios.get(url).then((res) => res.data);
 };
 
-export const getOperation = async (
-  workflowID: string,
-  step: string,
-): Promise<OperationFetchResponse> => {
+export const getOperation = async (workflowID: string, step: string): Promise<OperationData> => {
   const query = qs.stringify(
     {
+      sort: ['createdAt:desc'],
       filters: {
         $and: [
           {
@@ -40,7 +45,7 @@ export const getOperation = async (
 
   const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
 
-  const { data } = await axios.get(url);
+  const { data } = await axios.get<any, OperationFetchResponse>(url);
 
-  return data;
+  return data.data[0];
 };

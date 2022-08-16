@@ -15,12 +15,12 @@ export enum NodeStep {
   'RETURNED' = 'returned',
 }
 
-export enum CaseEditStep {
-  'WAITING_QC' = 'WAITING_QC',
-  'WAITING_SEGMENT' = 'WAITING_SEGMENT',
-  'WAITING_RIFINE' = 'WAITING_RIFINE',
-  'WAITING_REVIEW' = 'WAITING_REVIEW',
-  'WAITING_REPORT' = 'WAITING_REPORT',
+export enum CaseStatus {
+  'WAITING_QC' = 'waiting-qc',
+  'WAITING_SEGMENT' = 'waiting-rough-seg',
+  'WAITING_RIFINE' = 'waiting-exact-seg',
+  'WAITING_REVIEW' = 'waiting-review',
+  'WAITING_REPORT' = 'waiting-report',
   'WAITING_RETURN' = 'WAITING_RETURN',
   'RETURNED' = 'RETURNED',
 }

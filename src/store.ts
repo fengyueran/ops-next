@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { caseFilter, microApp } from 'src/redux';
+import { caseFilter, microApp, cases } from 'src/redux';
 
 export const store = configureStore({
   reducer: {
+    cases: cases.slice.reducer,
     caseFilter: caseFilter.slice.reducer,
     microApp: microApp.slice.reducer,
   },

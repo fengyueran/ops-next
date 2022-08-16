@@ -1,19 +1,22 @@
 import { loadDataFromLocalForage, saveDataToLocalForage } from './local-forage';
+import { getFileName } from './get-file-name';
 
 export const withCache = (fn: (url: string) => Promise<any>) => {
-  return async (url: string) => {
+  return async <T = Response>(url: string) => {
     const isDev = process.env.NODE_ENV === 'development';
+    const key = getFileName(url);
+
     if (isDev) {
-      const data = await loadDataFromLocalForage(url);
+      const data = await loadDataFromLocalForage(key);
       if (data) {
         console.log(`load data from cache,key=${url}`);
-        return data;
+        return data as T;
       }
     }
     const data = await fn(url);
     if (isDev) {
-      await saveDataToLocalForage(url, data);
+      await saveDataToLocalForage(key, data);
     }
-    return data;
+    return data as T;
   };
 };

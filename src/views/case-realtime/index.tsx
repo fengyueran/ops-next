@@ -1,26 +1,19 @@
 import { useCallback, useEffect } from 'react';
-import { useSWRConfig } from 'swr';
+import { useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 
 import { STRAPI_CMS_HOST } from 'src/api';
+import { cases } from 'src/redux';
 
 export const CaseRealtime = () => {
-  const { mutate } = useSWRConfig();
+  const dispatch = useDispatch();
 
   const handleCaseUpdated = useCallback(
     ({ data }: { data: CaseData }) => {
       console.log('case:update', data);
-      mutate('/api/cases', (res: CaseFetchResponse) => {
-        const cases = res.data;
-
-        const foundIndex = cases.findIndex(({ id }) => id === data.id);
-        if (foundIndex >= 0) {
-          cases[foundIndex] = data;
-        }
-        return { ...res, data: cases };
-      });
+      dispatch(cases.actions.updateCase(data));
     },
-    [mutate],
+    [dispatch],
   );
 
   useEffect(() => {

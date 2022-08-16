@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import {
   loadMicroApp,
-  MicroApp as MicApp,
+  MicroApp as MicroAppInstance,
   initGlobalState,
   MicroAppStateActions,
   addGlobalUncaughtErrorHandler,
@@ -14,7 +14,7 @@ addGlobalUncaughtErrorHandler((event) => {
 export enum MicroApp {
   QC = 'QC',
   MaskEdit = 'MaskEdit',
-  Review = 'Review',
+  Review = 'FFRValidate',
   Report = 'Report',
 }
 
@@ -38,8 +38,8 @@ export const MessageType = {
 };
 
 class MicroAppMgr {
-  private currentTool?: string;
-  private microApp?: MicApp;
+  private currentTool?: MicroApp;
+  private microApp?: MicroAppInstance;
 
   actions: MicroAppStateActions = initGlobalState({});
 

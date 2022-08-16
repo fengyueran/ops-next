@@ -3,9 +3,17 @@
 interface Window {
   STRAPI_CMS_HOST?: string;
   WORKFLOW_SERVER_URL?: string;
+  downloadFile: (filePath: string) => void;
 }
-
-type Status = 'Failed' | 'Completed' | 'Pending' | 'Running';
+enum CaseStatus {
+  'WAITING_QC' = 'waiting-qc',
+  'WAITING_SEGMENT' = 'waiting-rough-seg',
+  'WAITING_RIFINE' = 'waiting-exact-seg',
+  'WAITING_REVIEW' = 'WAITING_REVIEW',
+  'WAITING_REPORT' = 'WAITING_REPORT',
+  'WAITING_RETURN' = 'WAITING_RETURN',
+  'RETURNED' = 'RETURNED',
+}
 
 interface Operator {
   status: Status;
@@ -20,7 +28,7 @@ interface Base {
   resultReturnedAt?: number;
   tags?: string[];
   narrowDegree?: number; //狭窄程度
-  status?: Status;
+  status: CaseStatus;
   step: Step;
   isReaded: boolean; //是否已读，默认false
   priority: Priority;
@@ -163,17 +171,23 @@ interface SegToolOutput {
   mask: ArrayBuffer;
 }
 
+interface RefineToolOutput {
+  mask: ArrayBuffer;
+}
+
 interface RefineSubmitInput {
   edited_refine_aorta_and_arteries: string;
 }
 
-interface RefineToolOutput {
-  mask: string;
+interface ReviewToolOutput {
+  leftMeshVtp: string;
+  rightMeshVtp: string;
 }
 
 type QCSubmit = (input: QCToolOutput) => void;
 type SegSubmit = (input: SegToolOutput) => void;
 type RefineSubmit = (input: RefineToolOutput) => void;
+type ReviewSubmit = (input: ReviewToolOutput) => void;
 
 type SubmitInput = QCSubmitInput | SegSubmitInput;
 
@@ -239,33 +253,28 @@ interface NodeInput {
   Optional: boolean;
 }
 
-interface OperationData {
-  id: string;
-  attributes: {
-    input: [NodeInput, NodeInput, NodeInput, NodeInput];
-  };
-}
-
-interface OperationFetchResponse {
-  data: OperationData[];
-  meta: {
-    pagination: Pagination;
-  };
-}
-
-interface UntarFile {
-  buffer: ArrayBuffer;
-}
-
-interface EditOperationData {
+interface OperationDataAttributes {
   step: string;
   activityID: string;
   workflowID: string;
   input: NodeInput[];
 }
 
-interface EditOperationFetchResponse {
-  code: number;
-  data: EditOperationData;
-  message?: string;
+interface OperationData {
+  id: string;
+  attributes: OperationDataAttributes;
+}
+
+interface OperationFetchResponse {
+  data: {
+    data: OperationData[];
+    meta: {
+      pagination: Pagination;
+    };
+  };
+}
+
+interface UntarFile {
+  name: string;
+  buffer: ArrayBuffer;
 }

@@ -2,7 +2,7 @@
 import untar from 'js-untar';
 import axios from 'axios';
 
-import { unZip, withCache } from 'src/utils';
+import { decompress, withCache, download } from 'src/utils';
 
 interface UploadFileResponse {
   content: string;
@@ -15,42 +15,58 @@ const WORKFLOW_HOST = window.WORKFLOW_SERVER_URL || '';
 const FILE_PATH = '/v1/ops/files/download';
 const UPLOAD_PATH = '/v1/ops/files/upload';
 const COMPLETE_PATH = '/v1/ops/case';
-const OPERATION_PATH = '/v1/ops/case/edit/operation';
 
-export const fetchFile = async (filePath: string): Promise<any> => {
+const fetchCommonFile = async (filePath: string): Promise<any> => {
   const url = `${WORKFLOW_HOST}${FILE_PATH}/${filePath}`;
   const { data } = await axios.get(url);
   return data;
 };
 
-export const fetchEditOperation = async (caseID: string): Promise<EditOperationData> => {
-  const url = `${WORKFLOW_HOST}${OPERATION_PATH}/${caseID}`;
-  const { data } = await axios.get<EditOperationFetchResponse>(url);
-  if (data.code !== 200) {
-    throw new Error(`Get Edit operation error:${data.message}`);
-  }
-  return data.data;
-};
+// export const fetchEditOperation = async (caseID: string): Promise<EditOperationData> => {
+//   const url = `${WORKFLOW_HOST}${OPERATION_PATH}/${caseID}`;
+//   const { data } = await axios.get<EditOperationFetchResponse>(url);
+//   if (data.code !== 200) {
+//     throw new Error(`Get Edit operation error:${data.message}`);
+//   }
+//   return data.data;
+// };
 
-export const fetchGzipFile = async (filePath: string): Promise<ArrayBuffer> => {
+const fetchGzipFile = async (filePath: string): Promise<ArrayBuffer> => {
   const url = `${WORKFLOW_HOST}${FILE_PATH}/${filePath}`;
   const { data } = await axios.get(url, {
     responseType: 'arraybuffer',
   });
 
-  const unZipped = await unZip(data);
-  return unZipped.buffer;
+  const decompressped = await decompress(data);
+  return decompressped.buffer;
 };
 
-export const fetchGzipAndTarFile = async (filePath: string): Promise<any> => {
-  const unZipped = await fetchGzipFile(filePath);
-  const untared = await untar(unZipped);
-  return untared;
+const fetchGzipAndTarFile = async (filePath: string): Promise<UntarFile[] | ArrayBuffer> => {
+  const decompressped = await fetchGzipFile(filePath);
+
+  const untarFiles: UntarFile[] = await untar(decompressped);
+
+  const shouldUnGzip = untarFiles.length === 1 && untarFiles[0].name?.endsWith('gz');
+  if (shouldUnGzip) {
+    const unGzipBuffer = await decompress(untarFiles[0].buffer);
+    return unGzipBuffer.buffer;
+  }
+  return untarFiles;
 };
 
-export const fetchGzipFileWithCache = withCache(fetchGzipFile);
+export const fetchFile = async <T = Response>(filePath: string): Promise<T> => {
+  let data;
+  if (filePath.endsWith('.tgz')) {
+    data = await fetchGzipAndTarFile(filePath);
+  } else if (filePath.endsWith('.gz')) {
+    data = await fetchGzipFile(filePath);
+  } else {
+    data = await fetchCommonFile(filePath);
+  }
+  return data;
+};
 
-export const fetchGzipAndTarFileWithCache = withCache(fetchGzipAndTarFile);
+export const fetchFileWithCache = withCache(fetchFile);
 
 export const completeNode = async (workflowID: string, activityID: string, results: object) => {
   const completeUrl = `${WORKFLOW_HOST}${COMPLETE_PATH}/${workflowID}/${activityID}/complete`;
@@ -74,3 +90,10 @@ export const fullPath = (path: string) => {
   const fileUrl = `${WORKFLOW_HOST}${FILE_PATH}`;
   return `${fileUrl}/${path}`;
 };
+
+export const downloadFile = async (filePath: string) => {
+  const url = fullPath(filePath);
+  download('data', url);
+};
+
+window.downloadFile = downloadFile;

@@ -12,7 +12,7 @@ const Container = styled.div<{ visible: boolean }>`
   position: fixed;
   left: 0;
   top: 0;
-  z-index: ${(props) => (props.visible ? 1 : -1)};
+  z-index: ${(props) => (props.visible ? 10 : -1)};
 `;
 
 const StyledHeader = styled(Row)`

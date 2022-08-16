@@ -21,18 +21,27 @@ export const saveDataToLocalForage = async (key: string, arrayBuffer: ArrayBuffe
   } else {
     await localForage.setItem(key, arrayBuffer);
   }
-  console.log(`saveLocalForage success key=${key}, byteLength=${arrayBuffer.byteLength}`);
+  console.log(`saveLocalForage success key=${key}`);
 };
 
 export const loadDataFromLocalForage = async (key: string) => {
   const item = await localForage.getItem(key);
 
-  if (typeof item === 'string') {
-    const v = JSON.parse(item);
-    if (v && v.cacheSliceCount) {
-      const arrayBuffer = new Uint8Array(v.size);
+  const getSplitedCacheKeyMap = (data: any) => {
+    try {
+      return JSON.parse(data);
+    } catch (error) {
+      return undefined;
+    }
+  };
+
+  const keyMap = getSplitedCacheKeyMap(item);
+
+  if (keyMap) {
+    if (keyMap.cacheSliceCount) {
+      const arrayBuffer = new Uint8Array(keyMap.size);
       let offset = 0;
-      for (let i = 0; i < v.cacheSliceCount; i += 1) {
+      for (let i = 0; i < keyMap.cacheSliceCount; i += 1) {
         // eslint-disable-next-line no-await-in-loop
         const part = await localForage.getItem(`${key}/${i}`);
         arrayBuffer.set(new Uint8Array(part as ArrayBuffer), offset);
