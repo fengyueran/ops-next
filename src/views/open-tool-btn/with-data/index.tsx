@@ -12,6 +12,7 @@ import {
   makeSegSubmitInput,
   makeRefineSubmitInput,
   makeReviewSubmitInput,
+  makeReportSubmitInput,
   makeQCToolInput,
   makeMaskEditToolInput,
   makeReivewToolInput,
@@ -47,8 +48,6 @@ export const withData =
           }
         };
 
-        const inputs = operation.input;
-
         switch (status) {
           case CaseStatus.WAITING_QC:
             microAppMgr.loadQCTool(
@@ -77,7 +76,11 @@ export const withData =
             );
             break;
           case CaseStatus.WAITING_REPORT:
-            microAppMgr.loadReportTool(makeReportToolInput(inputs));
+            microAppMgr.loadReportTool(
+              makeReportToolInput(operation, caseInfo, (output) =>
+                submit(output, makeReportSubmitInput),
+              ),
+            );
             break;
           default:
             throw new Error('There is no corresponding tool!');

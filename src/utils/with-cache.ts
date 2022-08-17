@@ -1,8 +1,9 @@
+import { ResponseType } from 'axios';
 import { loadDataFromLocalForage, saveDataToLocalForage } from './local-forage';
 import { getFileName } from './get-file-name';
 
-export const withCache = (fn: (url: string) => Promise<any>) => {
-  return async <T = Response>(url: string) => {
+export const withCache = (fn: (url: string, responseType?: ResponseType) => Promise<any>) => {
+  return async <T = Response>(url: string, responseType?: ResponseType) => {
     const isDev = process.env.NODE_ENV === 'development';
     const key = getFileName(url);
 
@@ -13,7 +14,7 @@ export const withCache = (fn: (url: string) => Promise<any>) => {
         return data as T;
       }
     }
-    const data = await fn(url);
+    const data = await fn(url, responseType);
     if (isDev) {
       await saveDataToLocalForage(key, data);
     }

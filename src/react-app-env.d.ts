@@ -184,10 +184,24 @@ interface ReviewToolOutput {
   rightMeshVtp: string;
 }
 
+type ReportOutputData = {
+  path: string;
+  data: Uint8Array;
+};
+type ReportToolOutput = {
+  reportData: ReportOutputData[];
+  cprPlane: ReportOutputData[];
+  leftMeshVtp: ReportOutputData;
+  rightMeshVtp: ReportOutputData;
+  reportPdf: ReportOutputData;
+  reportJson: ReportOutputData;
+};
+
 type QCSubmit = (input: QCToolOutput) => void;
 type SegSubmit = (input: SegToolOutput) => void;
 type RefineSubmit = (input: RefineToolOutput) => void;
 type ReviewSubmit = (input: ReviewToolOutput) => void;
+type ReportSubmit = (input: ReportToolOutput) => void;
 
 type SubmitInput = QCSubmitInput | SegSubmitInput;
 

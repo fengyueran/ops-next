@@ -42,7 +42,6 @@ interface Props {
 export const StatusTag: React.FC<Props> = ({ status }) => {
   const tag = TagMap[status];
   if (!tag) {
-    console.error(`The status is wrong:${status}`);
     return null;
   }
 

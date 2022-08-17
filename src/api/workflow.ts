@@ -1,6 +1,6 @@
 //@ts-ignore
 import untar from 'js-untar';
-import axios from 'axios';
+import axios, { ResponseType } from 'axios';
 
 import { decompress, withCache, download } from 'src/utils';
 
@@ -16,9 +16,14 @@ const FILE_PATH = '/v1/ops/files/download';
 const UPLOAD_PATH = '/v1/ops/files/upload';
 const COMPLETE_PATH = '/v1/ops/case';
 
-const fetchCommonFile = async (filePath: string): Promise<any> => {
+export const fetchCommonFile = async (
+  filePath: string,
+  responseType: ResponseType = 'text',
+): Promise<any> => {
   const url = `${WORKFLOW_HOST}${FILE_PATH}/${filePath}`;
-  const { data } = await axios.get(url);
+  const { data } = await axios.get(url, {
+    responseType,
+  });
   return data;
 };
 
@@ -32,11 +37,7 @@ const fetchCommonFile = async (filePath: string): Promise<any> => {
 // };
 
 const fetchGzipFile = async (filePath: string): Promise<ArrayBuffer> => {
-  const url = `${WORKFLOW_HOST}${FILE_PATH}/${filePath}`;
-  const { data } = await axios.get(url, {
-    responseType: 'arraybuffer',
-  });
-
+  const data = await fetchCommonFile(filePath, 'arraybuffer');
   const decompressped = await decompress(data);
   return decompressped.buffer;
 };
@@ -54,14 +55,23 @@ const fetchGzipAndTarFile = async (filePath: string): Promise<UntarFile[] | Arra
   return untarFiles;
 };
 
-export const fetchFile = async <T = Response>(filePath: string): Promise<T> => {
+const fetchCompressedFile = async (filePath: string) => {
   let data;
   if (filePath.endsWith('.tgz')) {
     data = await fetchGzipAndTarFile(filePath);
-  } else if (filePath.endsWith('.gz')) {
-    data = await fetchGzipFile(filePath);
   } else {
-    data = await fetchCommonFile(filePath);
+    data = await fetchGzipFile(filePath);
+  }
+
+  return data;
+};
+
+const fetchFile = async (filePath: string, responseType?: ResponseType) => {
+  let data;
+  if (filePath.endsWith('.tgz') || filePath.endsWith('.gz')) {
+    data = await fetchCompressedFile(filePath);
+  } else {
+    data = await fetchCommonFile(filePath, responseType);
   }
   return data;
 };
@@ -75,15 +85,21 @@ export const completeNode = async (workflowID: string, activityID: string, resul
   });
 };
 
-export const uploadFile = async (name: string, buffer: ArrayBuffer | string) => {
+export const uploadFiles = async (files: { path: string; data: ArrayBuffer }[]) => {
   const uploadUrl = `${WORKFLOW_HOST}${UPLOAD_PATH}`;
-  const blob = new Blob([buffer], { type: 'application/octet-stream' });
-  const formData = new FormData();
-  formData.append(name, blob);
-  const { data } = await axios.post<UploadFileResponse>(uploadUrl, formData, {
-    headers: { 'Content-Type': `multipart/form-data` },
-  });
-  return data;
+  try {
+    const formData = new FormData();
+    files.forEach((file) => {
+      const blob = new Blob([file.data], { type: 'application/octet-stream' });
+      formData.append(file.path, blob);
+    });
+    const { data } = await axios.post<UploadFileResponse>(uploadUrl, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const fullPath = (path: string) => {

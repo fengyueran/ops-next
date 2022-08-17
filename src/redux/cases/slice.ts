@@ -40,14 +40,13 @@ export const slice = createSlice({
       });
       state.casesByID = casesByID;
       state.allCaseIDs = allCaseIDs;
-      console.log('meta', meta);
       state.pagination = meta.pagination;
     },
     updateCase(state, action: PayloadAction<CaseData>) {
       const { id } = action.payload;
-
       const hasCase = state.casesByID[id];
-      if (!hasCase) {
+
+      if (hasCase) {
         const formatted = formatCase(action.payload);
         state.casesByID[id] = formatted;
       }
