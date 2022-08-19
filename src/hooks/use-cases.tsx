@@ -16,8 +16,8 @@ export const useCases = (page: number) => {
   const dispatch = useDispatch();
   const { data, error } = useSWR<CaseFetchResponse>([FETCH_CASE_PATH, query], strapifetcher);
 
-  const cases = useSelector(casesRedux.selectors.casesSelector);
-  const pagination = useSelector(casesRedux.selectors.paginationSelector);
+  const cases = useSelector(casesRedux.selectors.cases);
+  const pagination = useSelector(casesRedux.selectors.pagination);
 
   useEffect(() => {
     if (data) {

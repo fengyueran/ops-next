@@ -7,7 +7,7 @@ import { microApp } from 'src/redux';
 export const withData =
   <P extends object>(WrappedComponent: React.ComponentType<P>) =>
   ({ ...props }) => {
-    const submitPending = useSelector(microApp.selectors.submitPendingSelector);
+    const submitPending = useSelector(microApp.selectors.submitPending);
 
     const loading = submitPending;
     const tip = useMemo(() => {

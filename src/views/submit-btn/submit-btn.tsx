@@ -9,11 +9,13 @@ const StyledButton = styled(Button)`
 `;
 
 interface Props {
+  visible: boolean;
   disabled: boolean;
   onClick: () => void;
 }
 
-export const SubmitButton: React.FC<Props> = ({ onClick, disabled }) => {
+export const SubmitButton: React.FC<Props> = ({ onClick, visible, disabled }) => {
+  if (!visible) return null;
   return (
     <StyledButton type="primary" onClick={onClick} disabled={disabled}>
       <FormattedMessage defaultMessage="提交" />

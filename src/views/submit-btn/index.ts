@@ -7,7 +7,8 @@ import { SubmitButton as S } from './submit-btn';
 import { microAppMgr } from 'src/utils';
 
 const mapStateToProps = (state: RootState) => ({
-  disabled: !microApp.selectors.microAppReadySelector(state),
+  disabled: !microApp.selectors.microAppReady(state),
+  visible: microApp.selectors.canSubmit(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

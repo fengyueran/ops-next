@@ -4,17 +4,16 @@ import { RootState } from 'src/store';
 
 const selector = (state: RootState) => state.microApp;
 
-const microAppReadySelector = createSelector(selector, (microApp) => microApp.microAppReady);
+const microAppReady = createSelector(selector, (microApp) => microApp.microAppReady);
 
-const submitPendingSelector = createSelector(selector, (microApp) => microApp.submitPending);
+const submitPending = createSelector(selector, (microApp) => microApp.submitPending);
 
-export const microAppVisibleSelector = createSelector(
-  selector,
-  (microApp) => microApp.microAppVisible,
-);
+const microAppVisible = createSelector(selector, (microApp) => microApp.microAppVisible);
+const canSubmit = createSelector(selector, (microApp) => microApp.canSubmit);
 
 export const selectors = {
-  microAppReadySelector,
-  submitPendingSelector,
-  microAppVisibleSelector,
+  canSubmit,
+  microAppReady,
+  submitPending,
+  microAppVisible,
 };

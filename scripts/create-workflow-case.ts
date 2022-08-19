@@ -25,15 +25,15 @@ const makeCases = () => {
 
   const caseInfo: any = {
     status: 'waiting-qc',
-    uploadedAt: '2022-08-12 12:21:34',
+    uploadedAt: new Date().toISOString(),
     tags: ['门诊'],
     narrowDegree: 1,
     priority: 'High',
     isPositive: true,
-    ffrAccessionNumber: 'asdfasd2342323',
+    ffrAccessionNumber: 'CT202203300412',
     name: 'xxx',
     StudyDate: '20210928',
-    PatientID: 'jjk443534',
+    PatientID: '00520387',
     PatientSex: 'M',
     PatientAge: '18',
     PatientName: '张三',

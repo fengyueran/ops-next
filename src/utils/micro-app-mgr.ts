@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import {
   loadMicroApp,
   MicroApp as MicroAppInstance,
@@ -8,7 +7,7 @@ import {
 } from 'qiankun';
 
 addGlobalUncaughtErrorHandler((event) => {
-  message.error(`Load error: ${(event as any).reason}`);
+  console.error(`Load error: ${(event as any).reason}`);
 });
 
 export enum MicroApp {
@@ -23,11 +22,14 @@ export enum MaskEditType {
   Refine = 'Refine',
 }
 
-const MicroAppHostMap = {
-  [MicroApp.QC]: '//localhost:3001',
-  [MicroApp.MaskEdit]: '//localhost:3002',
-  [MicroApp.Review]: '//localhost:3003',
-  [MicroApp.Report]: '//localhost:3004',
+const getMicroAppHost = (name: MicroApp) => {
+  const hostMap = {
+    [MicroApp.QC]: window.QC_TOOL_HOST,
+    [MicroApp.MaskEdit]: window.MaskEdit_TOOL_HOST,
+    [MicroApp.Review]: window.Review_TOOL_HOST,
+    [MicroApp.Report]: window.Report_TOOL_HOST,
+  };
+  return hostMap[name] || '';
 };
 
 const MOUNT_NODE = '#tool-mount-node';
@@ -52,7 +54,7 @@ class MicroAppMgr {
     this.microApp = loadMicroApp(
       {
         name,
-        entry: MicroAppHostMap[name],
+        entry: getMicroAppHost(name),
         container: MOUNT_NODE,
         props: {
           ...props,

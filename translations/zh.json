@@ -1,4 +1,10 @@
 {
+  "0SlfpI": {
+    "defaultMessage": "分析序列:"
+  },
+  "0UCvA0": {
+    "defaultMessage": "上传时间:"
+  },
   "1TF9b/": {
     "defaultMessage": "全部任务"
   },
@@ -13,6 +19,9 @@
   },
   "CLqPBU": {
     "defaultMessage": "编辑"
+  },
+  "CRfQ6g": {
+    "defaultMessage": "返还时间:"
   },
   "D8tPZv": {
     "defaultMessage": "CTFFR检查号"
@@ -38,6 +47,9 @@
   "RyXQqJ": {
     "defaultMessage": "上传时间"
   },
+  "SDi46d": {
+    "defaultMessage": "序列总数:"
+  },
   "TCIc6h": {
     "defaultMessage": "待审查"
   },
@@ -53,11 +65,23 @@
   "ZRIpuA": {
     "defaultMessage": "已返还"
   },
+  "cDZ00w": {
+    "defaultMessage": "查看"
+  },
   "cZsBR8": {
     "defaultMessage": "待质检"
   },
+  "hDJ0kQ": {
+    "defaultMessage": "入组序列:"
+  },
   "jcZC7+": {
     "defaultMessage": "待报告"
+  },
+  "kT6gyP": {
+    "defaultMessage": "截止时间:"
+  },
+  "lXiVEh": {
+    "defaultMessage": "已返回"
   },
   "ncq348": {
     "defaultMessage": "优先级"
@@ -67,6 +91,9 @@
   },
   "unb8so": {
     "defaultMessage": "提交中..."
+  },
+  "w6UEFv": {
+    "defaultMessage": "总张数:"
   },
   "x+2Be4": {
     "defaultMessage": "共{count}个任务"

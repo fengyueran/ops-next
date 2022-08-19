@@ -2,22 +2,10 @@ import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { message } from 'antd';
 
-import { microAppMgr, MaskEditType } from 'src/utils';
+import { loadMicroAppByStatus } from 'src/utils';
 import { microApp } from 'src/redux';
-import { CaseStatus } from 'src/type';
-import { completeNode, getOperation } from 'src/api';
-
-import {
-  makeQCSubmitInput,
-  makeSegSubmitInput,
-  makeRefineSubmitInput,
-  makeReviewSubmitInput,
-  makeReportSubmitInput,
-  makeQCToolInput,
-  makeMaskEditToolInput,
-  makeReivewToolInput,
-  makeReportToolInput,
-} from './util';
+import { AppDispatch } from 'src/store';
+import { getOperation } from 'src/api';
 
 interface Props {
   caseInfo: CaseInfo;
@@ -28,63 +16,25 @@ export const withData =
   ({ ...props }) => {
     const { caseInfo } = props;
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const onClick = useCallback(async () => {
       try {
-        const status: CaseStatus = caseInfo.status;
         dispatch(microApp.actions.toggleMicroAppVisible(true));
-        const { attributes: operation } = await getOperation(caseInfo.workflowID, caseInfo.step);
+        dispatch(microApp.actions.toggleCanSubmit(true));
+        const { id, attributes: operation } = await getOperation(caseInfo.editID!);
 
         const submit = async (output: object, makeSubmitInput: (output: any) => Promise<any>) => {
           try {
-            console.log('Submit', operation);
-            const submitInput = await makeSubmitInput(output);
-            await completeNode(operation.workflowID, operation.activityID, submitInput);
-            dispatch(microApp.actions.toggleMicroAppVisible(false));
+            await dispatch(
+              microApp.actions.submit({ operation, output, makeSubmitInput }),
+            ).unwrap();
           } catch (error) {
-            message.error(`Submit  error: ${(error as Error).message}`);
-            dispatch(microApp.actions.toggleSubmitPending(false));
+            message.error(`Submit error:${(error as Error).message}`);
           }
         };
 
-        switch (status) {
-          case CaseStatus.WAITING_QC:
-            microAppMgr.loadQCTool(
-              makeQCToolInput(operation, (output) => submit(output, makeQCSubmitInput)),
-            );
-            break;
-          case CaseStatus.WAITING_SEGMENT:
-            microAppMgr.loadMaskEditTool(
-              makeMaskEditToolInput(operation, MaskEditType.Segment, (output) =>
-                submit(output, makeSegSubmitInput),
-              ),
-            );
-            break;
-          case CaseStatus.WAITING_RIFINE:
-            microAppMgr.loadMaskEditTool(
-              makeMaskEditToolInput(operation, MaskEditType.Refine, (output) =>
-                submit(output, makeRefineSubmitInput),
-              ),
-            );
-            break;
-          case CaseStatus.WAITING_REVIEW:
-            microAppMgr.loadReviewTool(
-              makeReivewToolInput(operation, caseInfo, (output) =>
-                submit(output, makeReviewSubmitInput),
-              ),
-            );
-            break;
-          case CaseStatus.WAITING_REPORT:
-            microAppMgr.loadReportTool(
-              makeReportToolInput(operation, caseInfo, (output) =>
-                submit(output, makeReportSubmitInput),
-              ),
-            );
-            break;
-          default:
-            throw new Error('There is no corresponding tool!');
-        }
+        loadMicroAppByStatus(caseInfo, { id, ...operation }, submit);
       } catch (error) {
         message.error(`Load error: ${(error as Error).message}`);
       }

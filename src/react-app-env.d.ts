@@ -3,16 +3,20 @@
 interface Window {
   STRAPI_CMS_HOST?: string;
   WORKFLOW_SERVER_URL?: string;
+  QC_TOOL_HOST?: string;
+  MaskEdit_TOOL_HOST?: string;
+  Review_TOOL_HOST?: string;
+  Report_TOOL_HOST?: string;
   downloadFile: (filePath: string) => void;
 }
 enum CaseStatus {
   'WAITING_QC' = 'waiting-qc',
   'WAITING_SEGMENT' = 'waiting-rough-seg',
   'WAITING_RIFINE' = 'waiting-exact-seg',
-  'WAITING_REVIEW' = 'WAITING_REVIEW',
-  'WAITING_REPORT' = 'WAITING_REPORT',
-  'WAITING_RETURN' = 'WAITING_RETURN',
-  'RETURNED' = 'RETURNED',
+  'WAITING_REVIEW' = 'waiting-review',
+  'WAITING_REPORT' = 'waiting-report',
+  'WAITING_RETURN' = 'waiting-return',
+  'RETURNED' = 'returned',
 }
 
 interface Operator {
@@ -21,11 +25,15 @@ interface Operator {
   output?: any;
 }
 
-type Priority = 'High' | 'Medium' | 'Low';
+enum Priority {
+  High = 'High',
+  Medium = 'Medium',
+  Low = 'Low',
+}
 
-interface Base {
-  uploadedAt: number; //number?
-  resultReturnedAt?: number;
+interface CaseBaseInfo {
+  uploadedAt: string; //number?
+  resultReturnedAt?: string;
   tags?: string[];
   narrowDegree?: number; //狭窄程度
   status: CaseStatus;
@@ -38,6 +46,7 @@ interface Base {
   workflowID: string;
   caseID: string;
   enableEdit: boolean;
+  editID?: string;
 }
 
 interface DicomTag {
@@ -53,7 +62,7 @@ interface DicomTag {
   Description?: string;
 }
 
-type CaseInfo = Base & DicomTag;
+type CaseInfo = CaseBaseInfo & DicomTag;
 
 interface CaseData {
   id: string;
@@ -210,14 +219,14 @@ interface QCToolInput {
   seriesList: string[];
   thumbnailList: string[];
   getAutoQCResultFile: GetAutoQCResultFile;
-  submit: QCSubmit;
+  submit?: QCSubmit;
 }
 
 interface MaskEditToolInput {
   getNifti: GetNifti;
   getMask: GetMask;
   editType: string;
-  submit: SegSubmit;
+  submit?: SegSubmit;
 }
 
 interface ReviewToolInput {
@@ -233,6 +242,7 @@ interface ReviewToolInput {
   getMask: GetMask;
   getPly: GetPly;
   getCenterlines: GetCenterlines;
+  submit?: ReviewSubmit;
 }
 
 interface ReportToolInput {
@@ -252,6 +262,7 @@ interface ReportToolInput {
   getCPR: GetCPR;
   getSphere: GetSphere;
   getCenterlines: GetCenterlineBuffers;
+  submit?: ReportSubmit;
 }
 
 interface Message {
@@ -271,7 +282,20 @@ interface OperationDataAttributes {
   step: string;
   activityID: string;
   workflowID: string;
+  createdAt: string;
+  runID: string;
   input: NodeInput[];
+  output?: NodeInput[];
+}
+
+interface OperationFlatData extends OperationDataAttributes {
+  id: string;
+}
+
+interface DetailOperation extends OperationFlatData {
+  passed?: boolean;
+  thumbnail?: string;
+  targetSeries?: string;
 }
 
 interface OperationData {
@@ -281,7 +305,7 @@ interface OperationData {
 
 interface OperationFetchResponse {
   data: {
-    data: OperationData[];
+    data: OperationData;
     meta: {
       pagination: Pagination;
     };
@@ -291,4 +315,19 @@ interface OperationFetchResponse {
 interface UntarFile {
   name: string;
   buffer: ArrayBuffer;
+}
+
+interface Series {
+  UID: string;
+  passed: boolean;
+  warning: QCWarning[];
+  error: QCError[];
+  SeriesNumber: number;
+  selected: boolean;
+  tags: OriginTag & {
+    SliceInterval: number;
+    SeriesInstanceUID: string;
+    SeriesNumber: number;
+    NumberOfSlices: number;
+  };
 }

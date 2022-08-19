@@ -1,13 +1,17 @@
-import { fetchFileWithCache, fullPath, uploadFiles } from 'src/api';
-import { MaskEditType, getCurDate } from 'src/utils';
+import { format } from 'date-fns';
 
+import { fetchFileWithCache, fullPath, uploadFiles } from 'src/api';
+import { MaskEditType, microAppMgr } from 'src/utils';
+import { CaseStatus, NodeStep } from 'src/type';
+
+type Submit = (output: object, makeSubmitInput: (output: any) => Promise<any>) => void;
 const findFileByName = (name: string, inputs: NodeInput[]) => {
   const found = inputs.find(({ Name }) => Name === name);
   if (!found) throw new Error(`Can't find the file which name is ${name}`);
   return found;
 };
 
-export const makeQCToolInput = (operation: OperationDataAttributes, submit: QCSubmit) => {
+export const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) => {
   const inputs = operation.input;
   const getDicom = async (dicomPath: string) => {
     const fileList = await fetchFileWithCache<UntarFile[]>(dicomPath);
@@ -40,7 +44,7 @@ export const makeQCToolInput = (operation: OperationDataAttributes, submit: QCSu
 export const makeMaskEditToolInput = (
   operation: OperationDataAttributes,
   editType: MaskEditType,
-  submit: SegSubmit,
+  submit?: SegSubmit,
 ) => {
   const inputs = operation.input;
 
@@ -134,7 +138,7 @@ export const makeReportSubmitInput = async (data: ReportToolOutput) => {
 export const makeReivewToolInput = (
   operation: OperationDataAttributes,
   caseInfo: CaseInfo,
-  submit: ReviewSubmit,
+  submit?: ReviewSubmit,
 ) => {
   const inputs = operation.input;
 
@@ -178,18 +182,20 @@ export const makeReivewToolInput = (
     getMask,
     getPly,
     getCenterlines,
-    submit: () => {
-      const leftMeshVtp = findFileByName('left_cl_1Dmesh_vtp', inputs)?.Value;
-      const rightMeshVtp = findFileByName('right_cl_1Dmesh_vtp', inputs)?.Value;
-      submit({ leftMeshVtp, rightMeshVtp });
-    },
+    submit:
+      submit &&
+      (() => {
+        const leftMeshVtp = findFileByName('left_cl_1Dmesh_vtp', inputs)?.Value;
+        const rightMeshVtp = findFileByName('right_cl_1Dmesh_vtp', inputs)?.Value;
+        submit({ leftMeshVtp, rightMeshVtp });
+      }),
   };
 };
 
 export const makeReportToolInput = (
   operation: OperationDataAttributes,
   caseInfo: CaseInfo,
-  submit: ReportSubmit,
+  submit?: ReportSubmit,
 ) => {
   const inputs = operation.input;
 
@@ -227,7 +233,7 @@ export const makeReportToolInput = (
       reportId: caseInfo.caseID,
       id: caseInfo.PatientID!,
       checkDate: caseInfo.StudyDate!,
-      reportDate: getCurDate(),
+      reportDate: format(new Date(caseInfo.uploadedAt), 'yyyy-MM-dd HH:mm:ss'),
       patientName: caseInfo.PatientName!,
       gender: caseInfo.PatientSex!,
       age: caseInfo.PatientAge!,
@@ -240,4 +246,75 @@ export const makeReportToolInput = (
     cprFilePathList,
     submit,
   };
+};
+
+const loadQCTool = (operation: DetailOperation, submit?: Submit) => {
+  const qcSubmit = submit && ((output: QCToolOutput) => submit(output, makeQCSubmitInput));
+  microAppMgr.loadQCTool(makeQCToolInput(operation, qcSubmit));
+};
+
+const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
+  const segSubmit = submit && ((output: SegToolOutput) => submit(output, makeSegSubmitInput));
+  microAppMgr.loadMaskEditTool(makeMaskEditToolInput(operation, MaskEditType.Segment, segSubmit));
+};
+
+const loadRefineMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
+  const refineSubmit =
+    submit && ((output: RefineToolOutput) => submit(output, makeRefineSubmitInput));
+  microAppMgr.loadMaskEditTool(makeMaskEditToolInput(operation, MaskEditType.Refine, refineSubmit));
+};
+
+export const loadReviewTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?: Submit) => {
+  const reviewSubmit =
+    submit && ((output: ReviewToolOutput) => submit(output, makeReviewSubmitInput));
+  microAppMgr.loadReviewTool(makeReivewToolInput(operation, caseInfo, reviewSubmit));
+};
+
+export const loadReportTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?: Submit) => {
+  const reportSubmit =
+    submit && ((output: ReportToolOutput) => submit(output, makeReportSubmitInput));
+  microAppMgr.loadReportTool(makeReportToolInput(operation, caseInfo, reportSubmit));
+};
+
+export const loadMicroAppByStatus = (
+  caseInfo: CaseInfo,
+  operation: DetailOperation,
+  submit: Submit,
+) => {
+  const loadMicroAppMap: { [key: string]: Function } = {
+    [CaseStatus.WAITING_QC]: () => loadQCTool(operation, submit),
+    [CaseStatus.WAITING_SEGMENT]: () => loadSegMaskEditTool(operation, submit),
+    [CaseStatus.WAITING_RIFINE]: () => loadRefineMaskEditTool(operation, submit),
+    [CaseStatus.WAITING_REVIEW]: () => loadReviewTool(caseInfo, operation, submit),
+    [CaseStatus.WAITING_REPORT]: () => loadReportTool(caseInfo, operation, submit),
+  };
+
+  const load = loadMicroAppMap[caseInfo.status];
+  if (load) {
+    load();
+  } else {
+    throw new Error('There is no corresponding tool!');
+  }
+};
+
+export const loadMicroAppByStep = (
+  caseInfo: CaseInfo,
+  operation: DetailOperation,
+  submit?: Submit,
+) => {
+  console.log('operation', operation.step);
+  const loadMicroAppMap: { [key: string]: Function } = {
+    [NodeStep.QC]: () => loadQCTool(operation, submit),
+    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation, submit),
+    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation, submit),
+    [NodeStep.VALIDATE_FFR]: () => loadReviewTool(caseInfo, operation, submit),
+    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation, submit),
+  };
+
+  const load = loadMicroAppMap[operation.step];
+  if (load) {
+    load();
+  } else {
+    throw new Error('There is no corresponding tool!');
+  }
 };

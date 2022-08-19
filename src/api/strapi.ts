@@ -13,39 +13,73 @@ interface Query {
     pageSize: number;
   };
 }
-export const strapifetcher = (path: string, query: Query) => {
-  const queryStr = qs.stringify(query);
-  const url = `${STRAPI_CMS_HOST}${path}?${queryStr}`;
+export const strapifetcher = (path: string, pagenation: Query) => {
+  const query = qs.stringify(
+    {
+      sort: ['createdAt:desc'],
+      ...pagenation,
+    },
+    {
+      encodeValuesOnly: true,
+    },
+  );
+  const url = `${STRAPI_CMS_HOST}${path}?${query}`;
+
   return axios.get(url).then((res) => res.data);
 };
 
-export const getOperation = async (workflowID: string, step: string): Promise<OperationData> => {
+export const getOperationsByWFID = async (workflowID: string): Promise<OperationData[]> => {
   const query = qs.stringify(
     {
       sort: ['createdAt:desc'],
       filters: {
-        $and: [
-          {
-            workflowID: {
-              $eq: workflowID,
-            },
-          },
-          {
-            step: {
-              $eq: step,
-            },
-          },
-        ],
+        workflowID: {
+          $eq: workflowID,
+        },
       },
     },
     {
       encodeValuesOnly: true,
     },
   );
-
   const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
-
-  const { data } = await axios.get<any, OperationFetchResponse>(url);
-
-  return data.data[0];
+  const { data } = await axios.get(url);
+  return data.data;
 };
+
+export const getOperation = async (operationID: string): Promise<OperationData> => {
+  const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}/${operationID}`;
+  const { data } = await axios.get<any, OperationFetchResponse>(url);
+  return data.data;
+};
+
+// export const getOperation = async (workflowID: string, step: string): Promise<OperationData> => {
+//   const query = qs.stringify(
+//     {
+//       sort: ['createdAt:desc'],
+//       filters: {
+//         $and: [
+//           {
+//             workflowID: {
+//               $eq: workflowID,
+//             },
+//           },
+//           {
+//             step: {
+//               $eq: step,
+//             },
+//           },
+//         ],
+//       },
+//     },
+//     {
+//       encodeValuesOnly: true,
+//     },
+//   );
+
+//   const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
+
+//   const { data } = await axios.get<any, OperationFetchResponse>(url);
+
+//   return data.data[0];
+// };

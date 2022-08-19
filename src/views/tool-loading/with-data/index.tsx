@@ -9,7 +9,7 @@ export const withData =
   <P extends object>(WrappedComponent: React.ComponentType<P>) =>
   ({ ...props }) => {
     const dispatch = useDispatch();
-    const ready = useSelector(microApp.selectors.microAppReadySelector);
+    const ready = useSelector(microApp.selectors.microAppReady);
 
     useEffect(() => {
       microAppMgr.subscribe((state) => {

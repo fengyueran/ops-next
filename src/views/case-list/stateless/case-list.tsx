@@ -2,9 +2,11 @@ import React, { useMemo } from 'react';
 import { Table, Pagination } from 'antd';
 import styled from 'styled-components';
 import { FormattedMessage, useIntl, IntlFormatters } from 'react-intl';
+import { format, addDays } from 'date-fns';
 
 import { ColorTag, Row } from 'src/components';
 import { OpenToolBtn } from 'src/views/open-tool-btn';
+import { OpenDetailButton } from 'src/views/open-detail-btn';
 import { StatusTag } from 'src/views/status-tag';
 import { CaseStatus } from 'src/type';
 
@@ -32,12 +34,18 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     width: 200,
     title: formatMessage({ defaultMessage: '上传时间' }),
     dataIndex: ['uploadedAt'],
+    render: (uploadedAt: string) => {
+      return format(new Date(uploadedAt), 'yyyy-MM-dd HH:mm');
+    },
     sorter: true,
   },
   {
     width: 200,
     title: formatMessage({ defaultMessage: '截止时间' }),
     dataIndex: ['uploadedAt'],
+    render: (uploadedAt: string) => {
+      return format(addDays(new Date(uploadedAt), 1), 'yyyy-MM-dd HH:mm');
+    },
     sorter: true,
   },
   {
@@ -101,18 +109,26 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     width: 100,
     title: '',
+    dataIndex: ['id'],
+    render: (id: string) => {
+      return <OpenDetailButton id={id} />;
+    },
+  },
+  {
+    width: 100,
+    title: '',
     render: (caseInfo: CaseInfo) => {
       return <OpenToolBtn caseInfo={caseInfo} />;
     },
   },
-  {
-    width: 200,
-    title: '',
-    dataIndex: ['attributes'],
-    render: (caseInfo: CaseInfo) => {
-      return 'error hint';
-    },
-  },
+  // {
+  //   width: 200,
+  //   title: '',
+  //   dataIndex: ['attributes'],
+  //   render: (caseInfo: CaseInfo) => {
+  //     return 'error hint';
+  //   },
+  // },
 ];
 
 const TagContainer = styled.div`
@@ -148,10 +164,8 @@ const Container = styled.div`
   .ant-table-tbody {
     color: rgba(0, 0, 0, 0.65);
   }
-  .ant-pagination {
-    background: #fff;
-    margin: 0;
-    padding: 12px 0;
+  .ant-table-column-title {
+    flex: none;
   }
 `;
 

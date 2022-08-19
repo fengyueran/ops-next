@@ -9,7 +9,7 @@ export const withData =
     WrappedComponent: React.ComponentType<P>,
   ): React.FC<Omit<P, 'cases' | 'pagination' | 'onPageChange'>> =>
   ({ ...props }: any) => {
-    const page = useSelector(caseFilter.selectors.pageSelector);
+    const page = useSelector(caseFilter.selectors.page);
     const dispatch = useDispatch();
 
     const onPageChange = useCallback(

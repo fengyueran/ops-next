@@ -5,13 +5,14 @@ export enum NodeStep {
   'SEGMENT' = 'dicom-vessel-segment',
   'SEGMENT_EDIT' = 'vessel-segment-edit',
   'REFINE' = 'vessel-refine',
-  'REFINE_EDIT' = 'vessel-refine-edit',
+  'REFINE_EDIT' = 'vessel-refine-mask',
   'LUMEN_REFINEMENT_CL' = 'lumen-refinement-cl',
   'SZ_FFR' = 'sz-ffr',
   'CARS_GEN_THUMBNAIL' = 'cars-gen-thumbnail',
   'VALIDATE_FFR' = 'validate-ffr',
   'GEN_CPR_PLY' = 'gen-cpr-ply',
   'REPORT' = 'report',
+  'COMPLETE' = 'complete',
   'RETURNED' = 'returned',
 }
 
@@ -21,6 +22,19 @@ export enum CaseStatus {
   'WAITING_RIFINE' = 'waiting-exact-seg',
   'WAITING_REVIEW' = 'waiting-review',
   'WAITING_REPORT' = 'waiting-report',
-  'WAITING_RETURN' = 'WAITING_RETURN',
-  'RETURNED' = 'RETURNED',
+  'WAITING_RETURN' = 'waiting-return',
+  'RETURNED' = 'returned',
+}
+
+export enum Priority {
+  High = 'High',
+  Medium = 'Medium',
+  Low = 'Low',
+}
+
+export enum NodeOutput {
+  'DICOM_INFO' = 'dicom_info',
+  'THUMBNAILS' = 'thumbnails',
+  'TARGET_SERIES' = 'targetSeries',
+  'QC_FAILED' = 'qcf',
 }

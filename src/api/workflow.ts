@@ -27,15 +27,6 @@ export const fetchCommonFile = async (
   return data;
 };
 
-// export const fetchEditOperation = async (caseID: string): Promise<EditOperationData> => {
-//   const url = `${WORKFLOW_HOST}${OPERATION_PATH}/${caseID}`;
-//   const { data } = await axios.get<EditOperationFetchResponse>(url);
-//   if (data.code !== 200) {
-//     throw new Error(`Get Edit operation error:${data.message}`);
-//   }
-//   return data.data;
-// };
-
 const fetchGzipFile = async (filePath: string): Promise<ArrayBuffer> => {
   const data = await fetchCommonFile(filePath, 'arraybuffer');
   const decompressped = await decompress(data);
