@@ -8,6 +8,9 @@
   "1TF9b/": {
     "defaultMessage": "全部任务"
   },
+  "2MYr1m": {
+    "defaultMessage": "登录"
+  },
   "5bSjlJ": {
     "defaultMessage": "患者姓名"
   },
@@ -31,6 +34,12 @@
   },
   "ENPgS/": {
     "defaultMessage": "提交"
+  },
+  "FjS0Pl": {
+    "defaultMessage": "记住我"
+  },
+  "LesASB": {
+    "defaultMessage": "点击登录，则表示您同意我们的"
   },
   "MUbb2Q": {
     "defaultMessage": "阴性"
@@ -58,6 +67,9 @@
   },
   "UtE0dS": {
     "defaultMessage": "操作"
+  },
+  "VnDt4m": {
+    "defaultMessage": "隐私、服务条款。"
   },
   "YYSyMs": {
     "defaultMessage": "待精分"
@@ -89,8 +101,17 @@
   "qJX95g": {
     "defaultMessage": "待返还"
   },
+  "so2oBR": {
+    "defaultMessage": "人工智能助力智慧医疗"
+  },
+  "stBnZC": {
+    "defaultMessage": "OPS"
+  },
   "unb8so": {
     "defaultMessage": "提交中..."
+  },
+  "v0BEDl": {
+    "defaultMessage": "截止"
   },
   "w6UEFv": {
     "defaultMessage": "总张数:"

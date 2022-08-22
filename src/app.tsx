@@ -4,13 +4,13 @@ import { IntlProvider } from 'react-intl';
 import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
-import { Routes, Route, HashRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 
-import { IndexPage } from './pages';
 import { Loading } from './views/global-loading';
 import { getLocale } from './locales';
 import { store } from './store';
+import { Routes } from './routes';
 
 const Container = styled.div`
   width: 100vw;
@@ -23,9 +23,7 @@ export const App = () => (
       <ConfigProvider locale={zhCN}>
         <Container>
           <HashRouter>
-            <Routes>
-              <Route path={'/'} element={<IndexPage />} />
-            </Routes>
+            <Routes />
           </HashRouter>
           <Loading />
         </Container>

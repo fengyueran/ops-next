@@ -8,7 +8,7 @@ import { CaseDetailDrawer } from 'src/views/case-detail-drawer';
 
 const Sider = () => <div>Sider</div>;
 
-export const IndexPage = () => {
+export const CaseListPage = () => {
   return (
     <>
       <IndexPageLayout

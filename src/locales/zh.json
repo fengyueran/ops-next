@@ -17,6 +17,12 @@
       "value": "全部任务"
     }
   ],
+  "2MYr1m": [
+    {
+      "type": 0,
+      "value": "登录"
+    }
+  ],
   "5bSjlJ": [
     {
       "type": 0,
@@ -63,6 +69,18 @@
     {
       "type": 0,
       "value": "提交"
+    }
+  ],
+  "FjS0Pl": [
+    {
+      "type": 0,
+      "value": "记住我"
+    }
+  ],
+  "LesASB": [
+    {
+      "type": 0,
+      "value": "点击登录，则表示您同意我们的"
     }
   ],
   "MUbb2Q": [
@@ -117,6 +135,12 @@
     {
       "type": 0,
       "value": "操作"
+    }
+  ],
+  "VnDt4m": [
+    {
+      "type": 0,
+      "value": "隐私、服务条款。"
     }
   ],
   "YYSyMs": [
@@ -179,10 +203,28 @@
       "value": "待返还"
     }
   ],
+  "so2oBR": [
+    {
+      "type": 0,
+      "value": "人工智能助力智慧医疗"
+    }
+  ],
+  "stBnZC": [
+    {
+      "type": 0,
+      "value": "OPS"
+    }
+  ],
   "unb8so": [
     {
       "type": 0,
       "value": "提交中..."
+    }
+  ],
+  "v0BEDl": [
+    {
+      "type": 0,
+      "value": "截止"
     }
   ],
   "w6UEFv": [

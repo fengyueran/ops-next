@@ -7,6 +7,8 @@ export const FETCH_CASE_PATH = '/api/cases';
 
 const FETCH_OPERATION_PATH = '/api/operations';
 
+const LOGIN_PATH = '/api/auth/local';
+
 interface Query {
   pagenation: {
     page: number;
@@ -50,6 +52,15 @@ export const getOperationsByWFID = async (workflowID: string): Promise<Operation
 export const getOperation = async (operationID: string): Promise<OperationData> => {
   const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}/${operationID}`;
   const { data } = await axios.get<any, OperationFetchResponse>(url);
+  return data.data;
+};
+
+export const login = async (identifier: string, password: string): Promise<any> => {
+  const loginUrl = `${STRAPI_CMS_HOST}${LOGIN_PATH}`;
+  const { data } = await axios.post(loginUrl, {
+    identifier,
+    password,
+  });
   return data.data;
 };
 
