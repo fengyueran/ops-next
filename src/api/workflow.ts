@@ -76,7 +76,7 @@ export const completeNode = async (workflowID: string, activityID: string, resul
   });
 };
 
-export const uploadFiles = async (files: { path: string; data: ArrayBuffer }[]) => {
+export const uploadFiles = async (files: { path: string; data: ArrayBuffer | string }[]) => {
   const uploadUrl = `${WORKFLOW_HOST}${UPLOAD_PATH}`;
   try {
     const formData = new FormData();

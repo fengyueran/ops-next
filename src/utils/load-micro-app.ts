@@ -72,7 +72,12 @@ export const makeMaskEditToolInput = (
 };
 
 export const makeQCSubmitInput = async (data: QCToolOutput) => {
-  return data;
+  const { qcf, pdf_json, ...res } = data;
+  if (qcf) {
+    const { path } = await uploadFiles([{ path: 'qcReport.json', data: pdf_json }]);
+    return { qcf: 'true', pdf_json: path, ...res };
+  }
+  return { qcf: 'false', pdf_json: '', ...res };
 };
 
 export const makeSegSubmitInput = async (data: SegToolOutput) => {
@@ -297,18 +302,14 @@ export const loadMicroAppByStatus = (
   }
 };
 
-export const loadMicroAppByStep = (
-  caseInfo: CaseInfo,
-  operation: DetailOperation,
-  submit?: Submit,
-) => {
+export const loadMicroAppByStep = (caseInfo: CaseInfo, operation: DetailOperation) => {
   console.log('operation', operation.step);
   const loadMicroAppMap: { [key: string]: Function } = {
-    [NodeStep.QC]: () => loadQCTool(operation, submit),
-    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation, submit),
-    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation, submit),
-    [NodeStep.VALIDATE_FFR]: () => loadReviewTool(caseInfo, operation, submit),
-    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation, submit),
+    [NodeStep.QC]: () => loadQCTool(operation),
+    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation),
+    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation),
+    [NodeStep.VALIDATE_FFR]: () => loadReviewTool(caseInfo, operation),
+    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation),
   };
 
   const load = loadMicroAppMap[operation.step];

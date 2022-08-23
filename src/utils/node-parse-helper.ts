@@ -1,6 +1,7 @@
 import { NodeOutput } from 'src/type';
 
-export const findFileByName = (name: string, inputs: NodeInput[]) => {
+export const findFileByName = (name: string, inputs?: NodeInput[]) => {
+  if (!inputs) return null;
   const found = inputs.find(({ Name }) => Name === name);
   return found;
 };

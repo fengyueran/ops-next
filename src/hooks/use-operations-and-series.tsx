@@ -34,12 +34,12 @@ const formatOperations = (operations: OperationData[]) => {
   const formatted = operations.map((operation) => {
     const { id, attributes } = operation;
     const newOperation: DetailOperation = { id, ...attributes };
-    const { input, step } = newOperation;
+    const { output, step } = newOperation;
 
     if (step === NodeStep.QC) {
       const seriesUID = getQCSeriesID(operation);
       newOperation.targetSeries = seriesUID;
-      newOperation.passed = !(findFileByName(NodeOutput.QC_FAILED, input)?.Value === 'true');
+      newOperation.passed = !(findFileByName(NodeOutput.QC_FAILED, output)?.Value === 'true');
       newOperation.thumbnail = getQCThumbnail(seriesUID);
     }
 

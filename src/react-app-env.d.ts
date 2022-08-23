@@ -163,14 +163,16 @@ type GetSphere = () => Promise<ArrayBuffer>;
 type GetAutoQCResultFile = () => Promise<AutoQCInfo>;
 
 interface QCSubmitInput {
-  pdf_json?: string;
+  pdf_json: string;
   qcf: string;
   startIndex: string;
   count: string;
   targetSeries: string;
 }
 
-type QCToolOutput = QCSubmitInput;
+type QCToolOutput = Omit<QCSubmitInput, 'qcf'> & {
+  qcf: boolean;
+};
 
 interface SegSubmitInput {
   edited_aorta_and_arteries_comp: string;

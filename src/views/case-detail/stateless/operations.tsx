@@ -199,11 +199,10 @@ const Operations: React.FC<Props> = ({ operations, series, onOperationClick }) =
                       重新QC
                     </Button>
                   )} */}
-                {o.passed && (
-                  <ResultState>
-                    <TaskState passed={o.passed} />
-                  </ResultState>
-                )}
+
+                <ResultState>
+                  <TaskState passed={!!o.passed} />
+                </ResultState>
               </ResultRight>
             </Information>
           );
