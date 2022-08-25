@@ -1,6 +1,8 @@
 import axios from 'axios';
 import qs from 'qs';
 
+import { withInfiniteFetch } from 'src/utils';
+
 export const STRAPI_CMS_HOST = window.STRAPI_CMS_HOST || '';
 
 export const FETCH_CASE_PATH = '/api/cases';
@@ -30,24 +32,30 @@ export const strapifetcher = (path: string, pagenation: Query) => {
   return axios.get(url).then((res) => res.data);
 };
 
-export const getOperationsByWFID = async (workflowID: string): Promise<OperationData[]> => {
-  const query = qs.stringify(
-    {
-      sort: ['createdAt:desc'],
-      filters: {
-        workflowID: {
-          $eq: workflowID,
+export const getOperationsByWFID = withInfiniteFetch<OperationData>(
+  async (workflowID: string, page: number = 0): Promise<FetchResponse> => {
+    const query = qs.stringify(
+      {
+        sort: ['createdAt:desc'],
+        filters: {
+          workflowID: {
+            $eq: workflowID,
+          },
+        },
+        pagination: {
+          pageSize: 100,
+          page,
         },
       },
-    },
-    {
-      encodeValuesOnly: true,
-    },
-  );
-  const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
-  const { data } = await axios.get(url);
-  return data.data;
-};
+      {
+        encodeValuesOnly: true,
+      },
+    );
+    const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
+    const data = await axios.get<any, { data: FetchResponse }>(url);
+    return data.data;
+  },
+);
 
 export const getOperation = async (operationID: string): Promise<OperationData> => {
   const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}/${operationID}`;

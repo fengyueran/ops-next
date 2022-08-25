@@ -68,6 +68,9 @@
   "UtE0dS": {
     "defaultMessage": "操作"
   },
+  "VFCgro": {
+    "defaultMessage": "重新精分"
+  },
   "VnDt4m": {
     "defaultMessage": "隐私、服务条款。"
   },
@@ -101,11 +104,17 @@
   "qJX95g": {
     "defaultMessage": "待返还"
   },
+  "qccvJM": {
+    "defaultMessage": "回到粗分"
+  },
   "so2oBR": {
     "defaultMessage": "人工智能助力智慧医疗"
   },
   "stBnZC": {
     "defaultMessage": "OPS"
+  },
+  "uTfY7p": {
+    "defaultMessage": "重新QC"
   },
   "unb8so": {
     "defaultMessage": "提交中..."

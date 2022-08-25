@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { Spin } from 'antd';
+import { Spin, message } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { cases, caseDetail, microApp } from 'src/redux';
 import { useOperationsAndSeries } from 'src/hooks';
 import { loadMicroAppByStep } from 'src/utils';
 import { RootState, AppDispatch } from 'src/store';
+import { NodeStep } from 'src/type';
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -19,7 +20,7 @@ const LoadingWrapper = styled.div`
 export const withData =
   <P extends object>(
     WrappedComponent: React.ComponentType<P>,
-  ): React.FC<Omit<P, 'caseInfo' | 'series' | 'operations' | 'onOperationClick'>> =>
+  ): React.FC<Omit<P, 'caseInfo' | 'series' | 'operations' | 'onOperationClick' | 'patchNode'>> =>
   ({ ...props }) => {
     const dispatch = useDispatch<AppDispatch>();
     const id = useSelector(caseDetail.selectors.selectedCaseID);
@@ -27,14 +28,49 @@ export const withData =
 
     const { data, error } = useOperationsAndSeries(id && caseInfo?.workflowID);
 
+    const readyToOpenMicroApp = useCallback(() => {
+      dispatch(microApp.actions.toggleMicroAppVisible(true));
+      dispatch(caseDetail.actions.setSelectCaseID());
+    }, [dispatch]);
+
     const onOperationClick = useCallback(
       (operation: DetailOperation) => {
+        readyToOpenMicroApp();
         dispatch(microApp.actions.toggleCanSubmit(false));
-        dispatch(microApp.actions.toggleMicroAppVisible(true));
-        dispatch(caseDetail.actions.setSelectCaseID());
         loadMicroAppByStep(caseInfo, operation);
       },
-      [caseInfo, dispatch],
+      [caseInfo, dispatch, readyToOpenMicroApp],
+    );
+
+    const patchNode = useCallback(
+      (operation: DetailOperation) => {
+        readyToOpenMicroApp();
+        if (operation.step === NodeStep.REFINE_EDIT) {
+          dispatch(microApp.actions.toggleCanPatchSeg(true));
+        }
+        dispatch(microApp.actions.toggleCanSubmit(operation.step === NodeStep.QC));
+        const submit = async (
+          output: ToolOutput,
+          makeSubmitInput: (output: ToolOutput) => Promise<any>,
+        ) => {
+          try {
+            if (operation.step === NodeStep.REFINE_EDIT) {
+              const newOperation = { ...operation, step: NodeStep.SEGMENT_EDIT };
+              await dispatch(
+                microApp.actions.patch({ operation: newOperation, output, makeSubmitInput }),
+              ).unwrap();
+            } else {
+              await dispatch(
+                microApp.actions.patch({ operation, output, makeSubmitInput }),
+              ).unwrap();
+            }
+          } catch (error) {
+            message.error(`Patch error:${(error as Error).message}`);
+          }
+        };
+        loadMicroAppByStep(caseInfo, operation, submit);
+      },
+      [caseInfo, dispatch, readyToOpenMicroApp],
     );
 
     if (error) {
@@ -56,6 +92,7 @@ export const withData =
         caseInfo={caseInfo}
         series={data.series}
         operations={data.operations}
+        patchNode={patchNode}
         onOperationClick={onOperationClick}
       />
     );

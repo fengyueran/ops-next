@@ -5,3 +5,4 @@ export * from './local-forage';
 export * from './micro-app-mgr';
 export * from './load-micro-app';
 export * from './node-parse-helper';
+export * from './with-infinite-fetch';

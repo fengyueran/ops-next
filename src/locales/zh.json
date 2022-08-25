@@ -137,6 +137,12 @@
       "value": "操作"
     }
   ],
+  "VFCgro": [
+    {
+      "type": 0,
+      "value": "重新精分"
+    }
+  ],
   "VnDt4m": [
     {
       "type": 0,
@@ -203,6 +209,12 @@
       "value": "待返还"
     }
   ],
+  "qccvJM": [
+    {
+      "type": 0,
+      "value": "回到粗分"
+    }
+  ],
   "so2oBR": [
     {
       "type": 0,
@@ -213,6 +225,12 @@
     {
       "type": 0,
       "value": "OPS"
+    }
+  ],
+  "uTfY7p": [
+    {
+      "type": 0,
+      "value": "重新QC"
     }
   ],
   "unb8so": [

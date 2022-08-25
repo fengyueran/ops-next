@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { microAppMgr } from 'src/utils';
 import { microApp } from 'src/redux';
 
 export const withData =
@@ -9,7 +8,6 @@ export const withData =
   ({ ...props }) => {
     const dispatch = useDispatch();
     const onClick = useCallback(() => {
-      microAppMgr.unmount();
       dispatch(microApp.actions.toggleMicroAppVisible(false));
     }, [dispatch]);
 

@@ -2,10 +2,11 @@ import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { message } from 'antd';
 
-import { loadMicroAppByStatus } from 'src/utils';
+import { loadMicroAppByStatus, microAppMgr } from 'src/utils';
 import { microApp } from 'src/redux';
 import { AppDispatch } from 'src/store';
 import { getOperation } from 'src/api';
+import { CaseStatus, NodeStep } from 'src/type';
 
 interface Props {
   caseInfo: CaseInfo;
@@ -22,13 +23,26 @@ export const withData =
       try {
         dispatch(microApp.actions.toggleMicroAppVisible(true));
         dispatch(microApp.actions.toggleCanSubmit(true));
+        const canPatchSeg = caseInfo.status === CaseStatus.WAITING_RIFINE;
+        dispatch(microApp.actions.toggleCanPatchSeg(canPatchSeg));
+
         const { id, attributes: operation } = await getOperation(caseInfo.editID!);
 
-        const submit = async (output: object, makeSubmitInput: (output: any) => Promise<any>) => {
+        const submit = async (
+          output: ToolOutput,
+          makeSubmitInput: (output: ToolOutput) => Promise<any>,
+        ) => {
           try {
-            await dispatch(
-              microApp.actions.submit({ operation, output, makeSubmitInput }),
-            ).unwrap();
+            if (microAppMgr.isPatchSeg) {
+              const newOperation = { ...operation, step: NodeStep.SEGMENT_EDIT };
+              await dispatch(
+                microApp.actions.patch({ operation: newOperation, output, makeSubmitInput }),
+              ).unwrap();
+            } else {
+              await dispatch(
+                microApp.actions.submit({ operation, output, makeSubmitInput }),
+              ).unwrap();
+            }
           } catch (error) {
             message.error(`Submit error:${(error as Error).message}`);
           }

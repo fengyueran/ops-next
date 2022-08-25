@@ -42,10 +42,12 @@ export const MessageType = {
 class MicroAppMgr {
   private currentTool?: MicroApp;
   private microApp?: MicroAppInstance;
+  isPatchSeg = false;
 
   actions: MicroAppStateActions = initGlobalState({});
 
-  submit = () => {
+  submit = (isPatchSeg: boolean = false) => {
+    this.isPatchSeg = isPatchSeg;
     this.actions.setGlobalState({ type: 'SUBMIT', data: { tool: this.currentTool } });
   };
 

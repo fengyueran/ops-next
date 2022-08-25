@@ -32,7 +32,8 @@
     "create:worflowCase": "ts-node --project ./node.tsconfig.json scripts/create-workflow-case.ts",
     "upload:file": "ts-node --project ./node.tsconfig.json scripts/upload-file.ts",
     "extract:message": "formatjs extract 'src/**/*.ts*' --ignore='**/*.d.ts' --out-file translations/zh.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
-    "compile:message": "sh scripts/compile-message.sh"
+    "compile:message": "sh scripts/compile-message.sh",
+    "create:message": "yarn extract:message && yarn compile:message"
   },
   "eslintConfig": {
     "extends": [

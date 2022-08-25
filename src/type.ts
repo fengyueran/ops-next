@@ -37,4 +37,6 @@ export enum NodeOutput {
   'THUMBNAILS' = 'thumbnails',
   'TARGET_SERIES' = 'targetSeries',
   'QC_FAILED' = 'qcf',
+  'SEGMENT_MASK' = 'edited_aorta_and_arteries_comp',
+  'REFINE_MASK' = 'edited_refine_aorta_and_arteries',
 }

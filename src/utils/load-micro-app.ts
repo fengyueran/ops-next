@@ -2,16 +2,20 @@ import { format } from 'date-fns';
 
 import { fetchFileWithCache, fullPath, uploadFiles } from 'src/api';
 import { MaskEditType, microAppMgr } from 'src/utils';
-import { CaseStatus, NodeStep } from 'src/type';
+import { CaseStatus, NodeOutput, NodeStep } from 'src/type';
 
-type Submit = (output: object, makeSubmitInput: (output: any) => Promise<any>) => void;
+type Submit = (
+  output: ToolOutput,
+  makeSubmitInput: (output: any, isPatchSeg?: boolean) => Promise<any>,
+) => void;
 const findFileByName = (name: string, inputs: NodeInput[]) => {
   const found = inputs.find(({ Name }) => Name === name);
   if (!found) throw new Error(`Can't find the file which name is ${name}`);
+  if (!found.Value) throw new Error(`${name} Value is null`);
   return found;
 };
 
-export const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) => {
+const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) => {
   const inputs = operation.input;
   const getDicom = async (dicomPath: string) => {
     const fileList = await fetchFileWithCache<UntarFile[]>(dicomPath);
@@ -41,7 +45,7 @@ export const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCS
   };
 };
 
-export const makeMaskEditToolInput = (
+const makeMaskEditToolInput = (
   operation: OperationDataAttributes,
   editType: MaskEditType,
   submit?: SegSubmit,
@@ -71,7 +75,7 @@ export const makeMaskEditToolInput = (
   };
 };
 
-export const makeQCSubmitInput = async (data: QCToolOutput) => {
+const makeQCSubmitInput = async (data: QCToolOutput) => {
   const { qcf, pdf_json, ...res } = data;
   if (qcf) {
     const { path } = await uploadFiles([{ path: 'qcReport.json', data: pdf_json }]);
@@ -80,26 +84,14 @@ export const makeQCSubmitInput = async (data: QCToolOutput) => {
   return { qcf: 'false', pdf_json: '', ...res };
 };
 
-export const makeSegSubmitInput = async (data: SegToolOutput) => {
-  const { mask } = data;
-  const { path } = await uploadFiles([{ path: 'segMask.nii.gz', data: mask }]);
-  return { edited_aorta_and_arteries_comp: path };
-};
-
-export const makeRefineSubmitInput = async (data: RefineToolOutput) => {
-  const { mask } = data;
-  const { path } = await uploadFiles([{ path: 'refineMask.nii.gz', data: mask }]);
-  return { edited_refine_aorta_and_arteries: path };
-};
-
-export const makeReviewSubmitInput = async (data: ReviewToolOutput) => {
+const makeReviewSubmitInput = async (data: ReviewToolOutput) => {
   const { leftMeshVtp, rightMeshVtp } = data;
   //   const { path } = await uploadFile('leftMeshVtp.vtp', leftMeshVtp);
   //   const { path } = await uploadFile('rightMeshVtp.vtp', rightMeshVtp);
   return { leftMeshVtp, rightMeshVtp };
 };
 
-export const makeReportSubmitInput = async (data: ReportToolOutput) => {
+const makeReportSubmitInput = async (data: ReportToolOutput) => {
   const makeUploadData = (file: ReportOutputData | ReportOutputData[]) => {
     if (Array.isArray(file)) {
       return file.map(({ path, data }) => ({
@@ -140,7 +132,7 @@ export const makeReportSubmitInput = async (data: ReportToolOutput) => {
   };
 };
 
-export const makeReivewToolInput = (
+const makeReivewToolInput = (
   operation: OperationDataAttributes,
   caseInfo: CaseInfo,
   submit?: ReviewSubmit,
@@ -197,7 +189,7 @@ export const makeReivewToolInput = (
   };
 };
 
-export const makeReportToolInput = (
+const makeReportToolInput = (
   operation: OperationDataAttributes,
   caseInfo: CaseInfo,
   submit?: ReportSubmit,
@@ -258,9 +250,24 @@ const loadQCTool = (operation: DetailOperation, submit?: Submit) => {
   microAppMgr.loadQCTool(makeQCToolInput(operation, qcSubmit));
 };
 
+const makeSegSubmitInput = async (data: SegToolOutput) => {
+  const { mask } = data;
+  const { path } = await uploadFiles([{ path: 'segMask.nii.gz', data: mask }]);
+  return { [NodeOutput.SEGMENT_MASK]: path };
+};
+
 const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
   const segSubmit = submit && ((output: SegToolOutput) => submit(output, makeSegSubmitInput));
   microAppMgr.loadMaskEditTool(makeMaskEditToolInput(operation, MaskEditType.Segment, segSubmit));
+};
+
+const makeRefineSubmitInput = async (data: RefineToolOutput, isPatchSeg?: boolean) => {
+  const { mask } = data;
+  const { path } = await uploadFiles([{ path: 'refineMask.nii.gz', data: mask }]);
+  if (isPatchSeg) {
+    return { [NodeOutput.SEGMENT_MASK]: path };
+  }
+  return { [NodeOutput.REFINE_MASK]: path };
 };
 
 const loadRefineMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
@@ -269,13 +276,13 @@ const loadRefineMaskEditTool = (operation: DetailOperation, submit?: Submit) => 
   microAppMgr.loadMaskEditTool(makeMaskEditToolInput(operation, MaskEditType.Refine, refineSubmit));
 };
 
-export const loadReviewTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?: Submit) => {
+const loadReviewTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?: Submit) => {
   const reviewSubmit =
     submit && ((output: ReviewToolOutput) => submit(output, makeReviewSubmitInput));
   microAppMgr.loadReviewTool(makeReivewToolInput(operation, caseInfo, reviewSubmit));
 };
 
-export const loadReportTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?: Submit) => {
+const loadReportTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?: Submit) => {
   const reportSubmit =
     submit && ((output: ReportToolOutput) => submit(output, makeReportSubmitInput));
   microAppMgr.loadReportTool(makeReportToolInput(operation, caseInfo, reportSubmit));
@@ -302,14 +309,18 @@ export const loadMicroAppByStatus = (
   }
 };
 
-export const loadMicroAppByStep = (caseInfo: CaseInfo, operation: DetailOperation) => {
+export const loadMicroAppByStep = (
+  caseInfo: CaseInfo,
+  operation: DetailOperation,
+  submit?: Submit,
+) => {
   console.log('operation', operation.step);
   const loadMicroAppMap: { [key: string]: Function } = {
-    [NodeStep.QC]: () => loadQCTool(operation),
-    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation),
-    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation),
-    [NodeStep.VALIDATE_FFR]: () => loadReviewTool(caseInfo, operation),
-    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation),
+    [NodeStep.QC]: () => loadQCTool(operation, submit),
+    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation, submit),
+    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation, submit),
+    [NodeStep.VALIDATE_FFR]: () => loadReviewTool(caseInfo, operation, submit),
+    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation, submit),
   };
 
   const load = loadMicroAppMap[operation.step];

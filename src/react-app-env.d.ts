@@ -216,6 +216,20 @@ type ReportSubmit = (input: ReportToolOutput) => void;
 
 type SubmitInput = QCSubmitInput | SegSubmitInput;
 
+type ToolOutput =
+  | QCToolOutput
+  | SegToolOutput
+  | RefineToolOutput
+  | ReviewToolOutput
+  | ReportToolOutput;
+
+type MakeSubmit =
+  | QCToolOutput
+  | SegToolOutput
+  | RefineToolOutput
+  | ReviewToolOutput
+  | ReportToolOutput;
+
 interface QCToolInput {
   getDicom: GetDicom;
   seriesList: string[];
@@ -224,10 +238,14 @@ interface QCToolInput {
   submit?: QCSubmit;
 }
 
+enum MaskEditType {
+  Segment = 'Segment',
+  Refine = 'Refine',
+}
 interface MaskEditToolInput {
   getNifti: GetNifti;
   getMask: GetMask;
-  editType: string;
+  editType: MaskEditType;
   submit?: SegSubmit;
 }
 
@@ -280,14 +298,43 @@ interface NodeInput {
   Optional: boolean;
 }
 
+enum NodeStep {
+  'DICOM_PARSE' = 'dicom-parse',
+  'QC' = 'qc',
+  'DICOM2_NIFTI' = 'dicom2-nifti',
+  'SEGMENT' = 'dicom-vessel-segment',
+  'SEGMENT_EDIT' = 'vessel-segment-edit',
+  'REFINE' = 'vessel-refine',
+  'REFINE_EDIT' = 'vessel-refine-mask',
+  'LUMEN_REFINEMENT_CL' = 'lumen-refinement-cl',
+  'SZ_FFR' = 'sz-ffr',
+  'CARS_GEN_THUMBNAIL' = 'cars-gen-thumbnail',
+  'VALIDATE_FFR' = 'validate-ffr',
+  'GEN_CPR_PLY' = 'gen-cpr-ply',
+  'REPORT' = 'report',
+  'COMPLETE' = 'complete',
+  'RETURNED' = 'returned',
+}
 interface OperationDataAttributes {
-  step: string;
+  step: NodeStep;
   activityID: string;
   workflowID: string;
   createdAt: string;
   runID: string;
   input: NodeInput[];
   output?: NodeInput[];
+}
+
+interface FetchResponse {
+  data: any[];
+  meta: {
+    pagination: {
+      page: number;
+      pageCount: number;
+      pageSize: number;
+      total: number;
+    };
+  };
 }
 
 interface OperationFlatData extends OperationDataAttributes {

@@ -3,6 +3,7 @@ import untar from 'js-untar';
 import axios, { ResponseType } from 'axios';
 
 import { decompress, withCache, download } from 'src/utils';
+import { NodeStep } from 'src/type';
 
 interface UploadFileResponse {
   content: string;
@@ -68,6 +69,13 @@ const fetchFile = async (filePath: string, responseType?: ResponseType) => {
 };
 
 export const fetchFileWithCache = withCache(fetchFile);
+
+export const patchNode = async (workflowID: string, step: NodeStep, results: object) => {
+  const resetUrl = `${WORKFLOW_HOST}${COMPLETE_PATH}/${workflowID}/reset/${step}/complete`;
+  await axios.post(resetUrl, {
+    data: results,
+  });
+};
 
 export const completeNode = async (workflowID: string, activityID: string, results: object) => {
   const completeUrl = `${WORKFLOW_HOST}${COMPLETE_PATH}/${workflowID}/${activityID}/complete`;

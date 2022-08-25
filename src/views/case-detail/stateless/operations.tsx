@@ -1,7 +1,8 @@
 import React from 'react';
-import { Collapse } from 'antd';
+import { Collapse, Button } from 'antd';
 import styled from 'styled-components';
 import { UpOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
 import { format } from 'date-fns';
 
 import { NodeStep } from 'src/type';
@@ -15,6 +16,7 @@ export interface Props {
   series: Series[];
   operations: DetailOperation[];
   onOperationClick: (operation: DetailOperation) => void;
+  patchNode: (operation: DetailOperation) => void;
 }
 
 const Container = styled.div`
@@ -149,7 +151,7 @@ const expandIcon = ({ isActive }: { isActive?: boolean }) => {
   );
 };
 
-const Operations: React.FC<Props> = ({ operations, series, onOperationClick }) => {
+const Operations: React.FC<Props> = ({ operations, series, onOperationClick, patchNode }) => {
   const passedSeries = series.filter((s) => s.passed);
   const failedSeries = series.filter((s) => !s.passed);
 
@@ -190,19 +192,21 @@ const Operations: React.FC<Props> = ({ operations, series, onOperationClick }) =
                 </ResultCenter>
               </ResultContent>
               <ResultRight>
-                {/* {o.step === NodeStep.QC && casePermission.qcPatch.edit && (
-                    <Button
-                      size="small"
-                      style={{ marginRight: 10 }}
-                      onClick={() => onPatchClick(o.runID)}
-                    >
-                      重新QC
-                    </Button>
-                  )} */}
-
-                <ResultState>
-                  <TaskState passed={!!o.passed} />
-                </ResultState>
+                {o.step === NodeStep.QC && (
+                  <Button size="small" style={{ marginRight: 10 }} onClick={() => patchNode(o)}>
+                    <FormattedMessage defaultMessage="重新QC" />
+                  </Button>
+                )}
+                {o.step === NodeStep.REFINE_EDIT && (
+                  <Button size="small" style={{ marginRight: 10 }} onClick={() => patchNode(o)}>
+                    <FormattedMessage defaultMessage="重新精分" />
+                  </Button>
+                )}
+                {o.step === NodeStep.QC && (
+                  <ResultState>
+                    <TaskState passed={!!o.passed} />
+                  </ResultState>
+                )}
               </ResultRight>
             </Information>
           );

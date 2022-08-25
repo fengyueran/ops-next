@@ -10,7 +10,7 @@ export interface Props {
   series: Series[];
   operations: DetailOperation[];
   onOperationClick: (operation: DetailOperation) => void;
-  // onPatchClick: (id: string) => void;
+  patchNode: (operation: DetailOperation) => void;
 }
 
 const Container = styled.div`
@@ -21,12 +21,23 @@ const Container = styled.div`
   background: #ffffff;
 `;
 
-export const CaseDetail: React.FC<Props> = ({ caseInfo, series, operations, onOperationClick }) => {
+export const CaseDetail: React.FC<Props> = ({
+  caseInfo,
+  series,
+  operations,
+  onOperationClick,
+  patchNode,
+}) => {
   return (
     <Container>
       <Header caseInfo={caseInfo} />
       <CaseInfo series={series} caseInfo={caseInfo} />
-      <Operations series={series} operations={operations} onOperationClick={onOperationClick} />
+      <Operations
+        series={series}
+        operations={operations}
+        onOperationClick={onOperationClick}
+        patchNode={patchNode}
+      />
     </Container>
   );
 };
