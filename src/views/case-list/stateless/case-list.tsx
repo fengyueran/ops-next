@@ -8,6 +8,7 @@ import { ColorTag, Row } from 'src/components';
 import { OpenToolBtn } from 'src/views/open-tool-btn';
 import { OpenDetailButton } from 'src/views/open-detail-btn';
 import { StatusTag } from 'src/views/status-tag';
+import { ErrorHint } from 'src/views/error-hint';
 import { CaseStatus } from 'src/type';
 
 const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
@@ -121,14 +122,16 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
       return <OpenToolBtn caseInfo={caseInfo} />;
     },
   },
-  // {
-  //   width: 200,
-  //   title: '',
-  //   dataIndex: ['attributes'],
-  //   render: (caseInfo: CaseInfo) => {
-  //     return 'error hint';
-  //   },
-  // },
+  {
+    width: 200,
+    title: '',
+    render: (caseInfo: CaseInfo) => {
+      if (caseInfo.workflowFailed) {
+        return <ErrorHint step={caseInfo.step} />;
+      }
+      return null;
+    },
+  },
 ];
 
 const TagContainer = styled.div`

@@ -63,11 +63,11 @@ class MicroAppMgr {
           setState: this.actions.setGlobalState,
         },
       },
-      {
-        sandbox: {
-          experimentalStyleIsolation: true,
-        },
-      },
+      // {
+      //   sandbox: {
+      //     experimentalStyleIsolation: true,
+      //   },
+      // },
     );
   };
 

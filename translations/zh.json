@@ -1,4 +1,7 @@
 {
+  "+Pw1YZ": {
+    "defaultMessage": "提取cl失败，重新精分"
+  },
   "0SlfpI": {
     "defaultMessage": "分析序列:"
   },
@@ -10,6 +13,9 @@
   },
   "2MYr1m": {
     "defaultMessage": "登录"
+  },
+  "3m5dYo": {
+    "defaultMessage": "计算失败"
   },
   "5bSjlJ": {
     "defaultMessage": "患者姓名"
@@ -35,8 +41,14 @@
   "ENPgS/": {
     "defaultMessage": "提交"
   },
+  "FVfysf": {
+    "defaultMessage": "ffr计算失败，重新精分"
+  },
   "FjS0Pl": {
     "defaultMessage": "记住我"
+  },
+  "Fpxhq5": {
+    "defaultMessage": "转换失败，重新QC"
   },
   "LesASB": {
     "defaultMessage": "点击登录，则表示您同意我们的"
@@ -86,8 +98,14 @@
   "cZsBR8": {
     "defaultMessage": "待质检"
   },
+  "euzdLB": {
+    "defaultMessage": "解析失败，脚本处理"
+  },
   "hDJ0kQ": {
     "defaultMessage": "入组序列:"
+  },
+  "iiLh3V": {
+    "defaultMessage": "计算失败，脚本处理"
   },
   "jcZC7+": {
     "defaultMessage": "待报告"
@@ -124,6 +142,9 @@
   },
   "w6UEFv": {
     "defaultMessage": "总张数:"
+  },
+  "wXNZ53": {
+    "defaultMessage": "CPR展开失败，重新精分"
   },
   "x+2Be4": {
     "defaultMessage": "共{count}个任务"

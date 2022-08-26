@@ -47,6 +47,7 @@ interface CaseBaseInfo {
   caseID: string;
   enableEdit: boolean;
   editID?: string;
+  workflowFailed: boolean;
 }
 
 interface DicomTag {
