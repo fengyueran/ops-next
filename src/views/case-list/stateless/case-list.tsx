@@ -22,17 +22,17 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     },
   },
   {
-    width: 200,
+    width: 160,
     title: formatMessage({ defaultMessage: 'CTFFR检查号' }),
     dataIndex: ['ffrAccessionNumber'],
   },
   {
-    width: 140,
+    width: 120,
     title: formatMessage({ defaultMessage: '患者姓名' }),
     dataIndex: ['PatientName'],
   },
   {
-    width: 200,
+    width: 160,
     title: formatMessage({ defaultMessage: '上传时间' }),
     dataIndex: ['uploadedAt'],
     render: (uploadedAt: string) => {
@@ -41,7 +41,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     sorter: true,
   },
   {
-    width: 200,
+    width: 160,
     title: formatMessage({ defaultMessage: '截止时间' }),
     dataIndex: ['uploadedAt'],
     render: (uploadedAt: string) => {
@@ -50,7 +50,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     sorter: true,
   },
   {
-    width: 200,
+    width: 160,
     title: formatMessage({ defaultMessage: '返还时间' }),
     dataIndex: ['resultReturnedAt'],
     sorter: true,

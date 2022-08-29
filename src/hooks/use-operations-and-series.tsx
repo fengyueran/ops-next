@@ -31,6 +31,14 @@ const formatOperations = (operations: OperationData[]) => {
     return;
   };
 
+  const getCompleteThumbnail = () => {
+    const completeOp = operations.find(({ attributes }) => attributes.step === NodeStep.COMPLETE);
+    const thumbnail = findFileByName(NodeOutput.THUMBNAILS, completeOp?.attributes.output)?.Value;
+    return thumbnail ? fullPath(thumbnail) : undefined;
+  };
+
+  const modelThumbnail = getCompleteThumbnail();
+
   const formatted = operations.map((operation) => {
     const { id, attributes } = operation;
     const newOperation: DetailOperation = { id, ...attributes };
@@ -41,6 +49,14 @@ const formatOperations = (operations: OperationData[]) => {
       newOperation.targetSeries = seriesUID;
       newOperation.passed = !(findFileByName(NodeOutput.QC_FAILED, output)?.Value === 'true');
       newOperation.thumbnail = getQCThumbnail(seriesUID);
+    }
+
+    if (
+      step === NodeStep.SEGMENT_EDIT ||
+      step === NodeStep.REFINE_EDIT ||
+      step === NodeStep.VALIDATE_FFR
+    ) {
+      newOperation.thumbnail = modelThumbnail;
     }
 
     return newOperation;

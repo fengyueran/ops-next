@@ -49,7 +49,7 @@ const makeCases = () => {
     const caseName = createCaseID(v4());
     cases.push({
       ...caseInfo,
-      caseID: caseName,
+      orderID: caseName,
       workflowID: caseName,
       PatientName: caseName,
     });

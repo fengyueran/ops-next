@@ -29,6 +29,12 @@
       "value": "登录"
     }
   ],
+  "31EgFY": [
+    {
+      "type": 0,
+      "value": "优先级："
+    }
+  ],
   "3m5dYo": [
     {
       "type": 0,
@@ -41,10 +47,22 @@
       "value": "患者姓名"
     }
   ],
+  "5kTIPB": [
+    {
+      "type": 0,
+      "value": "低"
+    }
+  ],
   "61mMjf": [
     {
       "type": 0,
       "value": "待粗分"
+    }
+  ],
+  "7QDUmu": [
+    {
+      "type": 0,
+      "value": "任务状态："
     }
   ],
   "9UefLp": [
@@ -101,6 +119,12 @@
       "value": "转换失败，重新QC"
     }
   ],
+  "IOQECZ": [
+    {
+      "type": 0,
+      "value": "PatientID"
+    }
+  ],
   "LesASB": [
     {
       "type": 0,
@@ -155,6 +179,12 @@
       "value": "阳性"
     }
   ],
+  "U4IVzA": [
+    {
+      "type": 0,
+      "value": "任务属性："
+    }
+  ],
   "UtE0dS": [
     {
       "type": 0,
@@ -179,6 +209,12 @@
       "value": "待精分"
     }
   ],
+  "ZO/HLQ": [
+    {
+      "type": 0,
+      "value": "中"
+    }
+  ],
   "ZRIpuA": [
     {
       "type": 0,
@@ -197,10 +233,22 @@
       "value": "待质检"
     }
   ],
+  "dGBGbt": [
+    {
+      "type": 0,
+      "value": "全部"
+    }
+  ],
   "euzdLB": [
     {
       "type": 0,
       "value": "解析失败，脚本处理"
+    }
+  ],
+  "hBkLmp": [
+    {
+      "type": 0,
+      "value": "高"
     }
   ],
   "hDJ0kQ": [
@@ -279,6 +327,12 @@
     {
       "type": 0,
       "value": "截止"
+    }
+  ],
+  "vr5TVT": [
+    {
+      "type": 0,
+      "value": "请输入"
     }
   ],
   "w6UEFv": [

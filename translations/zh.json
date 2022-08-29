@@ -14,14 +14,23 @@
   "2MYr1m": {
     "defaultMessage": "登录"
   },
+  "31EgFY": {
+    "defaultMessage": "优先级："
+  },
   "3m5dYo": {
     "defaultMessage": "计算失败"
   },
   "5bSjlJ": {
     "defaultMessage": "患者姓名"
   },
+  "5kTIPB": {
+    "defaultMessage": "低"
+  },
   "61mMjf": {
     "defaultMessage": "待粗分"
+  },
+  "7QDUmu": {
+    "defaultMessage": "任务状态："
   },
   "9UefLp": {
     "defaultMessage": "标签"
@@ -50,6 +59,9 @@
   "Fpxhq5": {
     "defaultMessage": "转换失败，重新QC"
   },
+  "IOQECZ": {
+    "defaultMessage": "PatientID"
+  },
   "LesASB": {
     "defaultMessage": "点击登录，则表示您同意我们的"
   },
@@ -77,6 +89,9 @@
   "Tr5xVl": {
     "defaultMessage": "阳性"
   },
+  "U4IVzA": {
+    "defaultMessage": "任务属性："
+  },
   "UtE0dS": {
     "defaultMessage": "操作"
   },
@@ -89,6 +104,9 @@
   "YYSyMs": {
     "defaultMessage": "待精分"
   },
+  "ZO/HLQ": {
+    "defaultMessage": "中"
+  },
   "ZRIpuA": {
     "defaultMessage": "已返还"
   },
@@ -98,8 +116,14 @@
   "cZsBR8": {
     "defaultMessage": "待质检"
   },
+  "dGBGbt": {
+    "defaultMessage": "全部"
+  },
   "euzdLB": {
     "defaultMessage": "解析失败，脚本处理"
+  },
+  "hBkLmp": {
+    "defaultMessage": "高"
   },
   "hDJ0kQ": {
     "defaultMessage": "入组序列:"
@@ -139,6 +163,9 @@
   },
   "v0BEDl": {
     "defaultMessage": "截止"
+  },
+  "vr5TVT": {
+    "defaultMessage": "请输入"
   },
   "w6UEFv": {
     "defaultMessage": "总张数:"
