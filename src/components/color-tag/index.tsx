@@ -12,6 +12,7 @@ const Circle = styled.div<{ color: string }>`
   height: 6px;
   background: ${(props) => props.color};
   border-radius: 3px;
+  flex-shrink: 0;
 `;
 
 const Tip = styled.span`

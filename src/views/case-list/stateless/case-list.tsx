@@ -9,15 +9,15 @@ import { OpenToolBtn } from 'src/views/open-tool-btn';
 import { OpenDetailButton } from 'src/views/open-detail-btn';
 import { StatusTag } from 'src/views/status-tag';
 import { ErrorHint } from 'src/views/error-hint';
-import { CaseStatus } from 'src/type';
+import { CaseStatus, Priority } from 'src/type';
 
 const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     title: 'PatientID',
     sorter: true,
-    width: 100,
+    width: 108,
     render: (caseInfo: CaseInfo) => {
-      if (caseInfo.isReaded) return caseInfo.PatientID;
+      if (caseInfo.readed) return caseInfo.PatientID;
       return <ColorTag tip={caseInfo.PatientID || '-'} color="red" />;
     },
   },
@@ -34,27 +34,27 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     width: 160,
     title: formatMessage({ defaultMessage: '上传时间' }),
-    dataIndex: ['uploadedAt'],
-    render: (uploadedAt: string) => {
-      return format(new Date(uploadedAt), 'yyyy-MM-dd HH:mm');
+    dataIndex: ['uploadAt'],
+    render: (uploadAt: string) => {
+      return format(new Date(uploadAt), 'yyyy-MM-dd HH:mm');
     },
     sorter: true,
   },
   {
     width: 160,
     title: formatMessage({ defaultMessage: '截止时间' }),
-    dataIndex: ['uploadedAt'],
-    render: (uploadedAt: string) => {
-      return format(addDays(new Date(uploadedAt), 1), 'yyyy-MM-dd HH:mm');
+    dataIndex: ['uploadAt'],
+    render: (uploadAt: string) => {
+      return format(addDays(new Date(uploadAt), 1), 'yyyy-MM-dd HH:mm');
     },
     sorter: true,
   },
   {
     width: 160,
     title: formatMessage({ defaultMessage: '返还时间' }),
-    dataIndex: ['resultReturnedAt'],
+    dataIndex: ['returnEndAt'],
     sorter: true,
-    render: (resultReturnedAt: number) => {
+    render: (returnEndAt: number) => {
       return '-';
     },
   },
@@ -62,8 +62,20 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     width: 100,
     title: formatMessage({ defaultMessage: '优先级' }),
     dataIndex: ['priority'],
-    render: (priority: number) => {
-      return priority;
+    render: (priority: Priority) => {
+      let p;
+      switch (priority) {
+        case Priority.High:
+          p = formatMessage({ defaultMessage: '高' });
+          break;
+        case Priority.Medium:
+          p = formatMessage({ defaultMessage: '中' });
+          break;
+        default:
+          p = formatMessage({ defaultMessage: '低' });
+          break;
+      }
+      return p;
     },
   },
   {
@@ -118,7 +130,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     width: 100,
     title: '',
-    render: (caseInfo: CaseInfo) => {
+    render: (caseInfo: CaseInfo & { id: string }) => {
       return <OpenToolBtn caseInfo={caseInfo} />;
     },
   },

@@ -25,15 +25,12 @@ const makeCases = () => {
 
   const caseInfo: any = {
     status: 'waiting-qc',
-    uploadedAt: new Date().toISOString(),
     tags: ['门诊'],
     narrowDegree: 1,
     priority: 'High',
     isPositive: true,
-    ffrAccessionNumber: 'CT202203300412',
     name: 'xxx',
     StudyDate: '20210928',
-    PatientID: '00520387',
     PatientSex: 'M',
     PatientAge: '18',
     PatientName: '张三',
@@ -49,6 +46,8 @@ const makeCases = () => {
     const caseName = createCaseID(v4());
     cases.push({
       ...caseInfo,
+      PatientID: v4().slice(0, 8),
+      ffrAccessionNumber: v4().slice(0, 15),
       orderID: caseName,
       workflowID: caseName,
       PatientName: caseName,

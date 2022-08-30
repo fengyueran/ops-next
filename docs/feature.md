@@ -13,7 +13,7 @@
 
 - [T23524:已读未读](https://pha.curacloudplatform.com/T23524)
 
-  更新 case 字段 isReaded 为 true， [Update an entry](https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest-api.html#update-an-entry) 参数。
+  更新 case 字段 readed 为 true， [Update an entry](https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest-api.html#update-an-entry) 参数。
   例：
 
   ```
@@ -21,7 +21,7 @@
   http://localhost:1337/api/cases/1
   {
     "data": {
-        "isReaded": true
+        "readed": true
     }
   }
   ```

@@ -1,15 +1,13 @@
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { Button } from 'antd';
 
 import { Row } from 'src/components';
 
 const StyledRow = styled(Row)`
-  height: 68px;
   align-items: center;
 `;
 
-const StyledButton = styled(Button)<{ selected: boolean }>`
+const StyledButton = styled.div<{ selected: boolean }>`
   height: 24px;
   background: ${({ selected }) => (selected ? '#1890ff' : 'none')};
   border-radius: 2px;
@@ -19,6 +17,8 @@ const StyledButton = styled(Button)<{ selected: boolean }>`
   font-weight: 400;
   padding: 0 10px;
   margin-right: 14px;
+  user-select: none;
+  cursor: pointer;
 `;
 
 interface ListItem {
@@ -26,26 +26,29 @@ interface ListItem {
   [key: string]: any;
 }
 interface Props {
-  onClick: (name: string) => void;
+  onClick: (item: ListItem) => void;
   list: ListItem[];
-  selectedList: string[];
+  selectedMap: { [key: string]: boolean };
 }
 
-export const TextBtnSet: React.FC<Props> = ({ list, selectedList, onClick }) => {
+export const TextBtnSet: React.FC<Props> = ({ list, selectedMap, onClick }) => {
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       const id = (e.target as HTMLDivElement).getAttribute('data-id');
-      onClick(id!);
+      const found = list.find(({ name }) => name === id);
+      if (found) {
+        onClick(found);
+      }
     },
-    [onClick],
+    [list, onClick],
   );
 
   return (
     <StyledRow onClick={handleClick}>
       {list.map(({ name }) => {
-        const selected = selectedList.indexOf(name) >= 0;
+        const selected = selectedMap[name];
         return (
-          <StyledButton type="text" data-id={name} selected={selected}>
+          <StyledButton key={name} data-id={name} selected={selected}>
             {name}
           </StyledButton>
         );

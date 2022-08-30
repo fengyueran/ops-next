@@ -11,7 +11,9 @@ export const CaseRealtime = () => {
   const handleCaseUpdated = useCallback(
     ({ data }: { data: CaseData }) => {
       console.log('case:update', data);
-      dispatch(cases.actions.updateCase(data));
+      if (data) {
+        dispatch(cases.actions.updateCase(data));
+      }
     },
     [dispatch],
   );

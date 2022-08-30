@@ -95,9 +95,7 @@ const CaseInfo: React.FC<Props> = ({ caseInfo, series }) => {
             <ContentTitle>
               <FormattedMessage defaultMessage="上传时间:" />
             </ContentTitle>
-            <ContentInfo>
-              {format(new Date(caseInfo.uploadedAt), 'yyyy-MM-dd HH:mm:ss')}
-            </ContentInfo>
+            <ContentInfo>{format(new Date(caseInfo.uploadAt), 'yyyy-MM-dd HH:mm:ss')}</ContentInfo>
           </Content>
 
           <Content>
@@ -105,8 +103,8 @@ const CaseInfo: React.FC<Props> = ({ caseInfo, series }) => {
               <FormattedMessage defaultMessage="返还时间:" />
             </ContentTitle>
             <ContentInfo>
-              {caseInfo.resultReturnedAt &&
-                format(new Date(caseInfo.resultReturnedAt!), 'yyyy-MM-dd HH:mm:ss')}
+              {caseInfo.returnEndAt &&
+                format(new Date(caseInfo.returnEndAt), 'yyyy-MM-dd HH:mm:ss')}
             </ContentInfo>
           </Content>
 
@@ -114,9 +112,7 @@ const CaseInfo: React.FC<Props> = ({ caseInfo, series }) => {
             <ContentTitle>
               <FormattedMessage defaultMessage="截止时间:" />
             </ContentTitle>
-            <ContentInfo>
-              {format(new Date(caseInfo.uploadedAt), 'yyyy-MM-dd HH:mm:ss')}
-            </ContentInfo>
+            <ContentInfo>{format(new Date(caseInfo.uploadAt), 'yyyy-MM-dd HH:mm:ss')}</ContentInfo>
           </Content>
           <Content>
             <ContentTitle>

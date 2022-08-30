@@ -14,13 +14,13 @@ interface Operator {
 type Priority = 'High' | 'Medium' | 'Low';
 
 interface Base {
-  uploadedAt: number; //number?
-  resultReturnedAt?: number;
+  uploadAt: number;
+  returnEndAt?: number;
   tags?: string[];
   narrowDegree?: number; //狭窄程度
   status?: Status;
   step: Step;
-  isReaded: boolean; //是否已读，默认false
+  readed: boolean; //是否已读，默认false
   priority: Priority;
   isPositive?: boolean; //阴阳性
   ffrAccessionNumber?: string; //CTFFR检查号，手动录入

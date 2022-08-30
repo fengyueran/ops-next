@@ -1,12 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface State {
-  filter: object;
+  filters: {
+    PatientID?: string;
+    ffrAccessionNumber?: string;
+    dateRange?: [string, string];
+    statusList?: CaseStatus[];
+    priorityList?: Priority[];
+  };
   page: number;
 }
 
 const initialState: State = {
-  filter: {},
+  filters: {},
   page: 0,
 };
 
@@ -14,7 +20,9 @@ export const slice = createSlice({
   name: 'CaseFilter',
   initialState,
   reducers: {
-    updateFilter(state, action: PayloadAction<boolean>) {},
+    updateFilter(state, action: PayloadAction<object>) {
+      state.filters = { ...state.filters, ...action.payload };
+    },
     setPage(state, action: PayloadAction<number>) {
       state.page = action.payload;
     },

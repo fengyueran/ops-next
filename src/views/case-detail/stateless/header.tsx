@@ -112,9 +112,7 @@ const Header: React.FC<Props> = ({ caseInfo }) => {
       </Title>
       <DeadlineAndPriority>
         <Deadline>
-          <DeadlineText>
-            {format(new Date(caseInfo.uploadedAt), 'yyyy-MM-dd HH:mm:ss')}
-          </DeadlineText>
+          <DeadlineText>{format(new Date(caseInfo.uploadAt), 'yyyy-MM-dd HH:mm:ss')}</DeadlineText>
           <FormattedMessage defaultMessage="截止" />
         </Deadline>
         <CasePriority priority={caseInfo.priority} />

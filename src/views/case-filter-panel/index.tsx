@@ -2,7 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 
-import { Row, SearchInput, DatePicker, SpaceX } from 'src/components';
+import { Row, SpaceX } from 'src/components';
+import { FFRIDSearch } from '../ffr-id-search';
+import { PatientIDSearch } from '../patient-id-search';
+import { UploadDatePicker } from '../upload-date-picker';
 import { StatusBar } from '../status-bar';
 import { PriorityBar } from '../priority-bar';
 
@@ -36,9 +39,9 @@ export const CaseFilterPanel = () => {
           <FormattedMessage defaultMessage="任务属性：" />
         </Title>
         <SpaceX size={24} />
-        <SearchInput name={<FormattedMessage defaultMessage="CTFFR检查号" />} />
-        <SearchInput name={<FormattedMessage defaultMessage="PatientID" />} />
-        <DatePicker name={<FormattedMessage defaultMessage="上传时间" />} onDateRange={() => {}} />
+        <FFRIDSearch />
+        <PatientIDSearch />
+        <UploadDatePicker />
       </StyledRow>
       <StyledRow>
         <Title>

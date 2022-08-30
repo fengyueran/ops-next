@@ -11,17 +11,18 @@ const FETCH_OPERATION_PATH = '/api/operations';
 
 const LOGIN_PATH = '/api/auth/local';
 
-interface Query {
-  pagenation: {
+export interface Query {
+  filters: object;
+  pagination: {
     page: number;
     pageSize: number;
   };
 }
-export const strapifetcher = (path: string, pagenation: Query) => {
+export const strapifetcher = (path: string, pagination: Query) => {
   const query = qs.stringify(
     {
       sort: ['createdAt:desc'],
-      ...pagenation,
+      ...pagination,
     },
     {
       encodeValuesOnly: true,
@@ -69,6 +70,31 @@ export const login = async (identifier: string, password: string): Promise<any> 
     identifier,
     password,
   });
+  return data.data;
+};
+
+export const tagCaseReaded = async (id: string): Promise<void> => {
+  const url = `${STRAPI_CMS_HOST}${FETCH_CASE_PATH}/${id}`;
+  await axios.put(url, {
+    data: { readed: true },
+  });
+};
+
+export const search = async (filters: object): Promise<FetchResponse> => {
+  const query = qs.stringify(
+    {
+      sort: ['createdAt:desc'],
+      filters,
+      pagination: {
+        pageSize: 100,
+      },
+    },
+    {
+      encodeValuesOnly: true,
+    },
+  );
+  const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
+  const data = await axios.get<any, { data: FetchResponse }>(url);
   return data.data;
 };
 

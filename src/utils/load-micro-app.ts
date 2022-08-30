@@ -230,7 +230,7 @@ const makeReportToolInput = (
       reportId: caseInfo.caseID,
       id: caseInfo.PatientID!,
       checkDate: caseInfo.StudyDate!,
-      reportDate: format(new Date(caseInfo.uploadedAt), 'yyyy-MM-dd HH:mm:ss'),
+      reportDate: format(new Date(caseInfo.uploadAt), 'yyyy-MM-dd HH:mm:ss'),
       patientName: caseInfo.PatientName!,
       gender: caseInfo.PatientSex!,
       age: caseInfo.PatientAge!,

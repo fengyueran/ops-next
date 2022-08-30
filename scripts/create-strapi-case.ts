@@ -30,7 +30,7 @@ const makeCases = () => {
   const cases: any[] = [];
 
   const caseInfo: any = {
-    uploadedAt: '2022-08-12 12:21',
+    uploadAt: Date.now(),
     tags: ['门诊'],
     narrowDegree: 1,
     priority: 'High',

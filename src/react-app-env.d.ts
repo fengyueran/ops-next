@@ -32,13 +32,13 @@ enum Priority {
 }
 
 interface CaseBaseInfo {
-  uploadedAt: string; //number?
-  resultReturnedAt?: string;
+  uploadAt: string; //number?
+  returnEndAt?: string;
   tags?: string[];
   narrowDegree?: number; //狭窄程度
   status: CaseStatus;
   step: Step;
-  isReaded: boolean; //是否已读，默认false
+  readed: boolean; //是否已读，默认false
   priority: Priority;
   isPositive?: boolean; //阴阳性
   ffrAccessionNumber?: string; //CTFFR检查号，手动录入
@@ -380,4 +380,10 @@ interface Series {
     SeriesNumber: number;
     NumberOfSlices: number;
   };
+}
+
+interface ListItem {
+  name: string;
+  isAll?: boolean;
+  [key: string]: any;
 }

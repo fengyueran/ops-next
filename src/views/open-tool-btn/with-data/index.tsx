@@ -5,11 +5,11 @@ import { message } from 'antd';
 import { loadMicroAppByStatus, microAppMgr } from 'src/utils';
 import { microApp } from 'src/redux';
 import { AppDispatch } from 'src/store';
-import { getOperation } from 'src/api';
+import { getOperation, tagCaseReaded } from 'src/api';
 import { CaseStatus, NodeStep } from 'src/type';
 
 interface Props {
-  caseInfo: CaseInfo;
+  caseInfo: CaseInfo & { id: string };
 }
 
 export const withData =
@@ -25,6 +25,10 @@ export const withData =
         dispatch(microApp.actions.toggleCanSubmit(true));
         const canPatchSeg = caseInfo.status === CaseStatus.WAITING_RIFINE;
         dispatch(microApp.actions.toggleCanPatchSeg(canPatchSeg));
+
+        if (caseInfo.status === CaseStatus.WAITING_QC && !caseInfo.readed) {
+          await tagCaseReaded(caseInfo.id);
+        }
 
         const { id, attributes: operation } = await getOperation(caseInfo.editID!);
 
