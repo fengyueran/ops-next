@@ -36,7 +36,7 @@ interface CaseBaseInfo {
   returnEndAt?: string;
   tags?: string[];
   narrowDegree?: number; //狭窄程度
-  status: CaseStatus;
+  status: string;
   step: Step;
   readed: boolean; //是否已读，默认false
   priority: Priority;
@@ -48,6 +48,7 @@ interface CaseBaseInfo {
   enableEdit: boolean;
   editID?: string;
   workflowFailed: boolean;
+  progress: CaseStatus;
 }
 
 interface DicomTag {

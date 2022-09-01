@@ -1,3 +1,4 @@
+export * from './delay';
 export * from './unzip';
 export * from './download';
 export * from './with-cache';

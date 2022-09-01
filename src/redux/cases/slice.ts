@@ -13,9 +13,10 @@ interface Pagination {
 }
 
 export interface State {
-  casesByID: { [key: string]: CaseInfo };
+  casesByID: { [key: string]: CaseInfo & { id: string } };
   allCaseIDs: string[];
   pagination?: Pagination;
+  openCaseID?: string;
 }
 
 const initialState: State = {
@@ -30,7 +31,7 @@ export const slice = createSlice({
     addCases(state, action: PayloadAction<CaseFetchResponse>) {
       const { data, meta } = action.payload;
 
-      const casesByID: { [key: string]: CaseInfo } = {};
+      const casesByID: { [key: string]: CaseInfo & { id: string } } = {};
       const allCaseIDs: string[] = [];
       data.forEach((doc) => {
         const formatted = formatCase(doc);
@@ -53,6 +54,9 @@ export const slice = createSlice({
 
       state.allCaseIDs = [...state.allCaseIDs];
       state.casesByID = { ...state.casesByID };
+    },
+    setOpenCaseID(state, action: PayloadAction<string | undefined>) {
+      state.openCaseID = action.payload;
     },
   },
 });

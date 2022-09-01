@@ -10,7 +10,6 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   closeDrawer: () => {
-    console.log('999999999999');
     dispatch(caseDetail.actions.setSelectCaseID());
   },
 });

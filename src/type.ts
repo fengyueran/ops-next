@@ -34,9 +34,13 @@ export enum Priority {
 
 export enum NodeOutput {
   'DICOM_INFO' = 'dicom_info',
+  'NIFTI' = 'nifti',
+  'PLY' = 'ply',
   'THUMBNAILS' = 'thumbnails',
   'TARGET_SERIES' = 'targetSeries',
   'QC_FAILED' = 'qcf',
-  'SEGMENT_MASK' = 'edited_aorta_and_arteries_comp',
-  'REFINE_MASK' = 'edited_refine_aorta_and_arteries',
+  'SEGMENT_MASK' = 'aorta_and_arteries_comp',
+  'REFINE_MASK' = 'refine_aorta_and_arteries',
+  'EDITED_SEGMENT_MASK' = 'edited_aorta_and_arteries_comp',
+  'EDITED_REFINE_MASK' = 'edited_refine_aorta_and_arteries',
 }

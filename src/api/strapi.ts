@@ -18,6 +18,7 @@ export interface Query {
     pageSize: number;
   };
 }
+
 export const strapifetcher = (path: string, pagination: Query) => {
   const query = qs.stringify(
     {
@@ -58,7 +59,7 @@ export const getOperationsByWFID = withInfiniteFetch<OperationData>(
   },
 );
 
-export const getOperation = async (operationID: string): Promise<OperationData> => {
+export const getOperationByID = async (operationID: string): Promise<OperationData> => {
   const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}/${operationID}`;
   const { data } = await axios.get<any, OperationFetchResponse>(url);
   return data.data;
@@ -98,33 +99,40 @@ export const search = async (filters: object): Promise<FetchResponse> => {
   return data.data;
 };
 
-// export const getOperation = async (workflowID: string, step: string): Promise<OperationData> => {
-//   const query = qs.stringify(
-//     {
-//       sort: ['createdAt:desc'],
-//       filters: {
-//         $and: [
-//           {
-//             workflowID: {
-//               $eq: workflowID,
-//             },
-//           },
-//           {
-//             step: {
-//               $eq: step,
-//             },
-//           },
-//         ],
-//       },
-//     },
-//     {
-//       encodeValuesOnly: true,
-//     },
-//   );
+export const getOperation = async (workflowID: string, step: string) => {
+  const query = qs.stringify(
+    {
+      sort: ['createdAt:desc'],
+      filters: {
+        $and: [
+          {
+            workflowID: {
+              $eq: workflowID,
+            },
+          },
+          {
+            step: {
+              $eq: step,
+            },
+          },
+        ],
+      },
+    },
+    {
+      encodeValuesOnly: true,
+    },
+  );
 
-//   const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
+  const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
 
-//   const { data } = await axios.get<any, OperationFetchResponse>(url);
+  const { data } = await axios.get<
+    any,
+    {
+      data: {
+        data: OperationData[];
+      };
+    }
+  >(url);
 
-//   return data.data[0];
-// };
+  return data.data[0];
+};

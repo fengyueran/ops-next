@@ -10,6 +10,7 @@ import { OpenDetailButton } from 'src/views/open-detail-btn';
 import { StatusTag } from 'src/views/status-tag';
 import { ErrorHint } from 'src/views/error-hint';
 import { CaseStatus, Priority } from 'src/type';
+import { TagList } from './tag-list';
 
 const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
@@ -79,18 +80,12 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     },
   },
   {
-    width: 100,
+    width: 140,
     title: formatMessage({ defaultMessage: '标签' }),
     dataIndex: ['tags'],
     render: (tags: string[]) => {
       if (!tags) return null;
-      return (
-        <TagContainer>
-          {tags.map((tagName) => (
-            <Tag key={tagName}>{tagName}</Tag>
-          ))}
-        </TagContainer>
-      );
+      return <TagList tags={tags} />;
     },
   },
   {
@@ -106,7 +101,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     width: 100,
     title: formatMessage({ defaultMessage: '状态' }),
-    dataIndex: ['status'],
+    dataIndex: ['progress'],
     render: (status: CaseStatus) => {
       return <StatusTag status={status} />;
     },
@@ -145,20 +140,6 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     },
   },
 ];
-
-const TagContainer = styled.div`
-  display: flex;
-`;
-
-const Tag = styled.div`
-  padding: 0px 9px;
-  font-size: 12px;
-  background: rgb(250, 250, 250);
-  color: rgba(0, 0, 0, 0.85);
-  border: 1px solid rgb(217, 217, 217);
-  border-radius: 2px;
-  margin-right: 8px;
-`;
 
 const PaginationContainer = styled(Row)`
   width: 100%;

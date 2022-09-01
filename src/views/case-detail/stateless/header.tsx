@@ -107,7 +107,7 @@ const Header: React.FC<Props> = ({ caseInfo }) => {
           )}
         </TitleHead>
         <TitleReport>
-          <CaseStateLabel state={caseInfo.status} />
+          <CaseStateLabel state={caseInfo.progress} />
         </TitleReport>
       </Title>
       <DeadlineAndPriority>

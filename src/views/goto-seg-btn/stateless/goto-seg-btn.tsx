@@ -9,13 +9,11 @@ const StyledButton = styled(Button)`
 `;
 
 interface Props {
-  visible: boolean;
   disabled: boolean;
   onClick: () => void;
 }
 
-export const PatchSegButton: React.FC<Props> = ({ onClick, visible, disabled }) => {
-  if (!visible) return null;
+export const GotoSegBtn: React.FC<Props> = ({ onClick, disabled }) => {
   return (
     <StyledButton type="primary" onClick={onClick} disabled={disabled}>
       <FormattedMessage defaultMessage="回到粗分" />

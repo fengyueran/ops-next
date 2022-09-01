@@ -6,7 +6,8 @@ export interface State {
   submitPending: boolean;
   microAppVisible: boolean;
   canSubmit: boolean;
-  canPatchSeg: boolean;
+  canGotoSeg: boolean;
+  gotoSegLoading: boolean;
 }
 
 const initialState: State = {
@@ -14,12 +15,13 @@ const initialState: State = {
   microAppReady: false,
   submitPending: false,
   microAppVisible: false,
-  canPatchSeg: false,
+  canGotoSeg: false,
+  gotoSegLoading: false,
 };
 
 interface SubmitData {
   operation: OperationDataAttributes;
-  makeSubmitInput: (output: ToolOutput, isPatchSeg?: boolean) => any;
+  makeSubmitInput: (output: ToolOutput) => any;
   output: ToolOutput;
 }
 
@@ -31,8 +33,7 @@ export const submit = createAsyncThunk<void, SubmitData>('MicroApp/submit', asyn
 
 export const patch = createAsyncThunk<void, SubmitData>('MicroApp/patch', async (data) => {
   const { operation, makeSubmitInput, output } = data;
-  const isPatchSeg = true;
-  const submitInput = await makeSubmitInput(output, isPatchSeg);
+  const submitInput = await makeSubmitInput(output);
   await patchNode(operation.workflowID, operation.step, submitInput);
 });
 
@@ -49,7 +50,8 @@ export const slice = createSlice({
         state.microAppReady = false;
       } else {
         state.submitPending = false;
-        state.canPatchSeg = false;
+        state.canGotoSeg = false;
+        state.gotoSegLoading = false;
       }
     },
     toggleSubmitPending(state, action: PayloadAction<boolean>) {
@@ -58,8 +60,11 @@ export const slice = createSlice({
     toggleCanSubmit(state, action: PayloadAction<boolean>) {
       state.canSubmit = action.payload;
     },
-    toggleCanPatchSeg(state, action: PayloadAction<boolean>) {
-      state.canPatchSeg = action.payload;
+    toggleCanGotoSeg(state, action: PayloadAction<boolean>) {
+      state.canGotoSeg = action.payload;
+    },
+    toggleGotoSegLoading(state, action: PayloadAction<boolean>) {
+      state.gotoSegLoading = action.payload;
     },
   },
   extraReducers: (builder) => {

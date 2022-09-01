@@ -12,6 +12,7 @@ const cases = createSelector(allCaseIDs, casesByID, (allCaseIDs, casesByID) => {
 });
 
 const pagination = createSelector(selector, (root) => root.pagination);
+const openCaseID = createSelector(selector, (root) => root.openCaseID);
 
 const getCaseByID = createSelector(
   casesByID,
@@ -23,6 +24,7 @@ const getCaseByID = createSelector(
 
 export const selectors = {
   cases,
+  openCaseID,
   pagination,
   getCaseByID,
 };

@@ -2,11 +2,11 @@ import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { message } from 'antd';
 
-import { loadMicroAppByStatus, microAppMgr } from 'src/utils';
-import { microApp } from 'src/redux';
+import { loadMicroAppByStatus } from 'src/utils';
+import { microApp, cases } from 'src/redux';
 import { AppDispatch } from 'src/store';
-import { getOperation, tagCaseReaded } from 'src/api';
-import { CaseStatus, NodeStep } from 'src/type';
+import { getOperationByID, tagCaseReaded } from 'src/api';
+import { CaseStatus } from 'src/type';
 
 interface Props {
   caseInfo: CaseInfo & { id: string };
@@ -21,26 +21,26 @@ export const withData =
 
     const onClick = useCallback(async () => {
       try {
+        dispatch(cases.actions.setOpenCaseID(caseInfo.id));
         dispatch(microApp.actions.toggleMicroAppVisible(true));
         dispatch(microApp.actions.toggleCanSubmit(true));
-        const canPatchSeg = caseInfo.status === CaseStatus.WAITING_RIFINE;
-        dispatch(microApp.actions.toggleCanPatchSeg(canPatchSeg));
+        const canGotoSeg = caseInfo.progress === CaseStatus.WAITING_RIFINE;
+        dispatch(microApp.actions.toggleCanGotoSeg(canGotoSeg));
 
-        if (caseInfo.status === CaseStatus.WAITING_QC && !caseInfo.readed) {
+        if (caseInfo.progress === CaseStatus.WAITING_QC && !caseInfo.readed) {
           await tagCaseReaded(caseInfo.id);
         }
 
-        const { id, attributes: operation } = await getOperation(caseInfo.editID!);
+        const { id, attributes: operation } = await getOperationByID(caseInfo.editID!);
 
         const submit = async (
           output: ToolOutput,
           makeSubmitInput: (output: ToolOutput) => Promise<any>,
         ) => {
           try {
-            if (microAppMgr.isPatchSeg) {
-              const newOperation = { ...operation, step: NodeStep.SEGMENT_EDIT };
+            if (caseInfo.workflowFailed) {
               await dispatch(
-                microApp.actions.patch({ operation: newOperation, output, makeSubmitInput }),
+                microApp.actions.patch({ operation, output, makeSubmitInput }),
               ).unwrap();
             } else {
               await dispatch(

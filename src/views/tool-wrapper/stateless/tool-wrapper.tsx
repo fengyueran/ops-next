@@ -5,7 +5,7 @@ import { Loading } from 'src/views/tool-loading';
 import { Row, ElasticBox, SpaceX } from 'src/components';
 import { CloseMicroAppBtn } from 'src/views/close-micro-app-btn';
 import { SubmitButton } from 'src/views/submit-btn';
-import { PatchSegButton } from 'src/views/patch-seg-btn';
+import { GotoSegBtn } from 'src/views/goto-seg-btn';
 
 const Container = styled.div<{ visible: boolean }>`
   width: 100vw;
@@ -49,7 +49,7 @@ export const ToolWrapper: React.FC<Props> = ({ visible }) => {
       <StyledHeader>
         <CloseMicroAppBtn />
         <ElasticBox />
-        <PatchSegButton />
+        <GotoSegBtn />
         <SpaceX size={24} />
         <SubmitButton />
       </StyledHeader>

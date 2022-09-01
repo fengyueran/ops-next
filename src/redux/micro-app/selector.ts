@@ -7,15 +7,16 @@ const selector = (state: RootState) => state.microApp;
 const microAppReady = createSelector(selector, (microApp) => microApp.microAppReady);
 
 const submitPending = createSelector(selector, (microApp) => microApp.submitPending);
-
+const gotoSegLoading = createSelector(selector, (microApp) => microApp.gotoSegLoading);
 const microAppVisible = createSelector(selector, (microApp) => microApp.microAppVisible);
 const canSubmit = createSelector(selector, (microApp) => microApp.canSubmit);
-const canPatchSeg = createSelector(selector, (microApp) => microApp.canPatchSeg);
+const canGotoSeg = createSelector(selector, (microApp) => microApp.canGotoSeg);
 
 export const selectors = {
   canSubmit,
   microAppReady,
-  canPatchSeg,
+  canGotoSeg,
   submitPending,
   microAppVisible,
+  gotoSegLoading,
 };

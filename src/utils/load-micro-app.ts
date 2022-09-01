@@ -4,10 +4,7 @@ import { fetchFileWithCache, fullPath, uploadFiles } from 'src/api';
 import { MaskEditType, microAppMgr } from 'src/utils';
 import { CaseStatus, NodeOutput, NodeStep } from 'src/type';
 
-type Submit = (
-  output: ToolOutput,
-  makeSubmitInput: (output: any, isPatchSeg?: boolean) => Promise<any>,
-) => void;
+type Submit = (output: ToolOutput, makeSubmitInput: (output: any) => Promise<any>) => void;
 const findFileByName = (name: string, inputs: NodeInput[]) => {
   const found = inputs.find(({ Name }) => Name === name);
   if (!found) throw new Error(`Can't find the file which name is ${name}`);
@@ -50,19 +47,31 @@ const makeMaskEditToolInput = (
   editType: MaskEditType,
   submit?: SegSubmit,
 ) => {
-  const inputs = operation.input;
+  const { input, output } = operation;
 
   const getNifti = async () => {
-    const node = findFileByName('nifti_file', inputs);
+    const node = findFileByName(NodeOutput.NIFTI, input);
     const data = await fetchFileWithCache<ArrayBuffer>(node.Value);
     return data;
   };
 
   const getMask = async () => {
-    const node = findFileByName(
-      editType === MaskEditType.Segment ? 'aorta_and_arteries_comp' : 'refine_aorta_and_arteries',
-      inputs,
-    );
+    let node;
+
+    if (editType === MaskEditType.Segment) {
+      if (output) {
+        node = findFileByName(NodeOutput.EDITED_SEGMENT_MASK, output);
+      } else {
+        node = findFileByName(NodeOutput.SEGMENT_MASK, input);
+      }
+    } else {
+      if (output) {
+        node = findFileByName(NodeOutput.EDITED_REFINE_MASK, output);
+      } else {
+        node = findFileByName(NodeOutput.REFINE_MASK, input);
+      }
+    }
+
     const data = await fetchFileWithCache<ArrayBuffer>(node.Value);
     return data;
   };
@@ -152,7 +161,7 @@ const makeReivewToolInput = (
   };
 
   const getPly = async () => {
-    const node = findFileByName('ply_file', inputs);
+    const node = findFileByName(NodeOutput.PLY, inputs);
     const data = await fetchFileWithCache<string>(node.Value);
     return data;
   };
@@ -253,7 +262,7 @@ const loadQCTool = (operation: DetailOperation, submit?: Submit) => {
 const makeSegSubmitInput = async (data: SegToolOutput) => {
   const { mask } = data;
   const { path } = await uploadFiles([{ path: 'segMask.nii.gz', data: mask }]);
-  return { [NodeOutput.SEGMENT_MASK]: path };
+  return { [NodeOutput.EDITED_SEGMENT_MASK]: path };
 };
 
 const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
@@ -261,13 +270,10 @@ const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
   microAppMgr.loadMaskEditTool(makeMaskEditToolInput(operation, MaskEditType.Segment, segSubmit));
 };
 
-const makeRefineSubmitInput = async (data: RefineToolOutput, isPatchSeg?: boolean) => {
+const makeRefineSubmitInput = async (data: RefineToolOutput) => {
   const { mask } = data;
   const { path } = await uploadFiles([{ path: 'refineMask.nii.gz', data: mask }]);
-  if (isPatchSeg) {
-    return { [NodeOutput.SEGMENT_MASK]: path };
-  }
-  return { [NodeOutput.REFINE_MASK]: path };
+  return { [NodeOutput.EDITED_REFINE_MASK]: path };
 };
 
 const loadRefineMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
@@ -301,7 +307,7 @@ export const loadMicroAppByStatus = (
     [CaseStatus.WAITING_REPORT]: () => loadReportTool(caseInfo, operation, submit),
   };
 
-  const load = loadMicroAppMap[caseInfo.status];
+  const load = loadMicroAppMap[caseInfo.progress];
   if (load) {
     load();
   } else {

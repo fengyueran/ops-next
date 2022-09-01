@@ -44,26 +44,19 @@ export const withData =
 
     const patchNode = useCallback(
       (operation: DetailOperation) => {
-        readyToOpenMicroApp();
         if (operation.step === NodeStep.REFINE_EDIT) {
-          dispatch(microApp.actions.toggleCanPatchSeg(true));
+          dispatch(microApp.actions.toggleCanGotoSeg(true));
+          dispatch(cases.actions.setOpenCaseID(caseInfo.id));
         }
-        dispatch(microApp.actions.toggleCanSubmit(operation.step === NodeStep.QC));
+        readyToOpenMicroApp();
+        const canSubmit = operation.step === NodeStep.QC || operation.step === NodeStep.REFINE_EDIT;
+        dispatch(microApp.actions.toggleCanSubmit(canSubmit));
         const submit = async (
           output: ToolOutput,
           makeSubmitInput: (output: ToolOutput) => Promise<any>,
         ) => {
           try {
-            if (operation.step === NodeStep.REFINE_EDIT) {
-              const newOperation = { ...operation, step: NodeStep.SEGMENT_EDIT };
-              await dispatch(
-                microApp.actions.patch({ operation: newOperation, output, makeSubmitInput }),
-              ).unwrap();
-            } else {
-              await dispatch(
-                microApp.actions.patch({ operation, output, makeSubmitInput }),
-              ).unwrap();
-            }
+            await dispatch(microApp.actions.patch({ operation, output, makeSubmitInput })).unwrap();
           } catch (error) {
             message.error(`Patch error:${(error as Error).message}`);
           }
