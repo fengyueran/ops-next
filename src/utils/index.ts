@@ -4,6 +4,7 @@ export * from './download';
 export * from './with-cache';
 export * from './local-forage';
 export * from './micro-app-mgr';
+export * from './save-to-local';
 export * from './load-micro-app';
 export * from './node-parse-helper';
 export * from './with-infinite-fetch';

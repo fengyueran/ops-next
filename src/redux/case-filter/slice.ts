@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface Pagination {
+  page: number;
+  pageSize: number;
+}
 export interface State {
   filters: {
     PatientID?: string;
@@ -8,12 +12,16 @@ export interface State {
     statusList?: CaseStatus[];
     priorityList?: Priority[];
   };
-  page: number;
+  pagination: Pagination;
+  sort?: string;
 }
 
 const initialState: State = {
   filters: {},
-  page: 0,
+  pagination: {
+    page: 0,
+    pageSize: 20,
+  },
 };
 
 export const slice = createSlice({
@@ -23,8 +31,11 @@ export const slice = createSlice({
     updateFilter(state, action: PayloadAction<object>) {
       state.filters = { ...state.filters, ...action.payload };
     },
-    setPage(state, action: PayloadAction<number>) {
-      state.page = action.payload;
+    setPagination(state, action: PayloadAction<Pagination>) {
+      state.pagination = action.payload;
+    },
+    setSort(state, action: PayloadAction<string | undefined>) {
+      state.sort = action.payload;
     },
   },
 });

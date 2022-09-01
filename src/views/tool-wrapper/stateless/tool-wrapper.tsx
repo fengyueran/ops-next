@@ -20,7 +20,7 @@ const StyledHeader = styled(Row)`
   background: rgb(31, 48, 84);
   height: 64px;
   align-items: center;
-  padding: 0 32px;
+  padding: 0 32px 0 24px;
 `;
 
 const ToolContainer = styled.div`
@@ -39,15 +39,27 @@ const ToolMountNode = styled.div`
   }
 `;
 
+const Title = styled.div`
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: -0.1px;
+  line-height: 24px;
+  font-weight: 500;
+  margin-left: 5px;
+`;
+
 interface Props {
+  title: string;
   visible: boolean;
 }
 
-export const ToolWrapper: React.FC<Props> = ({ visible }) => {
+export const ToolWrapper: React.FC<Props> = ({ visible, title }) => {
   return (
     <Container visible={visible}>
       <StyledHeader>
         <CloseMicroAppBtn />
+        <Title>{title}</Title>
         <ElasticBox />
         <GotoSegBtn />
         <SpaceX size={24} />

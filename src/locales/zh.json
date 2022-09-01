@@ -95,6 +95,12 @@
       "value": "阴阳性"
     }
   ],
+  "E5PxaL": [
+    {
+      "type": 0,
+      "value": "查看日志"
+    }
+  ],
   "ENPgS/": [
     {
       "type": 0,
@@ -149,6 +155,12 @@
       "value": "加载中..."
     }
   ],
+  "Q9wANT": [
+    {
+      "type": 0,
+      "value": "查看log"
+    }
+  ],
   "QV3pnn": [
     {
       "type": 0,
@@ -201,6 +213,16 @@
     {
       "type": 0,
       "value": "隐私、服务条款。"
+    }
+  ],
+  "Y6U+ki": [
+    {
+      "type": 1,
+      "value": "pageSize"
+    },
+    {
+      "type": 0,
+      "value": "条/页"
     }
   ],
   "YYSyMs": [

@@ -47,6 +47,9 @@
   "DLNq1y": {
     "defaultMessage": "阴阳性"
   },
+  "E5PxaL": {
+    "defaultMessage": "查看日志"
+  },
   "ENPgS/": {
     "defaultMessage": "提交"
   },
@@ -74,6 +77,9 @@
   "PoiFu7": {
     "defaultMessage": "加载中..."
   },
+  "Q9wANT": {
+    "defaultMessage": "查看log"
+  },
   "QV3pnn": {
     "defaultMessage": "状态"
   },
@@ -100,6 +106,9 @@
   },
   "VnDt4m": {
     "defaultMessage": "隐私、服务条款。"
+  },
+  "Y6U+ki": {
+    "defaultMessage": "{pageSize}条/页"
   },
   "YYSyMs": {
     "defaultMessage": "待精分"

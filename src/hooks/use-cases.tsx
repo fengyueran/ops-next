@@ -11,57 +11,58 @@ const convertLocalDateToTimestamp = (localDateStr: string) => {
   return date.getTime();
 };
 
-const convertFilters = (filters: caseFilter.State['filters']) => {
-  const { PatientID, ffrAccessionNumber, dateRange, statusList, priorityList } = filters;
-  const fields = [];
+const makeQuery = (caseQueryState: caseFilter.State) => {
+  const { pagination, sort } = caseQueryState;
 
-  if (PatientID) {
-    fields.push({ PatientID: { $contains: PatientID } });
-  }
-  if (ffrAccessionNumber) {
-    fields.push({ ffrAccessionNumber: { $contains: ffrAccessionNumber } });
-  }
-  if (statusList) {
-    fields.push({ status: { $in: statusList } });
+  const makeFilter = () => {
+    const { PatientID, ffrAccessionNumber, dateRange, statusList, priorityList } =
+      caseQueryState.filters;
+    const fields = [];
+    if (PatientID) {
+      fields.push({ PatientID: { $contains: PatientID } });
+    }
+    if (ffrAccessionNumber) {
+      fields.push({ ffrAccessionNumber: { $contains: ffrAccessionNumber } });
+    }
+    if (statusList) {
+      fields.push({ status: { $in: statusList } });
+    }
+
+    if (priorityList) {
+      fields.push({ priority: { $in: priorityList } });
+    }
+    //本地时间
+    if (dateRange) {
+      const [start, end] = dateRange.map((dateStr) => convertLocalDateToTimestamp(dateStr));
+      const oneDay = 3600 * 24 * 1000; //ms
+      fields.push({ uploadAt: { $gte: start, $lt: end + oneDay } });
+    }
+    if (fields.length) {
+      return { $and: fields };
+    }
+    return null;
+  };
+
+  const query: Query = { pagination };
+
+  const filters = makeFilter();
+  if (filters) {
+    query.filters = filters;
   }
 
-  if (priorityList) {
-    fields.push({ priority: { $in: priorityList } });
-  }
-  //本地时间
-  if (dateRange) {
-    const [start, end] = dateRange.map((dateStr) => convertLocalDateToTimestamp(dateStr));
-    const oneDay = 3600 * 24 * 1000; //ms
-    fields.push({ uploadAt: { $gte: start, $lt: end + oneDay } });
+  if (sort) {
+    query.sort = [sort];
   }
 
-  if (fields.length) {
-    return {
-      $and: fields,
-    };
-  }
-  return null;
+  return query;
 };
 
-export const useCases = (page: number) => {
-  const filters = useSelector(caseFilter.selectors.filters);
-
-  const searchFilters = useMemo(() => {
-    return convertFilters(filters);
-  }, [filters]);
+export const useCases = () => {
+  const caseQueryState = useSelector(caseFilter.selectors.caseFilter);
 
   const query = useMemo(() => {
-    const query = {
-      pagination: {
-        page,
-        pageSize: 10,
-      },
-    };
-    if (searchFilters) {
-      (query as Query).filters = searchFilters;
-    }
-    return query;
-  }, [page, searchFilters]);
+    return makeQuery(caseQueryState);
+  }, [caseQueryState]);
 
   const dispatch = useDispatch();
   const { data, error } = useSWR<CaseFetchResponse>([FETCH_CASE_PATH, query], strapifetcher);

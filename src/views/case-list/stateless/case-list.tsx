@@ -1,14 +1,16 @@
 import React, { useMemo } from 'react';
-import { Table, Pagination } from 'antd';
+import { Table } from 'antd';
+import type { TableProps } from 'antd/es/table';
 import styled from 'styled-components';
 import { FormattedMessage, useIntl, IntlFormatters } from 'react-intl';
 import { format, addDays } from 'date-fns';
 
-import { ColorTag, Row } from 'src/components';
+import { ColorTag, Row, Pagination } from 'src/components';
 import { OpenToolBtn } from 'src/views/open-tool-btn';
 import { OpenDetailButton } from 'src/views/open-detail-btn';
 import { StatusTag } from 'src/views/status-tag';
 import { ErrorHint } from 'src/views/error-hint';
+import { OpenLogBtn } from 'src/views/open-log-btn';
 import { CaseStatus, Priority } from 'src/type';
 import { TagList } from './tag-list';
 
@@ -17,6 +19,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     title: 'PatientID',
     sorter: true,
     width: 108,
+    field: 'PatientID',
     render: (caseInfo: CaseInfo) => {
       if (caseInfo.readed) return caseInfo.PatientID;
       return <ColorTag tip={caseInfo.PatientID || '-'} color="red" />;
@@ -24,37 +27,44 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   },
   {
     width: 160,
+    sorter: true,
+    field: 'ffrAccessionNumber',
     title: formatMessage({ defaultMessage: 'CTFFR检查号' }),
     dataIndex: ['ffrAccessionNumber'],
   },
   {
     width: 120,
+    sorter: true,
+    field: 'PatientName',
     title: formatMessage({ defaultMessage: '患者姓名' }),
     dataIndex: ['PatientName'],
   },
   {
     width: 160,
+    sorter: true,
+    field: 'uploadAt',
     title: formatMessage({ defaultMessage: '上传时间' }),
     dataIndex: ['uploadAt'],
     render: (uploadAt: string) => {
       return format(new Date(uploadAt), 'yyyy-MM-dd HH:mm');
     },
-    sorter: true,
   },
   {
     width: 160,
+    sorter: true,
+    field: 'uploadAt',
     title: formatMessage({ defaultMessage: '截止时间' }),
     dataIndex: ['uploadAt'],
     render: (uploadAt: string) => {
       return format(addDays(new Date(uploadAt), 1), 'yyyy-MM-dd HH:mm');
     },
-    sorter: true,
   },
   {
     width: 160,
+    sorter: true,
+    field: 'returnEndAt',
     title: formatMessage({ defaultMessage: '返还时间' }),
     dataIndex: ['returnEndAt'],
-    sorter: true,
     render: (returnEndAt: number) => {
       return '-';
     },
@@ -130,13 +140,20 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     },
   },
   {
-    width: 200,
+    width: 160,
     title: '',
     render: (caseInfo: CaseInfo) => {
       if (caseInfo.workflowFailed) {
         return <ErrorHint step={caseInfo.step} />;
       }
       return null;
+    },
+  },
+  {
+    width: 100,
+    title: '',
+    render: (caseInfo: CaseInfo) => {
+      return <OpenLogBtn caseInfo={caseInfo} />;
     },
   },
 ];
@@ -163,16 +180,17 @@ const Container = styled.div`
   .ant-table-column-title {
     flex: none;
   }
+  .ant-table-column-sorters {
+    justify-content: start;
+  }
 `;
 
-const Header = styled.div`
-  /* position: absolute; */
-  /* left: 18px; */
-`;
+const Header = styled.div``;
 
 interface Props {
   cases?: CaseData[];
   pagination: Pagination;
+  onChange: TableProps<any>['onChange'];
   onPageChange: (page: number, pageSize: number) => void;
 }
 
@@ -194,7 +212,7 @@ const scrollY = (() => {
   return `calc(100vh - ${total}px)`;
 })();
 
-export const CaseList: React.FC<Props> = ({ cases, pagination, onPageChange }) => {
+export const CaseList: React.FC<Props> = ({ cases, pagination, onPageChange, onChange }) => {
   const intl = useIntl();
 
   const columns = useMemo(() => {
@@ -210,16 +228,10 @@ export const CaseList: React.FC<Props> = ({ cases, pagination, onPageChange }) =
             values={{ count: pagination?.total }}
           />
         </Header>
-        {pagination && (
-          <Pagination
-            {...pagination}
-            showSizeChanger
-            current={pagination.page}
-            onChange={onPageChange}
-          />
-        )}
+        {pagination && <Pagination pagination={pagination} onChange={onPageChange} />}
       </PaginationContainer>
       <Table
+        onChange={onChange}
         dataSource={cases}
         columns={columns}
         rowKey="id"
@@ -227,7 +239,6 @@ export const CaseList: React.FC<Props> = ({ cases, pagination, onPageChange }) =
         loading={!cases}
         pagination={false}
       />
-      {/* <Loading loading={!cases} tip="加载中..." /> */}
     </Container>
   );
 };

@@ -22,9 +22,15 @@ const getCaseByID = createSelector(
   },
 );
 
+const getSelectedCase = createSelector(casesByID, openCaseID, (casesByID, id) => {
+  if (id) return casesByID[id];
+  return null;
+});
+
 export const selectors = {
   cases,
   openCaseID,
   pagination,
   getCaseByID,
+  getSelectedCase,
 };

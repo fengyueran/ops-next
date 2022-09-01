@@ -9,27 +9,30 @@ export const FETCH_CASE_PATH = '/api/cases';
 
 const FETCH_OPERATION_PATH = '/api/operations';
 
+const FETCH_ALGO_OPERATION_PATH = '/api/algo-operations';
+
 const LOGIN_PATH = '/api/auth/local';
 
 export interface Query {
-  filters: object;
+  filters?: object;
   pagination: {
     page: number;
     pageSize: number;
   };
+  sort?: string[];
 }
 
-export const strapifetcher = (path: string, pagination: Query) => {
-  const query = qs.stringify(
+export const strapifetcher = (path: string, query: Query) => {
+  const queryStr = qs.stringify(
     {
       sort: ['createdAt:desc'],
-      ...pagination,
+      ...query,
     },
     {
       encodeValuesOnly: true,
     },
   );
-  const url = `${STRAPI_CMS_HOST}${path}?${query}`;
+  const url = `${STRAPI_CMS_HOST}${path}?${queryStr}`;
 
   return axios.get(url).then((res) => res.data);
 };
@@ -81,24 +84,6 @@ export const tagCaseReaded = async (id: string): Promise<void> => {
   });
 };
 
-export const search = async (filters: object): Promise<FetchResponse> => {
-  const query = qs.stringify(
-    {
-      sort: ['createdAt:desc'],
-      filters,
-      pagination: {
-        pageSize: 100,
-      },
-    },
-    {
-      encodeValuesOnly: true,
-    },
-  );
-  const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
-  const data = await axios.get<any, { data: FetchResponse }>(url);
-  return data.data;
-};
-
 export const getOperation = async (workflowID: string, step: string) => {
   const query = qs.stringify(
     {
@@ -124,6 +109,49 @@ export const getOperation = async (workflowID: string, step: string) => {
   );
 
   const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
+
+  const { data } = await axios.get<
+    any,
+    {
+      data: {
+        data: OperationData[];
+      };
+    }
+  >(url);
+
+  return data.data[0];
+};
+
+export const getAlgoOperation = async (workflowID: string, step: string) => {
+  const query = qs.stringify(
+    {
+      sort: ['createdAt:desc'],
+      filters: {
+        $and: [
+          {
+            workflowID: {
+              $eq: workflowID,
+            },
+          },
+          {
+            step: {
+              $eq: step,
+            },
+          },
+          {
+            status: {
+              $eq: 3, //failed
+            },
+          },
+        ],
+      },
+    },
+    {
+      encodeValuesOnly: true,
+    },
+  );
+
+  const url = `${STRAPI_CMS_HOST}${FETCH_ALGO_OPERATION_PATH}?${query}`;
 
   const { data } = await axios.get<
     any,

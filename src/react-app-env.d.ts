@@ -8,6 +8,7 @@ interface Window {
   Review_TOOL_HOST?: string;
   Report_TOOL_HOST?: string;
   downloadFile: (filePath: string) => void;
+  showSaveFilePicker: (data: any) => Promise<any>;
 }
 enum CaseStatus {
   'WAITING_QC' = 'waiting-qc',
@@ -387,4 +388,11 @@ interface ListItem {
   name: string;
   isAll?: boolean;
   [key: string]: any;
+}
+
+interface Sorter {
+  column?: { field: string };
+  columnKey?: string;
+  field?: undefined;
+  order?: 'descend' | 'ascend';
 }

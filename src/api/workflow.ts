@@ -15,7 +15,7 @@ const WORKFLOW_HOST = window.WORKFLOW_SERVER_URL || '';
 
 const FILE_PATH = '/v1/ops/files/download';
 const UPLOAD_PATH = '/v1/ops/files/upload';
-const COMPLETE_PATH = '/v1/ops/case';
+const CASE_PATH = '/v1/ops/case';
 
 export const fetchCommonFile = async (
   filePath: string,
@@ -71,14 +71,14 @@ const fetchFile = async (filePath: string, responseType?: ResponseType) => {
 export const fetchFileWithCache = withCache(fetchFile);
 
 export const patchNode = async (workflowID: string, step: NodeStep, results: object) => {
-  const resetUrl = `${WORKFLOW_HOST}${COMPLETE_PATH}/${workflowID}/reset/${step}/complete`;
+  const resetUrl = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/reset/${step}/complete`;
   await axios.post(resetUrl, {
     data: results,
   });
 };
 
 export const completeNode = async (workflowID: string, activityID: string, results: object) => {
-  const completeUrl = `${WORKFLOW_HOST}${COMPLETE_PATH}/${workflowID}/${activityID}/complete`;
+  const completeUrl = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${activityID}/complete`;
   await axios.post(completeUrl, {
     data: results,
   });
@@ -99,6 +99,12 @@ export const uploadFiles = async (files: { path: string; data: ArrayBuffer | str
   } catch (err) {
     throw err;
   }
+};
+
+export const geLog = async (workflowID: string, algoOperationID: string) => {
+  const url = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${algoOperationID}/log?all=true`;
+  const { data } = await axios.get(url);
+  return data;
 };
 
 export const fullPath = (path: string) => {
