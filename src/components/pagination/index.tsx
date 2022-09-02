@@ -46,7 +46,7 @@ export const Pagination: React.FC<Props> = ({ pagination, onChange }) => {
   );
 
   const options = useMemo(() => {
-    return [10, 20, 50, 100].map((v) => ({ key: v, value: makePageSizeText(v) }));
+    return [20, 30, 50].map((v) => ({ key: v, value: makePageSizeText(v) }));
   }, [makePageSizeText]);
 
   return (

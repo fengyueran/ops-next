@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Badge } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
-import { CaseStatus } from 'src/type';
+import { CaseStatus, StatusColorMap } from 'src/type';
 
 export const caseStatusText: Record<CaseStatus, React.ReactElement> = {
   [CaseStatus.WAITING_QC]: <FormattedMessage defaultMessage="待质检" />,
@@ -23,16 +23,6 @@ export interface Props {
   state: CaseStatus;
 }
 
-const stateColor: Record<string, string> = {
-  [CaseStatus.WAITING_QC]: '#36CFC9',
-  [CaseStatus.WAITING_SEGMENT]: '#FFC53D',
-  [CaseStatus.WAITING_RIFINE]: '#40A9FF',
-  [CaseStatus.WAITING_REVIEW]: '#F759AB',
-  [CaseStatus.WAITING_REPORT]: '#FF7A45',
-  [CaseStatus.WAITING_RETURN]: '#73D13D',
-  [CaseStatus.RETURNED]: '#73D13D',
-};
-
 const Container = styled.div<{ color: string }>`
   height: 22px;
   padding: 0 7px;
@@ -45,8 +35,8 @@ const Container = styled.div<{ color: string }>`
 /** Case状态标记 */
 const CaseStateLabel: React.FC<Props> = ({ state }) => {
   return (
-    <Container color={stateColor[state]}>
-      <Badge color={stateColor[state]} text={getCaseStatusText(state)} />
+    <Container color={StatusColorMap[state]}>
+      <Badge color={StatusColorMap[state]} text={getCaseStatusText(state)} />
     </Container>
   );
 };

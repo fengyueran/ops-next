@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { FormattedMessage } from 'react-intl';
 
 import { Row } from 'src/components';
@@ -112,7 +112,9 @@ const Header: React.FC<Props> = ({ caseInfo }) => {
       </Title>
       <DeadlineAndPriority>
         <Deadline>
-          <DeadlineText>{format(new Date(caseInfo.uploadAt), 'yyyy-MM-dd HH:mm:ss')}</DeadlineText>
+          <DeadlineText>
+            {format(addDays(new Date(caseInfo.uploadAt), 1), 'yyyy-MM-dd HH:mm:ss')}
+          </DeadlineText>
           <FormattedMessage defaultMessage="截止" />
         </Deadline>
         <CasePriority priority={caseInfo.priority} />

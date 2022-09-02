@@ -12,7 +12,6 @@ export enum NodeStep {
   'VALIDATE_FFR' = 'validate-ffr',
   'GEN_CPR_PLY' = 'gen-cpr-ply',
   'REPORT' = 'report',
-  'COMPLETE' = 'complete',
   'RETURNED' = 'returned',
 }
 
@@ -44,3 +43,13 @@ export enum NodeOutput {
   'EDITED_SEGMENT_MASK' = 'edited_aorta_and_arteries_comp',
   'EDITED_REFINE_MASK' = 'edited_refine_aorta_and_arteries',
 }
+
+export const StatusColorMap = {
+  [CaseStatus.WAITING_QC]: 'rgba(0,0,0,0.25)',
+  [CaseStatus.WAITING_SEGMENT]: '#40A9FF',
+  [CaseStatus.WAITING_RIFINE]: '#FD7943',
+  [CaseStatus.WAITING_REVIEW]: '#6236FF',
+  [CaseStatus.WAITING_REPORT]: '#177DDC',
+  [CaseStatus.WAITING_RETURN]: '#F5A623',
+  [CaseStatus.RETURNED]: '#52C41A',
+};

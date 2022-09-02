@@ -47,11 +47,13 @@ export const CaseFilterPanel = () => {
         <Title>
           <FormattedMessage defaultMessage="任务状态：" />
         </Title>
+        <SpaceX size={15} />
         <StatusBar />
         <SpaceX size={24} />
         <Title>
           <FormattedMessage defaultMessage="优先级：" />
         </Title>
+        <SpaceX size={15} />
         <PriorityBar />
       </StyledRow>
     </Container>

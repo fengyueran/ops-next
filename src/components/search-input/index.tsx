@@ -54,7 +54,7 @@ export const SearchInput: React.FC<Props> = ({ name, onSearch }) => {
     <StyledRow>
       <Name>{name}</Name>
       <AutoComplete allowClear ref={ref} onChange={onChange}>
-        <Input onPressEnter={handlePressEnter} placeholder={placeholder} />
+        <Input onPressEnter={handlePressEnter} placeholder={placeholder} style={{ width: 268 }} />
       </AutoComplete>
     </StyledRow>
   );

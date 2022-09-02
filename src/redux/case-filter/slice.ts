@@ -20,7 +20,7 @@ const initialState: State = {
   filters: {},
   pagination: {
     page: 0,
-    pageSize: 20,
+    pageSize: 30,
   },
 };
 

@@ -32,7 +32,7 @@ const formatOperations = (operations: OperationData[]) => {
   };
 
   const getCompleteThumbnail = () => {
-    const completeOp = operations.find(({ attributes }) => attributes.step === NodeStep.COMPLETE);
+    const completeOp = operations.find(({ attributes }) => attributes.step === NodeStep.RETURNED);
     const thumbnail = findFileByName(NodeOutput.THUMBNAILS, completeOp?.attributes.output)?.Value;
     return thumbnail ? fullPath(thumbnail) : undefined;
   };
@@ -132,7 +132,7 @@ export const useOperationsAndSeries = (workflowID?: string) => {
         const series = await getSeries(operations);
         const validOperaions = operations.filter(
           ({ step, output }) =>
-            step !== NodeStep.DICOM_PARSE && step !== NodeStep.COMPLETE && output,
+            step !== NodeStep.DICOM_PARSE && step !== NodeStep.RETURNED && output,
         );
         setData({ operations: validOperaions, series });
       } catch (error) {

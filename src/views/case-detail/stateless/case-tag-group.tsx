@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-// import { Tag } from 'src/types/casedoc';
 import CaseTag from './case-tag';
 
 interface Props {

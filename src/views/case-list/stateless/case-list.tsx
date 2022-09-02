@@ -14,15 +14,26 @@ import { OpenLogBtn } from 'src/views/open-log-btn';
 import { CaseStatus, Priority } from 'src/type';
 import { TagList } from './tag-list';
 
+const PatientIDContainer = styled.div`
+  margin-left: 16px;
+`;
+
 const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
   {
     title: 'PatientID',
     sorter: true,
-    width: 108,
+    width: 120,
     field: 'PatientID',
     render: (caseInfo: CaseInfo) => {
-      if (caseInfo.readed) return caseInfo.PatientID;
-      return <ColorTag tip={caseInfo.PatientID || '-'} color="red" />;
+      return (
+        <PatientIDContainer>
+          {caseInfo.readed ? (
+            caseInfo.PatientID
+          ) : (
+            <ColorTag tip={caseInfo.PatientID || '-'} color="red" />
+          )}
+        </PatientIDContainer>
+      );
     },
   },
   {
@@ -117,7 +128,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     },
   },
   {
-    width: 100,
+    width: 50,
     title: formatMessage({ defaultMessage: '操作' }),
     dataIndex: ['attributes'],
     render: (status: string) => {
@@ -125,7 +136,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     },
   },
   {
-    width: 100,
+    width: 80,
     title: '',
     dataIndex: ['id'],
     render: (id: string) => {
@@ -133,14 +144,14 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     },
   },
   {
-    width: 100,
+    width: 80,
     title: '',
     render: (caseInfo: CaseInfo & { id: string }) => {
       return <OpenToolBtn caseInfo={caseInfo} />;
     },
   },
   {
-    width: 160,
+    width: 150,
     title: '',
     render: (caseInfo: CaseInfo) => {
       if (caseInfo.workflowFailed) {
@@ -174,6 +185,10 @@ const Container = styled.div`
     > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan]):before {
     display: none;
   }
+
+  .ant-table-container table > thead > tr:first-child th:first-child {
+    padding-left: 16px !important;
+  }
   .ant-table-tbody {
     color: rgba(0, 0, 0, 0.65);
   }
@@ -182,6 +197,33 @@ const Container = styled.div`
   }
   .ant-table-column-sorters {
     justify-content: start;
+  }
+  th {
+    padding: 16px 0px !important;
+  }
+  .ant-table-row {
+    td {
+      padding: 16px 0px !important;
+    }
+  }
+
+  .ant-table-column-title {
+    -webkit-font-smoothing: auto;
+  }
+
+  .ant-table-body {
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 6px;
+      margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb {
+      width: 4px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 2px;
+    }
   }
 `;
 
@@ -200,7 +242,7 @@ const scrollY = (() => {
   const MARGIN_BETWEEN_TABLE_AND_CASE_FILTER = 24;
   const PAGINATION_HEIGHT = 56;
   const TABLE_HEADER_HEIGHT = 55;
-  const BOTTOM_PADDING = 10;
+  const BOTTOM_PADDING = 24;
   const total =
     HEADER_HEIGHT +
     CASE_FILTER_HEIGHT +

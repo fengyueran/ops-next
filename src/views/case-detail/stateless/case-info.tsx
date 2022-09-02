@@ -2,10 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { CopyOutlined } from '@ant-design/icons';
-// import { CaseData } from 'src/redux/cases/types';
-// import { Series } from 'src/types/casedoc';
-// import { CasePermission, OperationPermission } from 'src/redux/user/types';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 
 export interface Props {
   caseInfo: CaseInfo;
@@ -64,7 +61,10 @@ const ContentInfo = styled.div`
   line-height: 22px;
 `;
 
-const CopyButton = styled.div`
+const CopyButton = styled.span`
+  span {
+    vertical-align: bottom;
+  }
   svg {
     width: 12px;
     margin: 3px 0;
@@ -74,6 +74,17 @@ const CopyButton = styled.div`
     color: #91d5ff;
   }
   cursor: pointer;
+  margin-left: 2px;
+`;
+
+const WordBreak = styled.div`
+  word-break: break-all;
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 22px;
+`;
+
+const Inline = styled.span`
+  margin-right: 6px;
 `;
 
 const copyStudyUID = (StudyInstanceUID: string) => {
@@ -112,7 +123,9 @@ const CaseInfo: React.FC<Props> = ({ caseInfo, series }) => {
             <ContentTitle>
               <FormattedMessage defaultMessage="截止时间:" />
             </ContentTitle>
-            <ContentInfo>{format(new Date(caseInfo.uploadAt), 'yyyy-MM-dd HH:mm:ss')}</ContentInfo>
+            <ContentInfo>
+              {format(addDays(new Date(caseInfo.uploadAt), 1), 'yyyy-MM-dd HH:mm:ss')}
+            </ContentInfo>
           </Content>
           <Content>
             <ContentTitle>
@@ -166,18 +179,23 @@ const CaseInfo: React.FC<Props> = ({ caseInfo, series }) => {
             <ContentInfo>{caseInfo.StudyDate}</ContentInfo>
           </Content>
           <Content>
-            <ContentTitle>InstitutionName：:</ContentTitle>
+            <ContentTitle>InstitutionName:</ContentTitle>
             <ContentInfo>{caseInfo.InstitutionName}</ContentInfo>
           </Content>
           <Content>
-            <ContentTitle>Description:</ContentTitle>
-            <ContentInfo>{caseInfo.Description}</ContentInfo>
+            <WordBreak>
+              <Inline>Description:</Inline>
+              {caseInfo.Description}
+            </WordBreak>
           </Content>
           <Content>
-            <ContentTitle>StudyInstanceUID:</ContentTitle>
-            <CopyButton onClick={() => copyStudyUID(caseInfo.StudyInstanceUID)}>
-              <CopyOutlined />
-            </CopyButton>
+            <WordBreak>
+              <Inline>StudyInstanceUID:</Inline>
+              {caseInfo.StudyInstanceUID}
+              <CopyButton onClick={() => copyStudyUID(caseInfo.StudyInstanceUID)}>
+                <CopyOutlined />
+              </CopyButton>
+            </WordBreak>
           </Content>
         </Study>
       </Container>

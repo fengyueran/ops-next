@@ -1,37 +1,37 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { CaseStatus } from 'src/type';
+import { CaseStatus, StatusColorMap } from 'src/type';
 import { ColorTag } from 'src/components';
 
 const TagMap = {
   [CaseStatus.WAITING_QC]: {
     tag: <FormattedMessage defaultMessage="待质检" />,
-    color: '#B7B7B7',
+    color: StatusColorMap[CaseStatus.WAITING_QC],
   },
   [CaseStatus.WAITING_SEGMENT]: {
     tag: <FormattedMessage defaultMessage="待粗分" />,
-    color: '#3E9FF9',
+    color: StatusColorMap[CaseStatus.WAITING_SEGMENT],
   },
   [CaseStatus.WAITING_RIFINE]: {
     tag: <FormattedMessage defaultMessage="待精分" />,
-    color: '#F97043',
+    color: StatusColorMap[CaseStatus.WAITING_RIFINE],
   },
   [CaseStatus.WAITING_REVIEW]: {
     tag: <FormattedMessage defaultMessage="待审查" />,
-    color: '#5631F6',
+    color: StatusColorMap[CaseStatus.WAITING_REVIEW],
   },
   [CaseStatus.WAITING_REPORT]: {
     tag: <FormattedMessage defaultMessage="待报告" />,
-    color: '#1D71D1',
+    color: StatusColorMap[CaseStatus.WAITING_REPORT],
   },
   [CaseStatus.WAITING_RETURN]: {
     tag: <FormattedMessage defaultMessage="待返还" />,
-    color: '#FDBE4A',
+    color: StatusColorMap[CaseStatus.WAITING_RETURN],
   },
   [CaseStatus.RETURNED]: {
     tag: <FormattedMessage defaultMessage="已返还" />,
-    color: '#4FBB34',
+    color: StatusColorMap[CaseStatus.RETURNED],
   },
 };
 

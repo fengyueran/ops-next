@@ -86,6 +86,7 @@ const tagTable: Record<string, TagProps> = {
 
 const CaseTags: React.FC<Props> = ({ tag }) => {
   const data = tagTable[tag];
+
   if (!data) {
     return (
       <Label bgColor="#fafafa" borderColor="#d9d9d9" text={tag} textColor="rgba(0,0,0,0.85)" />
