@@ -1,10 +1,10 @@
-export const saveToLocal = async (content: string) => {
+export const saveToLocal = async (fileName: string, content: string) => {
   const blob = new Blob([content], {
     type: 'text/plain',
   });
 
   const fileHandle = await window.showSaveFilePicker({
-    suggestedName: 'log.txt',
+    suggestedName: fileName,
     types: [
       {
         description: 'TXT file',

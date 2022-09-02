@@ -101,7 +101,7 @@ export const uploadFiles = async (files: { path: string; data: ArrayBuffer | str
   }
 };
 
-export const geLog = async (workflowID: string, algoOperationID: string) => {
+export const getLog = async (workflowID: string, algoOperationID: string) => {
   const url = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${algoOperationID}/log?all=true`;
   const { data } = await axios.get(url);
   return data;

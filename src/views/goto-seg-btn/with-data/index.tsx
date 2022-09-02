@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { message } from 'antd';
 
-import { cases, microApp } from 'src/redux';
+import { cases, microApp, other } from 'src/redux';
 import { RootState, AppDispatch } from 'src/store';
 import { getOperation } from 'src/api';
 import { loadMicroAppByStep, delay } from 'src/utils';
-import { NodeStep } from 'src/type';
+import { NodeStep, ErrorType } from 'src/type';
 
 interface Props {}
 
@@ -34,10 +33,16 @@ export const withData =
           try {
             await dispatch(microApp.actions.patch({ operation, output, makeSubmitInput })).unwrap();
           } catch (error) {
-            message.error(`Patch error:${(error as Error).message}`);
+            dispatch(microApp.actions.toggleSubmitPending(false));
+            dispatch(
+              other.actions.setError({
+                type: ErrorType.PatchError,
+                detail: (error as Error).message,
+              }),
+            );
           }
         };
-        await delay(100);
+        await delay(40);
         dispatch(microApp.actions.toggleMicroAppVisible(true));
         loadMicroAppByStep(caseInfo, operation, submit);
       } catch (error) {

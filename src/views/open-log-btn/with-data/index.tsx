@@ -3,9 +3,9 @@ import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 
 import { other } from 'src/redux';
-import { getAlgoOperation, geLog } from 'src/api';
+import { getAlgoOperation, getLog } from 'src/api';
 import { saveToLocal } from 'src/utils';
-
+import { ErrorType } from 'src/type';
 interface Props {
   caseInfo: CaseInfo;
 }
@@ -22,15 +22,22 @@ export const withData =
       try {
         setIsModalVisible(true);
         dispatch(other.actions.toggleLoading(true));
-        const data = await getAlgoOperation(caseInfo.workflowID, caseInfo.step);
-        if (data) {
-          const data = await geLog(caseInfo.workflowID, caseInfo.step);
-          console.log('log', data);
+        const algoOp = await getAlgoOperation(caseInfo.workflowID, caseInfo.step);
+
+        if (algoOp) {
+          const logData = await getLog(caseInfo.workflowID, algoOp.id);
+          setLog(logData);
         } else {
           setLog('');
         }
       } catch (error) {
-        message.error(`Load log error:${(error as Error).message}`);
+        console.error('Load log error', error);
+        dispatch(
+          other.actions.setError({
+            type: ErrorType.LoadLogError,
+            detail: (error as Error).message,
+          }),
+        );
       } finally {
         dispatch(other.actions.toggleLoading(false));
       }
@@ -42,11 +49,15 @@ export const withData =
 
     const onSave = useCallback(async () => {
       try {
-        await saveToLocal(log);
+        await saveToLocal(`${caseInfo.PatientID}_log.txt`, log);
       } catch (error) {
         message.error(`Download log error:${(error as Error).message}`);
       }
-    }, [log]);
+    }, [caseInfo.PatientID, log]);
+
+    if (!caseInfo.workflowFailed) {
+      return null;
+    }
 
     return (
       <WrappedComponent

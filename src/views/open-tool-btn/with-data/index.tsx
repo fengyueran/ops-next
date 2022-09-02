@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { message } from 'antd';
 
 import { loadMicroAppByStatus } from 'src/utils';
-import { microApp, cases } from 'src/redux';
+import { microApp, cases, other } from 'src/redux';
 import { AppDispatch } from 'src/store';
 import { getOperationByID, tagCaseReaded } from 'src/api';
-import { CaseStatus } from 'src/type';
+import { CaseStatus, ErrorType } from 'src/type';
 
 interface Props {
   caseInfo: CaseInfo & { id: string };
@@ -48,13 +47,26 @@ export const withData =
               ).unwrap();
             }
           } catch (error) {
-            message.error(`Submit error:${(error as Error).message}`);
+            console.error('Submit error', error);
+            dispatch(microApp.actions.toggleSubmitPending(false));
+            dispatch(
+              other.actions.setError({
+                type: ErrorType.SubmitError,
+                detail: (error as Error).message,
+              }),
+            );
           }
         };
 
         loadMicroAppByStatus(caseInfo, { id, ...operation }, submit);
       } catch (error) {
-        message.error(`Load error: ${(error as Error).message}`);
+        console.error('Open tool error', error);
+        dispatch(
+          other.actions.setError({
+            type: ErrorType.OpenToolError,
+            detail: (error as Error).message,
+          }),
+        );
       }
     }, [dispatch, caseInfo]);
 

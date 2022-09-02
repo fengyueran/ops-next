@@ -2,6 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface State {
   loading: boolean;
+  error?: {
+    type: string;
+    detail: string;
+  };
 }
 
 const initialState: State = {
@@ -14,6 +18,9 @@ export const slice = createSlice({
   reducers: {
     toggleLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
+    },
+    setError(state, action: PayloadAction<{ type: string; detail: string } | undefined>) {
+      state.error = action.payload;
     },
   },
 });

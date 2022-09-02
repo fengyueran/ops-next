@@ -43,6 +43,7 @@ const Content = styled.div`
   padding: 24px;
   height: calc(100vh - 56px);
   overflow: auto;
+  white-space: pre-wrap;
 `;
 
 interface Props {

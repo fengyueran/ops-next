@@ -1,13 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { Spin, message } from 'antd';
+import { Spin } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { cases, caseDetail, microApp } from 'src/redux';
+import { cases, caseDetail, microApp, other } from 'src/redux';
 import { useOperationsAndSeries } from 'src/hooks';
 import { loadMicroAppByStep } from 'src/utils';
 import { RootState, AppDispatch } from 'src/store';
-import { NodeStep } from 'src/type';
+import { NodeStep, ErrorType } from 'src/type';
 
 const LoadingWrapper = styled.div`
   width: 100%;
@@ -26,7 +26,7 @@ export const withData =
     const id = useSelector(caseDetail.selectors.selectedCaseID);
     const caseInfo = useSelector((state: RootState) => cases.selectors.getCaseByID(state, id!));
 
-    const { data, error } = useOperationsAndSeries(id && caseInfo?.workflowID);
+    const { data, error } = useOperationsAndSeries(caseInfo?.workflowID);
 
     const readyToOpenMicroApp = useCallback(() => {
       dispatch(microApp.actions.toggleMicroAppVisible(true));
@@ -58,7 +58,14 @@ export const withData =
           try {
             await dispatch(microApp.actions.patch({ operation, output, makeSubmitInput })).unwrap();
           } catch (error) {
-            message.error(`Patch error:${(error as Error).message}`);
+            console.error('Patch error', error);
+            dispatch(microApp.actions.toggleSubmitPending(false));
+            dispatch(
+              other.actions.setError({
+                type: ErrorType.PatchError,
+                detail: (error as Error).message,
+              }),
+            );
           }
         };
         loadMicroAppByStep(caseInfo, operation, submit);
@@ -66,9 +73,15 @@ export const withData =
       [caseInfo, dispatch, readyToOpenMicroApp],
     );
 
-    if (error) {
-      console.error('Get operaions error', error);
-    }
+    useEffect(() => {
+      if (error) {
+        console.error('Get operaions error', error);
+        dispatch(
+          other.actions.setError({ type: ErrorType.LoadOperationError, detail: error.message }),
+        );
+      }
+    }, [dispatch, error]);
+
     if (!id) return null;
 
     if (!data?.operations) {

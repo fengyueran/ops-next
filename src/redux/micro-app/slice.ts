@@ -72,15 +72,9 @@ export const slice = createSlice({
       state.submitPending = false;
       state.microAppVisible = false;
     });
-    builder.addCase(submit.rejected, (state, action) => {
-      state.submitPending = false;
-    });
     builder.addCase(patch.fulfilled, (state) => {
       state.submitPending = false;
       state.microAppVisible = false;
-    });
-    builder.addCase(patch.rejected, (state, action) => {
-      state.submitPending = false;
     });
   },
 });

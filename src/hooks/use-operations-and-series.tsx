@@ -123,7 +123,7 @@ const getSeries = async (operations: DetailOperation[]) => {
 
 export const useOperationsAndSeries = (workflowID?: string) => {
   const [data, setData] = useState<{ operations: OperationFlatData[]; series: Series[] }>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<Error>();
 
   useEffect(() => {
     const start = async () => {
@@ -136,7 +136,7 @@ export const useOperationsAndSeries = (workflowID?: string) => {
         );
         setData({ operations: validOperaions, series });
       } catch (error) {
-        setError((error as Error).message);
+        setError(error as Error);
       }
     };
     if (workflowID) {

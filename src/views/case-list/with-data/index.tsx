@@ -33,7 +33,10 @@ export const withData =
 
     const { data, error } = useCases();
 
-    if (error) return <div>failed to load</div>;
+    if (error) {
+      console.error('Load cases error', error);
+      return <div style={{ color: 'red' }}>failed to load</div>;
+    }
 
     return (
       <WrappedComponent

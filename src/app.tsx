@@ -7,10 +7,11 @@ import zhCN from 'antd/es/locale/zh_CN';
 import { HashRouter } from 'react-router-dom';
 import 'antd/dist/antd.min.css';
 
-import { Loading } from './views/global-loading';
 import { getLocale } from './locales';
 import { store } from './store';
 import { Routes } from './routes';
+import { Error } from './views/global-error';
+import { Loading } from './views/global-loading';
 
 const Container = styled.div`
   width: 100vw;
@@ -26,6 +27,7 @@ export const App = () => (
             <Routes />
           </HashRouter>
           <Loading />
+          <Error />
         </Container>
       </ConfigProvider>
     </IntlProvider>
