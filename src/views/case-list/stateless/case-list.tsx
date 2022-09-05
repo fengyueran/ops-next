@@ -18,7 +18,18 @@ const PatientIDContainer = styled.div`
   margin-left: 16px;
 `;
 
-const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
+const getTagMaxLength = (cases?: CaseInfo[]) => {
+  if (!cases) return 0;
+  let max = cases[0]?.tags?.length || 0;
+  for (let i = 0; i < cases.length; i += 1) {
+    const current = cases[i].tags?.length || 0;
+    if (current > max) {
+      max = current;
+    }
+  }
+  return max;
+};
+const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases?: CaseInfo[]) => [
   {
     title: 'PatientID',
     sorter: true,
@@ -101,7 +112,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage']) => [
     },
   },
   {
-    width: 140,
+    width: 80 + getTagMaxLength(cases) * 40,
     title: formatMessage({ defaultMessage: '标签' }),
     dataIndex: ['tags'],
     render: (tags: string[]) => {
@@ -230,7 +241,7 @@ const Container = styled.div`
 const Header = styled.div``;
 
 interface Props {
-  cases?: CaseData[];
+  cases?: CaseInfo[];
   pagination: Pagination;
   onChange: TableProps<any>['onChange'];
   onPageChange: (page: number, pageSize: number) => void;
@@ -258,8 +269,8 @@ export const CaseList: React.FC<Props> = ({ cases, pagination, onPageChange, onC
   const intl = useIntl();
 
   const columns = useMemo(() => {
-    return createCaseColumns(intl.formatMessage);
-  }, [intl]);
+    return createCaseColumns(intl.formatMessage, cases);
+  }, [intl, cases]);
 
   return (
     <Container>

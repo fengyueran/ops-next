@@ -28,6 +28,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
+    "build:image": "sh scripts/build-image.sh",
     "create:strapiCase": "ts-node --project ./node.tsconfig.json scripts/create-strapi-case.ts",
     "create:worflowCase": "ts-node --project ./node.tsconfig.json scripts/create-workflow-case.ts",
     "upload:file": "ts-node --project ./node.tsconfig.json scripts/upload-file.ts",
