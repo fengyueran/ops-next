@@ -1,6 +1,6 @@
 import A, { AxiosInstance, AxiosError } from 'axios';
 
-export const STRAPI_CMS_HOST = window.STRAPI_CMS_HOST || '';
+export const STRAPI_CMS_HOST = process.env.REACT_APP_STRAPI_CMS_URL || '';
 
 class Fetcher {
   private _axios?: AxiosInstance;

@@ -91,7 +91,7 @@ const makeReviewSubmitInput = async (data: ReviewToolOutput) => {
   const { leftMeshVtp, rightMeshVtp } = data;
   //   const { path } = await uploadFile('leftMeshVtp.vtp', leftMeshVtp);
   //   const { path } = await uploadFile('rightMeshVtp.vtp', rightMeshVtp);
-  return { leftMeshVtp, rightMeshVtp };
+  return { left_vtp: leftMeshVtp, right_vtp: rightMeshVtp };
 };
 
 const makeReportSubmitInput = async (data: ReportToolOutput) => {
@@ -168,7 +168,6 @@ const makeReivewToolInput = (
     const vtps = await Promise.all(vtpTasks);
     return vtps;
   };
-  debugger; //eslint-disable-line
 
   return {
     caseInfo: {
@@ -232,7 +231,7 @@ const makeReportToolInput = (
   return {
     caseInfo: {
       caseId: caseInfo.caseID,
-      reportId: caseInfo.caseID,
+      reportId: caseInfo.caseID.slice(0, 9),
       id: caseInfo.PatientID!,
       checkDate: caseInfo.StudyDate!,
       reportDate: format(new Date(caseInfo.uploadAt), 'yyyy-MM-dd HH:mm:ss'),

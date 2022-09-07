@@ -159,6 +159,12 @@ const CaseInfo: React.FC<Props> = ({ caseInfo, series }) => {
             </ContentTitle>
             <ContentInfo>{series.find((d) => d.selected)?.tags.SeriesNumber || ''}</ContentInfo>
           </Content>
+          <Content>
+            <WordBreak>
+              <Inline>CaseID:</Inline>
+              {caseInfo.caseID.slice(0, 9)}
+            </WordBreak>
+          </Content>
         </Parse>
         <Study>
           <Title>Study Information:</Title>

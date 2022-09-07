@@ -3,7 +3,8 @@ import { v4 } from 'uuid';
 
 import { createCaseID } from './utils';
 
-const HOST = 'http://192.168.201.243';
+const HOST = 'http://192.168.201.243'; //开发环境
+// const HOST = 'http://10.3.4.220';
 const PORT = '8008';
 const CREATE_CASE_PATH = '/v1/ops/case/create';
 
@@ -40,6 +41,7 @@ const makeCases = () => {
     PatientBirthDate: '19890216',
     Description: 'xxxxx',
     dicomFilePath: 'upload/DMSBoAKAyKN7Y2cbT2xqjN.tgz',
+    // dicomFilePath: 'upload/sZxYKuTJSJ36qVZb9z2uaX.tgz',
   };
 
   for (let i = 0; i < CASE_COUNT; i += 1) {

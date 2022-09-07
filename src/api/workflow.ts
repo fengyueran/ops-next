@@ -11,7 +11,7 @@ interface UploadFileResponse {
   path: string;
 }
 
-const WORKFLOW_HOST = window.WORKFLOW_SERVER_URL || '';
+const WORKFLOW_HOST = process.env.REACT_APP_WORKFLOW_SERVER_URL || '';
 
 const PREFIX = '/v1/ops';
 const FILE_PATH = `${PREFIX}/files/download`;
