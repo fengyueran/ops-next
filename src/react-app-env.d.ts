@@ -10,6 +10,7 @@ interface Window {
   downloadFile: (filePath: string) => void;
   showSaveFilePicker: (data: any) => Promise<any>;
 }
+
 enum CaseStatus {
   'WAITING_QC' = 'waiting-qc',
   'WAITING_SEGMENT' = 'waiting-rough-seg',
@@ -18,12 +19,6 @@ enum CaseStatus {
   'WAITING_REPORT' = 'waiting-report',
   'WAITING_RETURN' = 'waiting-return',
   'RETURNED' = 'returned',
-}
-
-interface Operator {
-  status: Status;
-  input: any;
-  output?: any;
 }
 
 enum Priority {
@@ -46,6 +41,7 @@ interface CaseBaseInfo {
   name?: string; //手动录入
   workflowID: string;
   caseID: string;
+  sopInstanceUID: string;
   enableEdit: boolean;
   editID?: string;
   workflowFailed: boolean;
@@ -297,21 +293,21 @@ interface NodeInput {
   Name: string;
   Type: string;
   Path: string;
-  Value: string;
+  value: string;
   Optional: boolean;
 }
 
 enum NodeStep {
   'DICOM_PARSE' = 'dicom-parse',
-  'QC' = 'qc',
+  'QC' = 'quality-control',
   'DICOM2_NIFTI' = 'dicom2-nifti',
   'SEGMENT' = 'dicom-vessel-segment',
   'SEGMENT_EDIT' = 'vessel-segment-edit',
   'REFINE' = 'vessel-refine',
-  'REFINE_EDIT' = 'vessel-refine-mask',
+  'REFINE_EDIT' = 'vessel-refine-edit',
   'LUMEN_REFINEMENT_CL' = 'lumen-refinement-cl',
   'SZ_FFR' = 'sz-ffr',
-  'CARS_GEN_THUMBNAIL' = 'cars-gen-thumbnail',
+  'GEN_THUMBNAIL' = 'cars-gen-thumbnail',
   'VALIDATE_FFR' = 'validate-ffr',
   'GEN_CPR_PLY' = 'gen-cpr-ply',
   'REPORT' = 'report',
@@ -323,8 +319,8 @@ interface OperationDataAttributes {
   workflowID: string;
   createdAt: string;
   runID: string;
-  input: NodeInput[];
-  output?: NodeInput[];
+  input: { [key: string]: NodeInput };
+  output?: { [key: string]: NodeInput };
 }
 
 interface FetchResponse {
@@ -394,4 +390,12 @@ interface Sorter {
   columnKey?: string;
   field?: undefined;
   order?: 'descend' | 'ascend';
+}
+
+interface LoginResponse {
+  jwt: string;
+  user: {
+    email: string;
+    username: string;
+  };
 }

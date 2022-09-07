@@ -2,16 +2,16 @@ import axios from 'axios';
 import qs from 'qs';
 
 import { withInfiniteFetch } from 'src/utils';
+import { fetcher, STRAPI_CMS_HOST } from './fetcher';
 
-export const STRAPI_CMS_HOST = window.STRAPI_CMS_HOST || '';
+const PREFIX = '/v1/ops-strapi';
+export const FETCH_CASE_PATH = `${PREFIX}/api/cases`;
 
-export const FETCH_CASE_PATH = '/api/cases';
+const FETCH_OPERATION_PATH = `${PREFIX}/api/operations`;
 
-const FETCH_OPERATION_PATH = '/api/operations';
+const FETCH_ALGO_OPERATION_PATH = `${PREFIX}/api/algo-operations`;
 
-const FETCH_ALGO_OPERATION_PATH = '/api/algo-operations';
-
-const LOGIN_PATH = '/api/auth/local';
+const LOGIN_PATH = `${PREFIX}/api/auth/local`;
 
 export interface Query {
   filters?: object;
@@ -32,9 +32,9 @@ export const strapifetcher = (path: string, query: Query) => {
       encodeValuesOnly: true,
     },
   );
-  const url = `${STRAPI_CMS_HOST}${path}?${queryStr}`;
+  const url = `${path}?${queryStr}`;
 
-  return axios.get(url).then((res) => res.data);
+  return fetcher.axios.get(url).then((res) => res?.data);
 };
 
 export const getOperationsByWFID = withInfiniteFetch<OperationData>(
@@ -56,30 +56,30 @@ export const getOperationsByWFID = withInfiniteFetch<OperationData>(
         encodeValuesOnly: true,
       },
     );
-    const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
-    const data = await axios.get<any, { data: FetchResponse }>(url);
+    const url = `${FETCH_OPERATION_PATH}?${query}`;
+    const data = await fetcher.axios.get<any, { data: FetchResponse }>(url);
     return data.data;
   },
 );
 
 export const getOperationByID = async (operationID: string): Promise<OperationData> => {
-  const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}/${operationID}`;
-  const { data } = await axios.get<any, OperationFetchResponse>(url);
+  const url = `${FETCH_OPERATION_PATH}/${operationID}`;
+  const { data } = await fetcher.axios.get<any, OperationFetchResponse>(url);
   return data.data;
 };
 
-export const login = async (identifier: string, password: string): Promise<any> => {
+export const login = async (identifier: string, password: string): Promise<LoginResponse> => {
   const loginUrl = `${STRAPI_CMS_HOST}${LOGIN_PATH}`;
   const { data } = await axios.post(loginUrl, {
     identifier,
     password,
   });
-  return data.data;
+  return data;
 };
 
 export const tagCaseReaded = async (id: string): Promise<void> => {
-  const url = `${STRAPI_CMS_HOST}${FETCH_CASE_PATH}/${id}`;
-  await axios.put(url, {
+  const url = `${FETCH_CASE_PATH}/${id}`;
+  await fetcher.axios.put(url, {
     data: { readed: true },
   });
 };
@@ -108,9 +108,9 @@ export const getOperation = async (workflowID: string, step: string) => {
     },
   );
 
-  const url = `${STRAPI_CMS_HOST}${FETCH_OPERATION_PATH}?${query}`;
+  const url = `${FETCH_OPERATION_PATH}?${query}`;
 
-  const { data } = await axios.get<
+  const { data } = await fetcher.axios.get<
     any,
     {
       data: {
@@ -151,9 +151,9 @@ export const getAlgoOperation = async (workflowID: string, step: string) => {
     },
   );
 
-  const url = `${STRAPI_CMS_HOST}${FETCH_ALGO_OPERATION_PATH}?${query}`;
+  const url = `${FETCH_ALGO_OPERATION_PATH}?${query}`;
 
-  const { data } = await axios.get<
+  const { data } = await fetcher.axios.get<
     any,
     {
       data: {

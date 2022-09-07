@@ -13,9 +13,10 @@ interface UploadFileResponse {
 
 const WORKFLOW_HOST = window.WORKFLOW_SERVER_URL || '';
 
-const FILE_PATH = '/v1/ops/files/download';
-const UPLOAD_PATH = '/v1/ops/files/upload';
-const CASE_PATH = '/v1/ops/case';
+const PREFIX = '/v1/ops';
+const FILE_PATH = `${PREFIX}/files/download`;
+const UPLOAD_PATH = `${PREFIX}/files/upload`;
+const CASE_PATH = `${PREFIX}/case`;
 
 export const fetchCommonFile = async (
   filePath: string,

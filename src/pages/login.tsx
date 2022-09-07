@@ -1,12 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
-import { Button, Checkbox, Form, Input, message } from 'antd';
 
 import { Col, Row, SpaceY } from 'src/components';
-import { login } from 'src/api';
-import { RoutesMap } from 'src/routes';
+import { LoginForm } from 'src/views/login-form';
 import logoImg from 'src/assets/icons/logo.svg';
 
 const Container = styled(Row)`
@@ -48,10 +45,6 @@ const LoginContainer = styled.div`
   width: 360px;
 `;
 
-const SubmitBtn = styled(Button)`
-  width: 360px;
-`;
-
 const StatementContainer = styled(Row)`
   margin-top: 2px;
   font-family: PingFangSC-Regular;
@@ -72,22 +65,6 @@ const StatementLink = styled.a`
 `;
 
 export const LoginPage = () => {
-  const navigate = useNavigate();
-
-  const onFinish = useCallback(
-    async (values: { username: string; password: string; remember: boolean }) => {
-      const { username, password } = values;
-
-      try {
-        await login(username, password);
-        navigate(RoutesMap.CASE_LIST);
-      } catch (error) {
-        message.error(`Login error: ${(error as Error).message}`);
-      }
-    },
-    [navigate],
-  );
-
   return (
     <Container>
       <Col>
@@ -104,37 +81,7 @@ export const LoginPage = () => {
           </Slogan>
         </LogoContainer>
         <LoginContainer>
-          <Form
-            name="normal_login"
-            className="login-form"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-          >
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: 'Please input your Username!' }]}
-            >
-              <Input placeholder="Username" />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: 'Please input your Password!' }]}
-            >
-              <Input.Password />
-            </Form.Item>
-            <Form.Item>
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>
-                  <FormattedMessage defaultMessage="记住我" />
-                </Checkbox>
-              </Form.Item>
-            </Form.Item>
-            <Form.Item>
-              <SubmitBtn type="primary" htmlType="submit" className="login-form-button">
-                <FormattedMessage defaultMessage="登录" />
-              </SubmitBtn>
-            </Form.Item>
-          </Form>
+          <LoginForm />
         </LoginContainer>
         <StatementContainer>
           <StatementText>

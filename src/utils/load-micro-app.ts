@@ -1,16 +1,10 @@
 import { format } from 'date-fns';
 
 import { fetchFileWithCache, fullPath, uploadFiles } from 'src/api';
-import { MaskEditType, microAppMgr } from 'src/utils';
+import { MaskEditType, microAppMgr, findFileByName } from 'src/utils';
 import { CaseStatus, NodeOutput, NodeStep } from 'src/type';
 
 type Submit = (output: ToolOutput, makeSubmitInput: (output: any) => Promise<any>) => void;
-const findFileByName = (name: string, inputs: NodeInput[]) => {
-  const found = inputs.find(({ Name }) => Name === name);
-  if (!found) throw new Error(`Can't find the file which name is ${name}`);
-  if (!found.Value) throw new Error(`${name} Value is null`);
-  return found;
-};
 
 const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) => {
   const inputs = operation.input;
@@ -24,12 +18,12 @@ const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) 
 
   const getAutoQCResultFile = async () => {
     const node = findFileByName('dicom_info', inputs);
-    const data = await fetchFileWithCache<AutoQCInfo>(node.Value);
+    const data = await fetchFileWithCache<AutoQCInfo>(node.value);
     return data;
   };
 
-  const seriesList = JSON.parse(findFileByName('series', inputs)?.Value);
-  const thumbnailList = JSON.parse(findFileByName('thumbnails', inputs)?.Value).map(
+  const seriesList = JSON.parse(findFileByName('series', inputs)?.value);
+  const thumbnailList = JSON.parse(findFileByName('thumbnails', inputs)?.value).map(
     (thumbPath: string) => fullPath(thumbPath),
   );
 
@@ -51,7 +45,7 @@ const makeMaskEditToolInput = (
 
   const getNifti = async () => {
     const node = findFileByName(NodeOutput.NIFTI, input);
-    const data = await fetchFileWithCache<ArrayBuffer>(node.Value);
+    const data = await fetchFileWithCache<ArrayBuffer>(node.value);
     return data;
   };
 
@@ -72,7 +66,7 @@ const makeMaskEditToolInput = (
       }
     }
 
-    const data = await fetchFileWithCache<ArrayBuffer>(node.Value);
+    const data = await fetchFileWithCache<ArrayBuffer>(node.value);
     return data;
   };
 
@@ -150,30 +144,31 @@ const makeReivewToolInput = (
 
   const getNifti = async () => {
     const node = findFileByName('nifti', inputs);
-    const data = await fetchFileWithCache<ArrayBuffer>(node.Value);
+    const data = await fetchFileWithCache<ArrayBuffer>(node.value);
     return data;
   };
 
   const getMask = async () => {
     const node = findFileByName('refine_aorta_and_arteries', inputs);
-    const maskBuffer = await fetchFileWithCache<ArrayBuffer>(node.Value);
+    const maskBuffer = await fetchFileWithCache<ArrayBuffer>(node.value);
     return maskBuffer;
   };
 
   const getPly = async () => {
     const node = findFileByName(NodeOutput.PLY, inputs);
-    const data = await fetchFileWithCache<string>(node.Value);
+    const data = await fetchFileWithCache<string>(node.value);
     return data;
   };
 
   const getCenterlines = async () => {
-    const vtpTasks = ['left_cl_1Dmesh_vtp', 'right_cl_1Dmesh_vtp'].map((name) => {
+    const vtpTasks = ['left_vtp', 'right_vtp'].map((name) => {
       const node = findFileByName(name, inputs);
-      return fetchFileWithCache<string>(node.Value);
+      return fetchFileWithCache<string>(node.value);
     });
     const vtps = await Promise.all(vtpTasks);
     return vtps;
   };
+  debugger; //eslint-disable-line
 
   return {
     caseInfo: {
@@ -191,8 +186,9 @@ const makeReivewToolInput = (
     submit:
       submit &&
       (() => {
-        const leftMeshVtp = findFileByName('left_cl_1Dmesh_vtp', inputs)?.Value;
-        const rightMeshVtp = findFileByName('right_cl_1Dmesh_vtp', inputs)?.Value;
+        const leftMeshVtp = findFileByName('left_vtp', inputs)?.value;
+        const rightMeshVtp = findFileByName('right_vtp', inputs)?.value;
+
         submit({ leftMeshVtp, rightMeshVtp });
       }),
   };
@@ -207,7 +203,7 @@ const makeReportToolInput = (
 
   const getPly = async () => {
     const node = findFileByName('ply', inputs);
-    const data = await fetchFileWithCache<ArrayBuffer>(node.Value, 'arraybuffer');
+    const data = await fetchFileWithCache<ArrayBuffer>(node.value, 'arraybuffer');
     return data;
   };
 
@@ -218,20 +214,20 @@ const makeReportToolInput = (
 
   const getSphere = async () => {
     const node = findFileByName('cprSphere', inputs);
-    const data = await fetchFileWithCache<ArrayBuffer>(node.Value);
+    const data = await fetchFileWithCache<ArrayBuffer>(node.value);
     return data;
   };
 
   const getCenterlines = async () => {
     const vtpTasks = ['leftMeshVtp', 'rightMeshVtp'].map((name) => {
       const node = findFileByName(name, inputs);
-      return fetchFileWithCache<ArrayBuffer>(node.Value, 'arraybuffer');
+      return fetchFileWithCache<ArrayBuffer>(node.value, 'arraybuffer');
     });
     const vtps = await Promise.all(vtpTasks);
     return vtps;
   };
 
-  const cprFilePathList = JSON.parse(findFileByName('cprs', inputs)?.Value);
+  const cprFilePathList = JSON.parse(findFileByName('cprs', inputs)?.value);
 
   return {
     caseInfo: {

@@ -1,3 +1,4 @@
+export * as user from './user';
 export * as cases from './cases';
 export * as other from './other';
 export * as caseDetail from './case-detail';

@@ -48,8 +48,9 @@ const makeCases = () => {
       ...caseInfo,
       PatientID: v4().slice(0, 8),
       ffrAccessionNumber: v4().slice(0, 15),
-      orderID: caseName,
-      workflowID: caseName,
+      orderID: v4(),
+      workflowID: v4(),
+      sopInstanceUID: v4(),
       PatientName: caseName,
     });
   }

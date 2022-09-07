@@ -7,7 +7,7 @@ import { Sider } from 'src/views/sider';
 import { CaseRealtime } from 'src/views/case-realtime';
 import { CaseDetailDrawer } from 'src/views/case-detail-drawer';
 
-export const CaseListPage = () => {
+export const HomePage = () => {
   return (
     <>
       <IndexPageLayout

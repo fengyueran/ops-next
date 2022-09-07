@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { useCases } from 'src/hooks/use-cases';
-import { caseFilter } from 'src/redux';
+import { user, caseFilter } from 'src/redux';
 
 export const withData =
   <P extends object>(
@@ -10,6 +10,7 @@ export const withData =
   ): React.FC<Omit<P, 'cases' | 'pagination' | 'onPageChange' | 'onChange'>> =>
   ({ ...props }: any) => {
     const dispatch = useDispatch();
+    const token = useSelector(user.selectors.token);
 
     const onPageChange = useCallback(
       (page: number, pageSize: number) => {
@@ -30,6 +31,8 @@ export const withData =
       },
       [dispatch],
     );
+
+    if (!token) return null;
 
     const { data, error } = useCases();
 

@@ -65,7 +65,13 @@ export const useCases = () => {
   }, [caseQueryState]);
 
   const dispatch = useDispatch();
-  const { data, error } = useSWR<CaseFetchResponse>([FETCH_CASE_PATH, query], strapifetcher);
+  const { data, error } = useSWR<CaseFetchResponse>([FETCH_CASE_PATH, query], strapifetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    refreshWhenOffline: false,
+    refreshWhenHidden: false,
+    refreshInterval: 0,
+  });
 
   const cases = useSelector(casesRedux.selectors.cases);
   const pagination = useSelector(casesRedux.selectors.pagination);

@@ -8,7 +8,7 @@ const getQCSeriesID = (operation: OperationData) => {
   try {
     const { attributes } = operation;
     const data = findFileByName(NodeOutput.TARGET_SERIES, attributes.output!);
-    const parts = data!.Value.split('/');
+    const parts = data!.value.split('/');
     const seriesUID = parts[parts.length - 1].replace('.tgz', '');
     return seriesUID;
   } catch (error) {
@@ -33,7 +33,9 @@ const formatOperations = (operations: OperationData[]) => {
 
   const getCompleteThumbnail = () => {
     const completeOp = operations.find(({ attributes }) => attributes.step === NodeStep.RETURNED);
-    const thumbnail = findFileByName(NodeOutput.THUMBNAILS, completeOp?.attributes.output)?.Value;
+    const thumbnail =
+      completeOp?.attributes.output &&
+      findFileByName(NodeOutput.THUMBNAILS, completeOp?.attributes.output)?.value;
     return thumbnail ? fullPath(thumbnail) : undefined;
   };
 
@@ -47,7 +49,9 @@ const formatOperations = (operations: OperationData[]) => {
     if (step === NodeStep.QC) {
       const seriesUID = getQCSeriesID(operation);
       newOperation.targetSeries = seriesUID;
-      newOperation.passed = !(findFileByName(NodeOutput.QC_FAILED, output)?.Value === 'true');
+      newOperation.passed = !(
+        output && findFileByName(NodeOutput.QC_FAILED, output)?.value === 'true'
+      );
       newOperation.thumbnail = getQCThumbnail(seriesUID);
     }
 
@@ -97,14 +101,14 @@ const getSeries = async (operations: DetailOperation[]) => {
     try {
       const { output } = dicomParseOp;
       const data = findFileByName(NodeOutput.THUMBNAILS, output!);
-      const thumbnails = JSON.parse(data!.Value);
+      const thumbnails = JSON.parse(data!.value);
       return thumbnails as string[];
     } catch (error) {
       return [];
     }
   };
 
-  const dicomInfoFilePath = findFileByName(NodeOutput.DICOM_INFO, operation.output)?.Value;
+  const dicomInfoFilePath = findFileByName(NodeOutput.DICOM_INFO, operation.output)?.value;
   const autoQCInfo = await fetchFileWithCache<AutoQCInfo>(dicomInfoFilePath!);
   const series = formatAutoQCInfo(autoQCInfo);
   const thumbnails = getThumbnails(operation);
