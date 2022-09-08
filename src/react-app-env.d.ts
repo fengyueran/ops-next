@@ -274,7 +274,7 @@ interface ReportToolInput {
     patientName: string;
     gender: string;
     age: string;
-    hospital: string;
+    accessionNumber: string;
   };
   cprFilePathList: string[];
   getPly: GetPlyBuffer;
@@ -321,6 +321,11 @@ interface OperationDataAttributes {
   runID: string;
   input: { [key: string]: NodeInput };
   output?: { [key: string]: NodeInput };
+  operatorInfo?: {
+    email: string;
+    username: string;
+    createdAt: string;
+  };
 }
 
 interface FetchResponse {

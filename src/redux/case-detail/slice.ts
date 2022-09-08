@@ -1,17 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface State {
-  selectedCaseID?: string;
+  loading: boolean;
 }
 
-const initialState: State = {};
+const initialState: State = {
+  loading: false,
+};
 
 export const slice = createSlice({
   name: 'CaseDetail',
   initialState,
   reducers: {
-    setSelectCaseID(state, action: PayloadAction<string | undefined>) {
-      state.selectedCaseID = action.payload;
+    toggleLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
     },
   },
 });

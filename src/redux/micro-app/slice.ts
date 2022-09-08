@@ -8,6 +8,7 @@ export interface State {
   canSubmit: boolean;
   canGotoSeg: boolean;
   gotoSegLoading: boolean;
+  currentOperation?: DetailOperation;
 }
 
 const initialState: State = {
@@ -65,6 +66,9 @@ export const slice = createSlice({
     },
     toggleGotoSegLoading(state, action: PayloadAction<boolean>) {
       state.gotoSegLoading = action.payload;
+    },
+    setCurrentOperation(state, action: PayloadAction<DetailOperation | undefined>) {
+      state.currentOperation = action.payload;
     },
   },
   extraReducers: (builder) => {

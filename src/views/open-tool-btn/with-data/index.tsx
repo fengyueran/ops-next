@@ -31,6 +31,7 @@ export const withData =
         }
 
         const { id, attributes: operation } = await getOperationByID(caseInfo.editID!);
+        dispatch(microApp.actions.setCurrentOperation({ id, ...operation }));
 
         const submit = async (
           output: ToolOutput,

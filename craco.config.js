@@ -18,6 +18,7 @@ module.exports = {
       '/report': 'http://localhost:3004',
       '/workers': 'http://localhost:3002',
       '/static/media/dvlogo*': 'http://localhost:3004',
+      '/static/media/SourceHanSansSC*': 'http://localhost:3004',
     },
   },
 };

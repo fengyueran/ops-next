@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { microAppMgr } from 'src/utils';
@@ -15,10 +15,14 @@ export const withData =
       if (!visible) {
         microAppMgr.unmount();
         dispatch(microApp.actions.toggleCanGotoSeg(false));
+        dispatch(microApp.actions.setCurrentOperation());
+        dispatch(cases.actions.setOpenCaseID());
       }
     }, [visible, dispatch]);
 
-    return (
-      <WrappedComponent {...(props as P)} visible={visible} title={selectedCase?.PatientID || ''} />
-    );
+    const caseID = useMemo(() => {
+      return selectedCase?.caseID?.slice(0, 9) || '';
+    }, [selectedCase]);
+
+    return <WrappedComponent {...(props as P)} visible={visible} title={caseID} />;
   };

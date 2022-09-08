@@ -5,12 +5,12 @@ import { caseDetail } from 'src/redux';
 import { CaseDetailDrawer as S } from './case-detail-drawer';
 
 const mapStateToProps = (state: RootState) => ({
-  visible: !!caseDetail.selectors.selectedCaseID(state),
+  visible: caseDetail.selectors.loading(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   closeDrawer: () => {
-    dispatch(caseDetail.actions.setSelectCaseID());
+    dispatch(caseDetail.actions.toggleLoading(false));
   },
 });
 

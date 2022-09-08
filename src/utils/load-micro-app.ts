@@ -54,7 +54,9 @@ const makeMaskEditToolInput = (
 
     if (editType === MaskEditType.Segment) {
       if (output) {
-        node = findFileByName(NodeOutput.EDITED_SEGMENT_MASK, output);
+        node = output[NodeOutput.EDITED_REFINE_MASK]
+          ? findFileByName(NodeOutput.EDITED_REFINE_MASK, output)
+          : findFileByName(NodeOutput.EDITED_SEGMENT_MASK, output);
       } else {
         node = findFileByName(NodeOutput.SEGMENT_MASK, input);
       }
@@ -238,7 +240,7 @@ const makeReportToolInput = (
       patientName: caseInfo.PatientName!,
       gender: caseInfo.PatientSex!,
       age: caseInfo.PatientAge!,
-      hospital: caseInfo.InstitutionName!,
+      accessionNumber: caseInfo.AccessionNumber!,
     },
     getPly,
     getCPR,

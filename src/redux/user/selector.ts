@@ -8,7 +8,10 @@ const token = createSelector(selector, (user) => user.token);
 
 const user = createSelector(selector, (user) => user.user);
 
+const loginInfo = createSelector(selector, (user) => user.loginInfo);
+
 export const selectors = {
   token,
   user,
+  loginInfo,
 };

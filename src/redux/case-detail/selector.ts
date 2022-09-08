@@ -4,8 +4,8 @@ import { RootState } from 'src/store';
 
 const selector = (state: RootState) => state.caseDetail;
 
-const selectedCaseID = createSelector(selector, (root) => root.selectedCaseID);
+const loading = createSelector(selector, (root) => root.loading);
 
 export const selectors = {
-  selectedCaseID,
+  loading,
 };

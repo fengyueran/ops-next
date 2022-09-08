@@ -5,12 +5,22 @@ import { createCaseID } from './utils';
 
 const HOST = 'http://localhost';
 const PORT = '1337';
-const CREATE_CASE_PATH = '/api/cases';
+const CREATE_CASE_PATH = '/v1/ops-strapi/api/cases';
+const LOGIN_PATH = '/v1/ops-strapi/api/auth/local';
 
 const step = ['QC', 'MaskEdit', 'Review', 'Report'];
 
 const getStep = (i: number) => {
   return step[i % 4];
+};
+
+export const login = async (identifier: string, password: string): Promise<any> => {
+  const loginUrl = `${HOST}:${PORT}${LOGIN_PATH}`;
+  const { data } = await axios.post(loginUrl, {
+    identifier,
+    password,
+  });
+  return data;
 };
 
 const handleError = (error: any) => {
@@ -32,9 +42,8 @@ const makeCases = () => {
   const caseInfo: any = {
     uploadAt: Date.now(),
     tags: ['门诊'],
-    narrowDegree: 1,
+    narrowDegree: '1',
     priority: 'High',
-    isPositive: true,
     ffrAccessionNumber: 'asdfasd2342323',
     name: 'xxx',
 
@@ -56,6 +65,9 @@ const makeCases = () => {
       caseID: createCaseID(v4()),
       workflowID: v4(),
       step: getStep(i),
+      orderID: v4(),
+      sopInstanceUID: v4(),
+      ffrAccessionNumber: v4().slice(0, 15),
       PatientName: `${caseInfo.PatientName}${i}`,
     });
   }
@@ -65,6 +77,7 @@ const makeCases = () => {
 
 const createCases = async () => {
   try {
+    const { jwt } = await login('xinghunm', '12345678');
     const URI = `${HOST}:${PORT}${CREATE_CASE_PATH}`;
     const cases = makeCases();
 
@@ -78,9 +91,17 @@ const createCases = async () => {
       while (number < MAX_TASK_COUNT && (caseInfo = cases.pop())) {
         number++;
         tasks.push(
-          axios.post(URI, {
-            data: caseInfo,
-          }),
+          axios.post(
+            URI,
+            {
+              data: caseInfo,
+            },
+            {
+              headers: {
+                authorization: `Bearer ${jwt}`,
+              },
+            },
+          ),
         );
       }
 

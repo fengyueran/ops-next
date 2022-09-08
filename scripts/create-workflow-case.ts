@@ -8,6 +8,18 @@ const HOST = 'http://192.168.201.243'; //开发环境
 const PORT = '8008';
 const CREATE_CASE_PATH = '/v1/ops/case/create';
 
+const STRAPI_CMS_HOST = 'http://10.3.6.34:1339';
+const LOGIN_PATH = '/v1/ops-strapi/api/auth/local';
+
+export const login = async (identifier: string, password: string): Promise<any> => {
+  const loginUrl = `${STRAPI_CMS_HOST}${LOGIN_PATH}`;
+  const { data } = await axios.post(loginUrl, {
+    identifier,
+    password,
+  });
+  return data;
+};
+
 const handleError = (error: any) => {
   console.log('Error----------------------');
   if (error.response) {
@@ -29,7 +41,6 @@ const makeCases = () => {
     tags: ['门诊'],
     narrowDegree: 1,
     priority: 'High',
-    isPositive: true,
     name: 'xxx',
     StudyDate: '20210928',
     PatientSex: 'M',
@@ -48,6 +59,7 @@ const makeCases = () => {
     const caseName = createCaseID(v4());
     cases.push({
       ...caseInfo,
+      caseID: caseName,
       PatientID: v4().slice(0, 8),
       ffrAccessionNumber: v4().slice(0, 15),
       orderID: v4(),
@@ -64,7 +76,7 @@ const createCases = async () => {
   try {
     const URI = `${HOST}:${PORT}${CREATE_CASE_PATH}`;
     const cases = makeCases();
-
+    const { jwt } = await login('xinghunm', '12345678');
     const createCasesBatchToBatch = async () => {
       const tasks: any[] = [];
       const MAX_TASK_COUNT = 6;
@@ -74,7 +86,13 @@ const createCases = async () => {
 
       while (number < MAX_TASK_COUNT && (caseInfo = cases.pop())) {
         number++;
-        tasks.push(axios.post(URI, caseInfo));
+        tasks.push(
+          axios.post(URI, caseInfo, {
+            headers: {
+              authorization: `Bearer ${jwt}`,
+            },
+          }),
+        );
       }
 
       await Promise.all(tasks);

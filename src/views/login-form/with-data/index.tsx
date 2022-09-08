@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { other, user } from 'src/redux';
@@ -8,18 +8,22 @@ import { ErrorType } from 'src/type';
 import { login } from 'src/api';
 
 export const withData =
-  <P extends object>(WrappedComponent: React.ComponentType<P>): React.FC<Omit<P, 'onLogin'>> =>
+  <P extends object>(
+    WrappedComponent: React.ComponentType<P>,
+  ): React.FC<Omit<P, 'onLogin' | 'initialValues'>> =>
   ({ ...props }: any) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const loginInfo = useSelector(user.selectors.loginInfo);
 
     const onLogin = useCallback(
       async (values: { username: string; password: string; remember: boolean }) => {
-        const { username, password } = values;
-
+        const { username, password, remember } = values;
+        dispatch(user.actions.setLoginInfo(remember ? values : undefined));
         try {
           const data = await login(username, password);
           dispatch(user.actions.setUser(data));
+
           navigate(RoutesMap.ROOT);
         } catch (error) {
           dispatch(
@@ -33,5 +37,6 @@ export const withData =
       [dispatch, navigate],
     );
 
-    return <WrappedComponent {...(props as P)} onLogin={onLogin} />;
+    console.log('loginInfo', loginInfo);
+    return <WrappedComponent {...(props as P)} onLogin={onLogin} initialValues={{ loginInfo }} />;
   };

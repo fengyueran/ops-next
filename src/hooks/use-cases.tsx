@@ -25,7 +25,7 @@ const makeQuery = (caseQueryState: caseFilter.State) => {
       fields.push({ ffrAccessionNumber: { $contains: ffrAccessionNumber } });
     }
     if (statusList) {
-      fields.push({ status: { $in: statusList } });
+      fields.push({ progress: { $in: statusList } });
     }
 
     if (priorityList) {

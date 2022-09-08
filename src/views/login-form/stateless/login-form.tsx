@@ -8,15 +8,16 @@ const SubmitBtn = styled(Button)`
 `;
 
 interface Props {
+  initialValues: { username?: string; password?: string; remember?: boolean };
   onLogin: (values: { username: string; password: string; remember: boolean }) => void;
 }
 
-export const LoginForm: React.FC<Props> = ({ onLogin }) => {
+export const LoginForm: React.FC<Props> = ({ initialValues, onLogin }) => {
   return (
     <Form
       name="normal_login"
       className="login-form"
-      initialValues={{ remember: true }}
+      initialValues={initialValues}
       onFinish={onLogin}
     >
       <Form.Item

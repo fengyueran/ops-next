@@ -18,12 +18,17 @@ export const withData =
     const visible = useSelector(microApp.selectors.canGotoSeg);
     const id = useSelector(cases.selectors.openCaseID);
     const caseInfo = useSelector((state: RootState) => cases.selectors.getCaseByID(state, id!));
+    const currentOperation = useSelector(microApp.selectors.currentOperation);
 
     const onClick = useCallback(async () => {
       try {
         dispatch(microApp.actions.toggleGotoSegLoading(true));
         const { id, attributes } = await getOperation(caseInfo.workflowID, NodeStep.SEGMENT_EDIT);
         const operation = { id, ...attributes };
+        if (currentOperation?.output) {
+          const segOutput = operation.output || {};
+          operation.output = { ...segOutput, ...currentOperation.output };
+        }
         dispatch(microApp.actions.toggleMicroAppVisible(false));
 
         const submit = async (
@@ -48,7 +53,7 @@ export const withData =
       } catch (error) {
         console.error('Goto seg error', error);
       }
-    }, [caseInfo, dispatch]);
+    }, [caseInfo, currentOperation, dispatch]);
 
     if (!visible) return null;
 

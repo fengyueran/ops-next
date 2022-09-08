@@ -11,6 +11,7 @@ const gotoSegLoading = createSelector(selector, (microApp) => microApp.gotoSegLo
 const microAppVisible = createSelector(selector, (microApp) => microApp.microAppVisible);
 const canSubmit = createSelector(selector, (microApp) => microApp.canSubmit);
 const canGotoSeg = createSelector(selector, (microApp) => microApp.canGotoSeg);
+const currentOperation = createSelector(selector, (microApp) => microApp.currentOperation);
 
 export const selectors = {
   canSubmit,
@@ -19,4 +20,5 @@ export const selectors = {
   submitPending,
   microAppVisible,
   gotoSegLoading,
+  currentOperation,
 };

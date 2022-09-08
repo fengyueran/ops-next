@@ -13,3 +13,7 @@ code {
 #root {
   overflow: hidden;
 }
+
+html {
+  overflow: hidden;
+}

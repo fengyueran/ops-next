@@ -57,7 +57,8 @@ export const FilterButtonSet: React.FC<Props> = ({ list, onClick }) => {
           }
           return s;
         }, 0);
-        const isSelectedAll = selectedCount === Object.keys(newSelectedMap).length - 1;
+        const isSelectedAll = selectedCount === Object.keys(selectedInitvalue).length - 1;
+
         newSelectedMap[allNode!.name] = isSelectedAll;
         setSelectedList(newSelectedMap);
         onClick(isSelectedAll ? undefined : getSelected());

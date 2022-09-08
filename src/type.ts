@@ -45,12 +45,13 @@ export enum NodeOutput {
 }
 
 export enum ErrorType {
-  LoadOperationError = 'LoadOperation error',
+  LoadOperationError = 'Load operation error',
   SubmitError = 'Submit error',
   PatchError = 'Patch error',
   OpenToolError = 'OpenTool error',
   LoadLogError = 'LoadLog error',
   LoginError = 'Login error',
+  DownloadLogError = 'Download log error',
 }
 
 export const StatusColorMap = {

@@ -1,8 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+interface LoginInfo {
+  username: string;
+  password: string;
+  remember: boolean;
+}
 export interface State {
   user?: object;
   token?: string;
+  loginInfo?: LoginInfo;
 }
 
 const initialState: State = {};
@@ -20,6 +26,9 @@ export const slice = createSlice({
         state.token = undefined;
         state.user = undefined;
       }
+    },
+    setLoginInfo(state, action: PayloadAction<LoginInfo | undefined>) {
+      state.loginInfo = action.payload;
     },
   },
 });

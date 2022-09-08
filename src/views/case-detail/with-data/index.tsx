@@ -23,14 +23,14 @@ export const withData =
   ): React.FC<Omit<P, 'caseInfo' | 'series' | 'operations' | 'onOperationClick' | 'patchNode'>> =>
   ({ ...props }) => {
     const dispatch = useDispatch<AppDispatch>();
-    const id = useSelector(caseDetail.selectors.selectedCaseID);
+    const id = useSelector(cases.selectors.openCaseID);
     const caseInfo = useSelector((state: RootState) => cases.selectors.getCaseByID(state, id!));
 
     const { data, error } = useOperationsAndSeries(caseInfo?.workflowID);
 
     const readyToOpenMicroApp = useCallback(() => {
       dispatch(microApp.actions.toggleMicroAppVisible(true));
-      dispatch(caseDetail.actions.setSelectCaseID());
+      dispatch(caseDetail.actions.toggleLoading(false));
     }, [dispatch]);
 
     const onOperationClick = useCallback(
@@ -44,9 +44,11 @@ export const withData =
 
     const patchNode = useCallback(
       (operation: DetailOperation) => {
+        //重新精分
         if (operation.step === NodeStep.REFINE_EDIT) {
           dispatch(microApp.actions.toggleCanGotoSeg(true));
           dispatch(cases.actions.setOpenCaseID(caseInfo.id));
+          dispatch(microApp.actions.setCurrentOperation(operation));
         }
         readyToOpenMicroApp();
         const canSubmit = operation.step === NodeStep.QC || operation.step === NodeStep.REFINE_EDIT;
@@ -82,7 +84,7 @@ export const withData =
       }
     }, [dispatch, error]);
 
-    if (!id) return null;
+    if (!caseInfo) return null;
 
     if (!data?.operations) {
       return (

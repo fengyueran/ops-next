@@ -127,15 +127,12 @@ const ResultListDate = styled.div`
   line-height: 20px;
 `;
 
-const opTitle: Record<string, string> = {
-  [NodeStep.QC]: 'qc',
-  // [NodeStep.SegmentEdit]: 'segmentation',
-  // [NodeStep.LumenRefineMaskEdit]: 'refinement',
-  // [NodeStep.Review1]: 'review (一审)',
-  // [NodeStep.Review2]: 'review (二审)',
-  // [NodeStep.AdvancedReview]: 'ad-review',
-  // [NodeStep.Report]: 'report',
-};
+const OperatorName = styled.div`
+  height: 22px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 22px;
+`;
 
 const expandIcon = ({ isActive }: { isActive?: boolean }) => {
   return isActive ? (
@@ -170,7 +167,7 @@ const Operations: React.FC<Props> = ({ operations, series, onOperationClick, pat
           } else if (o.thumbnail) {
             thumbnail = o.thumbnail;
           }
-          const title = `${opTitle[o.step] || o.step} ${
+          const title = `${o.step} ${
             arr.slice(index + 1).filter((d) => d.step === o.step).length + 1
           }`;
           return (
@@ -184,10 +181,11 @@ const Operations: React.FC<Props> = ({ operations, series, onOperationClick, pat
                 <ResultCenter>
                   <ResultInfo>
                     <OperationTitle>{title}</OperationTitle>
-                    {/* <OperatorName>{operator}</OperatorName> */}
+                    <OperatorName>{o.operatorInfo?.email}</OperatorName>
                   </ResultInfo>
                   <ResultListDate>
-                    {format(new Date(o.createdAt), 'yyyy-MM-dd HH:mm:ss')}
+                    {o.operatorInfo?.createdAt &&
+                      format(new Date(o.operatorInfo?.createdAt), 'yyyy-MM-dd HH:mm:ss')}
                   </ResultListDate>
                 </ResultCenter>
               </ResultContent>

@@ -55,6 +55,17 @@ export const slice = createSlice({
       state.allCaseIDs = [...state.allCaseIDs];
       state.casesByID = { ...state.casesByID };
     },
+    addCase(state, action: PayloadAction<CaseData>) {
+      const { id } = action.payload;
+      const hasCase = state.casesByID[id];
+      const formatted = formatCase(action.payload);
+
+      if (!hasCase) {
+        state.casesByID[id] = formatted;
+        state.allCaseIDs = [id, ...state.allCaseIDs];
+        state.casesByID = { ...state.casesByID };
+      }
+    },
     setOpenCaseID(state, action: PayloadAction<string | undefined>) {
       state.openCaseID = action.payload;
     },

@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 
 import { other } from 'src/redux';
@@ -51,9 +50,15 @@ export const withData =
       try {
         await saveToLocal(`${caseInfo.PatientID}_log.txt`, log);
       } catch (error) {
-        message.error(`Download log error:${(error as Error).message}`);
+        const errorMessage = (error as Error).message;
+        const canceled = errorMessage.includes('aborted');
+        if (!canceled) {
+          dispatch(
+            other.actions.setError({ type: ErrorType.DownloadLogError, detail: errorMessage }),
+          );
+        }
       }
-    }, [caseInfo.PatientID, log]);
+    }, [caseInfo.PatientID, log, dispatch]);
 
     if (!caseInfo.workflowFailed) {
       return null;
