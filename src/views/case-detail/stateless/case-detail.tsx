@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { getThumbnailPath } from 'src/api';
 import Header from './header';
 import CaseInfo from './case-info';
 import Operations from './operations';
@@ -37,6 +38,7 @@ export const CaseDetail: React.FC<Props> = ({
         operations={operations}
         onOperationClick={onOperationClick}
         patchNode={patchNode}
+        ffrModelThumbnail={caseInfo.thumbnail && getThumbnailPath(caseInfo.thumbnail)}
       />
     </Container>
   );

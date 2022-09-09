@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-import { fetchFileWithCache, fullPath, uploadFiles } from 'src/api';
+import { fetchFileWithCache, getThumbnailPath, uploadFiles } from 'src/api';
 import { MaskEditType, microAppMgr, findFileByName } from 'src/utils';
 import { CaseStatus, NodeOutput, NodeStep } from 'src/type';
 
@@ -24,7 +24,7 @@ const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) 
 
   const seriesList = JSON.parse(findFileByName('series', inputs)?.value);
   const thumbnailList = JSON.parse(findFileByName('thumbnails', inputs)?.value).map(
-    (thumbPath: string) => fullPath(thumbPath),
+    (thumbPath: string) => getThumbnailPath(thumbPath),
   );
 
   return {
@@ -128,6 +128,7 @@ const makeReportSubmitInput = async (data: ReportToolOutput) => {
   const res = await Promise.all(uploadTasks);
 
   return {
+    isPositive: data.isPositive,
     reportData: res[0].path,
     cprPlane: res[1].path,
     leftMeshVtp: res[2].path,

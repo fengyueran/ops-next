@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getOperationsByWFID, fullPath, fetchFileWithCache } from 'src/api';
+import { getOperationsByWFID, getThumbnailPath, fetchFileWithCache } from 'src/api';
 import { NodeStep, NodeOutput } from 'src/type';
 import { getDicomThumbnail, findFileByName } from 'src/utils';
 
@@ -26,7 +26,7 @@ const formatOperations = (operations: OperationData[]) => {
     if (!seriesUID) return;
 
     const thumbnail = thumbnails.find((t) => t.includes(seriesUID));
-    if (thumbnail) return fullPath(thumbnail);
+    if (thumbnail) return getThumbnailPath(thumbnail);
 
     return;
   };
@@ -36,7 +36,7 @@ const formatOperations = (operations: OperationData[]) => {
     const thumbnail =
       completeOp?.attributes.output &&
       findFileByName(NodeOutput.THUMBNAILS, completeOp?.attributes.output)?.value;
-    return thumbnail ? fullPath(thumbnail) : undefined;
+    return thumbnail ? getThumbnailPath(thumbnail) : undefined;
   };
 
   const modelThumbnail = getCompleteThumbnail();
@@ -119,7 +119,7 @@ const getSeries = async (operations: DetailOperation[]) => {
       UID,
       ...res,
       selected: targetSeries === UID,
-      thumbnail: thumbnail && fullPath(thumbnail),
+      thumbnail: thumbnail && getThumbnailPath(thumbnail),
     };
   });
   return newSeries;

@@ -30,7 +30,7 @@ export const LoginForm: React.FC<Props> = ({ initialValues, onLogin }) => {
         name="password"
         rules={[{ required: true, message: 'Please input your Password!' }]}
       >
-        <Input.Password />
+        <Input.Password placeholder="Password" />
       </Form.Item>
       <Form.Item>
         <Form.Item name="remember" valuePropName="checked" noStyle>

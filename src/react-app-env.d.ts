@@ -46,6 +46,7 @@ interface CaseBaseInfo {
   editID?: string;
   workflowFailed: boolean;
   progress: CaseStatus;
+  thumbnail?: string;
 }
 
 interface DicomTag {
@@ -199,6 +200,7 @@ type ReportOutputData = {
   data: Uint8Array;
 };
 type ReportToolOutput = {
+  isPositive: string;
   reportData: ReportOutputData[];
   cprPlane: ReportOutputData[];
   leftMeshVtp: ReportOutputData;
@@ -318,6 +320,7 @@ interface OperationDataAttributes {
   activityID: string;
   workflowID: string;
   createdAt: string;
+  updatedAt: string;
   runID: string;
   input: { [key: string]: NodeInput };
   output?: { [key: string]: NodeInput };

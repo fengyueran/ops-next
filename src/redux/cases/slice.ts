@@ -62,8 +62,16 @@ export const slice = createSlice({
 
       if (!hasCase) {
         state.casesByID[id] = formatted;
-        state.allCaseIDs = [id, ...state.allCaseIDs];
+        const allCaseIDs = [...state.allCaseIDs];
+        allCaseIDs.pop();
+        state.allCaseIDs = [id, ...allCaseIDs];
         state.casesByID = { ...state.casesByID };
+        if (state.pagination) {
+          const { total, pageSize } = state.pagination;
+          const newTotal = total + 1;
+          const newPageCount = (newTotal % pageSize) + 1;
+          state.pagination = { ...state.pagination, total: newTotal, pageCount: newPageCount };
+        }
       }
     },
     setOpenCaseID(state, action: PayloadAction<string | undefined>) {

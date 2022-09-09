@@ -38,5 +38,5 @@ export const withData =
     );
 
     console.log('loginInfo', loginInfo);
-    return <WrappedComponent {...(props as P)} onLogin={onLogin} initialValues={{ loginInfo }} />;
+    return <WrappedComponent {...(props as P)} onLogin={onLogin} initialValues={loginInfo} />;
   };

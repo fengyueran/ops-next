@@ -24,7 +24,7 @@ export const TagList: React.FC<Props> = ({ tags }) => {
   return (
     <TagContainer>
       {tags.map((tagName) => (
-        <Tag key={tagName} highlight={tagName === 'qcf'}>
+        <Tag key={tagName} highlight={tagName === 'QCF'}>
           {tagName}
         </Tag>
       ))}

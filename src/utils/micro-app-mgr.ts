@@ -77,7 +77,11 @@ class MicroAppMgr {
               return MicroAppDevHostMap[key];
             },
           }
-        : undefined;
+        : {
+            // sandbox: {
+            //   experimentalStyleIsolation: true,
+            // },
+          };
 
     this.microApp = loadMicroApp(
       {
@@ -121,7 +125,9 @@ class MicroAppMgr {
   };
 
   unmount = () => {
-    this.microApp?.unmount();
+    if (this.microApp?.getStatus() === 'MOUNTED') {
+      this.microApp?.unmount();
+    }
   };
 }
 

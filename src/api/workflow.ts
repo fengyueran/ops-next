@@ -17,6 +17,7 @@ const WORKFLOW_HOST = process.env.REACT_APP_WORKFLOW_SERVER_URL || '';
 const PREFIX = '/v1/ops';
 const FILE_PATH = `${PREFIX}/files/download`;
 const UPLOAD_PATH = `${PREFIX}/files/upload`;
+const THUMBNAIL_PATH = `${PREFIX}/files/thumbnail`;
 const CASE_PATH = `${PREFIX}/case`;
 
 export const fetchCommonFile = async (
@@ -111,6 +112,11 @@ export const getLog = async (workflowID: string, algoOperationID: string) => {
 
 export const fullPath = (path: string) => {
   const fileUrl = `${WORKFLOW_HOST}${FILE_PATH}`;
+  return `${fileUrl}/${path}`;
+};
+
+export const getThumbnailPath = (path: string) => {
+  const fileUrl = `${WORKFLOW_HOST}${THUMBNAIL_PATH}`;
   return `${fileUrl}/${path}`;
 };
 

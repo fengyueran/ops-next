@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from '@reduxjs/toolkit';
 import { RootState } from 'src/store';
-import { caseDetail } from 'src/redux';
+import { caseDetail, cases } from 'src/redux';
 import { CaseDetailDrawer as S } from './case-detail-drawer';
 
 const mapStateToProps = (state: RootState) => ({
@@ -11,6 +11,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   closeDrawer: () => {
     dispatch(caseDetail.actions.toggleLoading(false));
+    dispatch(cases.actions.setOpenCaseID());
   },
 });
 

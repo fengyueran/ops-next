@@ -13,6 +13,7 @@ import TaskState from './case-task-state';
 
 const { Panel } = Collapse;
 export interface Props {
+  ffrModelThumbnail?: string;
   series: Series[];
   operations: DetailOperation[];
   onOperationClick: (operation: DetailOperation) => void;
@@ -148,7 +149,13 @@ const expandIcon = ({ isActive }: { isActive?: boolean }) => {
   );
 };
 
-const Operations: React.FC<Props> = ({ operations, series, onOperationClick, patchNode }) => {
+const Operations: React.FC<Props> = ({
+  ffrModelThumbnail,
+  operations,
+  series,
+  onOperationClick,
+  patchNode,
+}) => {
   const passedSeries = series.filter((s) => s.passed);
   const failedSeries = series.filter((s) => !s.passed);
 
@@ -166,6 +173,8 @@ const Operations: React.FC<Props> = ({ operations, series, onOperationClick, pat
             thumbnail = reportImage;
           } else if (o.thumbnail) {
             thumbnail = o.thumbnail;
+          } else if (ffrModelThumbnail) {
+            thumbnail = ffrModelThumbnail;
           }
           const title = `${o.step} ${
             arr.slice(index + 1).filter((d) => d.step === o.step).length + 1
@@ -184,8 +193,7 @@ const Operations: React.FC<Props> = ({ operations, series, onOperationClick, pat
                     <OperatorName>{o.operatorInfo?.email}</OperatorName>
                   </ResultInfo>
                   <ResultListDate>
-                    {o.operatorInfo?.createdAt &&
-                      format(new Date(o.operatorInfo?.createdAt), 'yyyy-MM-dd HH:mm:ss')}
+                    {format(new Date(o.updatedAt), 'yyyy-MM-dd HH:mm:ss')}
                   </ResultListDate>
                 </ResultCenter>
               </ResultContent>
