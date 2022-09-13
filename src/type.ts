@@ -22,7 +22,7 @@ export enum CaseStatus {
   WAITING_REVIEW = 'waiting-review',
   WAITING_REPORT = 'waiting-report',
   WAITING_RETURN = 'waiting-return',
-  RETURNED = 'returned',
+  COMPLETED = 'COMPLETED',
 }
 
 export enum Priority {
@@ -61,5 +61,5 @@ export const StatusColorMap = {
   [CaseStatus.WAITING_REVIEW]: '#6236FF',
   [CaseStatus.WAITING_REPORT]: '#177DDC',
   [CaseStatus.WAITING_RETURN]: '#F5A623',
-  [CaseStatus.RETURNED]: '#52C41A',
+  [CaseStatus.COMPLETED]: '#52C41A',
 };

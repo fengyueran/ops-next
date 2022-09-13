@@ -12,7 +12,7 @@ export const caseStatusText: Record<CaseStatus, React.ReactElement> = {
   [CaseStatus.WAITING_REVIEW]: <FormattedMessage defaultMessage="待审查" />,
   [CaseStatus.WAITING_REPORT]: <FormattedMessage defaultMessage="待报告" />,
   [CaseStatus.WAITING_RETURN]: <FormattedMessage defaultMessage="待返还" />,
-  [CaseStatus.RETURNED]: <FormattedMessage defaultMessage="已返回" />,
+  [CaseStatus.COMPLETED]: <FormattedMessage defaultMessage="已返回" />,
 };
 
 export const getCaseStatusText = (state: CaseStatus): React.ReactElement => {

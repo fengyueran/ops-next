@@ -136,7 +136,10 @@ export const useOperationsAndSeries = (workflowID?: string) => {
         const series = await getSeries(operations);
         const validOperaions = operations.filter(
           ({ step, output }) =>
-            step !== NodeStep.DICOM_PARSE && step !== NodeStep.RETURNED && output,
+            step !== NodeStep.DICOM_PARSE &&
+            step !== NodeStep.RETURNED &&
+            step !== NodeStep.GEN_THUMBNAIL &&
+            output,
         );
         setData({ operations: validOperaions, series });
       } catch (error) {

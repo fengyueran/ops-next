@@ -2,23 +2,12 @@ import axios from 'axios';
 import { v4 } from 'uuid';
 
 import { createCaseID } from './utils';
+import { login } from './login';
 
 const HOST = 'http://192.168.201.243'; //开发环境
 // const HOST = 'http://10.3.4.220';
 const PORT = '8008';
 const CREATE_CASE_PATH = '/v1/ops/case/create';
-
-const STRAPI_CMS_HOST = 'http://10.3.6.34:1339';
-const LOGIN_PATH = '/v1/ops-strapi/api/auth/local';
-
-export const login = async (identifier: string, password: string): Promise<any> => {
-  const loginUrl = `${STRAPI_CMS_HOST}${LOGIN_PATH}`;
-  const { data } = await axios.post(loginUrl, {
-    identifier,
-    password,
-  });
-  return data;
-};
 
 const handleError = (error: any) => {
   console.log('Error----------------------');
@@ -51,8 +40,9 @@ const makeCases = () => {
     StudyInstanceUID: '3475934509438053840958324',
     PatientBirthDate: '19890216',
     Description: 'xxxxx',
-    dicomFilePath: 'upload/DMSBoAKAyKN7Y2cbT2xqjN.tgz',
     // dicomFilePath: 'upload/sZxYKuTJSJ36qVZb9z2uaX.tgz',
+    // dicomFilePath: 'upload/BGdcrg2N7RrbiVyLEscMDM.tgz',
+    dicomFilePath: 'upload/DMSBoAKAyKN7Y2cbT2xqjN.tgz',
   };
 
   for (let i = 0; i < CASE_COUNT; i += 1) {

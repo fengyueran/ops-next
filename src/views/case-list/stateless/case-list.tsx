@@ -87,8 +87,11 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
     field: 'returnEndAt',
     title: formatMessage({ defaultMessage: '返还时间' }),
     dataIndex: ['returnEndAt'],
-    render: (returnEndAt: number) => {
-      return '-';
+    render: (returnEndAt?: number) => {
+      if (returnEndAt) {
+        return format(new Date(returnEndAt), 'yyyy-MM-dd HH:mm');
+      }
+      return null;
     },
   },
   {
@@ -123,14 +126,13 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
   {
     width: 100,
     title: formatMessage({ defaultMessage: '阴阳性' }),
-    dataIndex: ['isPositive'],
-    render: (isPositive: boolean | null) => {
+    render: (caseIno: CaseInfo) => {
+      const { isPositive, status } = caseIno;
+      if (status !== CaseStatus.COMPLETED) return null;
       if (isPositive) {
         return <ColorTag tip={formatMessage({ defaultMessage: '阳性' })} color="red" />;
-      } else if (typeof isPositive === 'boolean') {
-        return <ColorTag tip={formatMessage({ defaultMessage: '阴性' })} color="green" />;
       }
-      return null;
+      return <ColorTag tip={formatMessage({ defaultMessage: '阴性' })} color="green" />;
     },
   },
   {
@@ -141,14 +143,14 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
       return <StatusTag status={status} />;
     },
   },
-  {
-    width: 50,
-    title: formatMessage({ defaultMessage: '操作' }),
-    dataIndex: ['attributes'],
-    render: (status: string) => {
-      return '...';
-    },
-  },
+  // {
+  //   width: 50,
+  //   title: formatMessage({ defaultMessage: '操作' }),
+  //   dataIndex: ['attributes'],
+  //   render: (status: string) => {
+  //     return '...';
+  //   },
+  // },
   {
     width: 80,
     title: '',

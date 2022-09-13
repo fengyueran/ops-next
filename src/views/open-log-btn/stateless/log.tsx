@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
-import { Button } from 'antd';
+import { Button, Empty } from 'antd';
 import { DownloadOutlined, CloseOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 
@@ -46,8 +46,12 @@ const Content = styled.div`
   white-space: pre-wrap;
 `;
 
+const StyledBtn = styled(Button)`
+  width: 16px;
+`;
+
 interface Props {
-  log?: string;
+  log: string | null;
   visible: boolean;
   onClose: () => void;
   onClick: () => void;
@@ -55,6 +59,11 @@ interface Props {
 }
 
 export const Log: React.FC<Props> = ({ onClose, onClick, onSave, visible, log }) => {
+  const renderLog = useCallback(() => {
+    if (log === null || log) return log;
+    return <Empty description={<FormattedMessage defaultMessage="没有日志" />} />;
+  }, [log]);
+
   return (
     <>
       <StyledButton type="text" onClick={onClick}>
@@ -67,11 +76,11 @@ export const Log: React.FC<Props> = ({ onClose, onClick, onSave, visible, log })
               <FormattedMessage defaultMessage="查看日志" />
             </Title>
             <ElasticBox />
-            <DownloadOutlined style={{ width: 16 }} onClick={onSave} />
+            <StyledBtn icon={<DownloadOutlined />} type="text" onClick={onSave} disabled={!log} />
             <SpaceX size={16} />
             <CloseOutlined style={{ width: 16 }} onClick={onClose} />
           </Header>
-          <Content>{log}</Content>
+          <Content>{renderLog()}</Content>
         </ModalContainer>
       )}
     </>

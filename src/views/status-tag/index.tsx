@@ -29,9 +29,9 @@ const TagMap = {
     tag: <FormattedMessage defaultMessage="待返还" />,
     color: StatusColorMap[CaseStatus.WAITING_RETURN],
   },
-  [CaseStatus.RETURNED]: {
+  [CaseStatus.COMPLETED]: {
     tag: <FormattedMessage defaultMessage="已返还" />,
-    color: StatusColorMap[CaseStatus.RETURNED],
+    color: StatusColorMap[CaseStatus.COMPLETED],
   },
 };
 

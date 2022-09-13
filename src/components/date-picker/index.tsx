@@ -16,18 +16,16 @@ const Label = styled.span`
 
 interface Props {
   name: string | React.ReactElement;
-  dataRange?: any;
   onDateRange: (dataRange?: any) => void;
 }
 
 const { RangePicker } = DP;
 
-export const DatePicker: React.FC<Props> = ({ name, dataRange, onDateRange }) => (
+export const DatePicker: React.FC<Props> = ({ name, onDateRange }) => (
   <Container>
     <Label>{name}</Label>
     <RangePicker
       style={{ width: 268 }}
-      // value={get(dataRange, 'data', null)}
       onChange={(d, ds) => onDateRange({ data: d, dataString: ds })}
     />
   </Container>

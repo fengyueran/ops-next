@@ -18,7 +18,7 @@ enum CaseStatus {
   'WAITING_REVIEW' = 'waiting-review',
   'WAITING_REPORT' = 'waiting-report',
   'WAITING_RETURN' = 'waiting-return',
-  'RETURNED' = 'returned',
+  'COMPLETED' = 'COMPLETED',
 }
 
 enum Priority {
@@ -38,7 +38,6 @@ interface CaseBaseInfo {
   priority: Priority;
   isPositive?: boolean; //阴阳性
   ffrAccessionNumber?: string; //CTFFR检查号，手动录入
-  name?: string; //手动录入
   workflowID: string;
   caseID: string;
   sopInstanceUID: string;
@@ -300,21 +299,22 @@ interface NodeInput {
 }
 
 enum NodeStep {
-  'DICOM_PARSE' = 'dicom-parse',
-  'QC' = 'quality-control',
-  'DICOM2_NIFTI' = 'dicom2-nifti',
-  'SEGMENT' = 'dicom-vessel-segment',
-  'SEGMENT_EDIT' = 'vessel-segment-edit',
-  'REFINE' = 'vessel-refine',
-  'REFINE_EDIT' = 'vessel-refine-edit',
-  'LUMEN_REFINEMENT_CL' = 'lumen-refinement-cl',
-  'SZ_FFR' = 'sz-ffr',
-  'GEN_THUMBNAIL' = 'cars-gen-thumbnail',
-  'VALIDATE_FFR' = 'validate-ffr',
-  'GEN_CPR_PLY' = 'gen-cpr-ply',
-  'REPORT' = 'report',
-  'RETURNED' = 'returned',
+  DICOM_PARSE = 'dicom-parse',
+  QC = 'quality-control',
+  DICOM2_NIFTI = 'dicom2-nifti',
+  SEGMENT = 'dicom-vessel-segment',
+  SEGMENT_EDIT = 'vessel-segment-edit',
+  REFINE = 'vessel-refine',
+  REFINE_EDIT = 'vessel-refine-edit',
+  LUMEN_REFINEMENT_CL = 'lumen-refinement-cl',
+  SZ_FFR = 'sz-ffr',
+  GEN_THUMBNAIL = 'gen-thumbnail',
+  VALIDATE_FFR = 'validate-ffr',
+  GEN_CPR_PLY = 'gen-cpr-ply',
+  REPORT = 'report',
+  RETURNED = 'returned',
 }
+
 interface OperationDataAttributes {
   step: NodeStep;
   activityID: string;

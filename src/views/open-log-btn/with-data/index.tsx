@@ -14,7 +14,7 @@ export const withData =
   ({ ...props }) => {
     const { caseInfo } = props;
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [log, setLog] = useState<string>('');
+    const [log, setLog] = useState<string | null>(null);
     const dispatch = useDispatch();
 
     const onClick = useCallback(async () => {
@@ -44,11 +44,12 @@ export const withData =
 
     const onClose = useCallback(async () => {
       setIsModalVisible(false);
+      setLog(null);
     }, []);
 
     const onSave = useCallback(async () => {
       try {
-        await saveToLocal(`${caseInfo.PatientID}_log.txt`, log);
+        await saveToLocal(`${caseInfo.PatientID}_log.txt`, log!);
       } catch (error) {
         const errorMessage = (error as Error).message;
         const canceled = errorMessage.includes('aborted');

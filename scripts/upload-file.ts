@@ -1,8 +1,11 @@
 import fs from 'fs';
+import { login } from './login';
+
 const { execSync } = require('child_process');
 
 const HOST = `http://192.168.201.243:8008/v1/ops/files/upload`;
-const uploadDir = (dir: string) => {
+const uploadDir = async (dir: string) => {
+  const { jwt } = await login('xinghunm', '12345678');
   let args = '';
   const files = fs.readdirSync(dir);
 
@@ -11,7 +14,7 @@ const uploadDir = (dir: string) => {
     args += ` -F "originDicom/${file}=@${dir}/${file}"`;
   }
   const data = execSync(
-    `curl ${HOST} -XPOST -H "Content-Type: multipart/form-data" ${args}`,
+    `curl ${HOST} -XPOST -H "Content-Type: multipart/form-data" ${args} -H "Authorization: Bearer ${jwt}"`,
   ).toString();
   console.log('data', data);
 };
