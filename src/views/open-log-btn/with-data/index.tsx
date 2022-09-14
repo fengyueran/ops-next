@@ -21,7 +21,7 @@ export const withData =
       try {
         setIsModalVisible(true);
         dispatch(other.actions.toggleLoading(true));
-        const algoOp = await getAlgoOperation(caseInfo.workflowID, caseInfo.step);
+        const algoOp = await getAlgoOperation(caseInfo.workflowID);
 
         if (algoOp) {
           const logData = await getLog(caseInfo.workflowID, algoOp.id);
@@ -40,7 +40,7 @@ export const withData =
       } finally {
         dispatch(other.actions.toggleLoading(false));
       }
-    }, [caseInfo.step, caseInfo.workflowID, dispatch]);
+    }, [caseInfo.workflowID, dispatch]);
 
     const onClose = useCallback(async () => {
       setIsModalVisible(false);

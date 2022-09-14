@@ -8,11 +8,12 @@ const SubmitBtn = styled(Button)`
 `;
 
 interface Props {
+  pending: boolean;
   initialValues: { username?: string; password?: string; remember?: boolean };
   onLogin: (values: { username: string; password: string; remember: boolean }) => void;
 }
 
-export const LoginForm: React.FC<Props> = ({ initialValues, onLogin }) => {
+export const LoginForm: React.FC<Props> = ({ initialValues, onLogin, pending }) => {
   return (
     <Form
       name="normal_login"
@@ -40,7 +41,7 @@ export const LoginForm: React.FC<Props> = ({ initialValues, onLogin }) => {
         </Form.Item>
       </Form.Item>
       <Form.Item>
-        <SubmitBtn type="primary" htmlType="submit" className="login-form-button">
+        <SubmitBtn type="primary" htmlType="submit" className="login-form-button" loading={pending}>
           <FormattedMessage defaultMessage="登录" />
         </SubmitBtn>
       </Form.Item>

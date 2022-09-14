@@ -1,4 +1,5 @@
 export * from './drawer';
+export * from './avatar';
 export * from './loading';
 export * from './space';
 export * from './flex-box';

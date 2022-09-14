@@ -122,7 +122,7 @@ export const getOperation = async (workflowID: string, step: string) => {
   return data.data[0];
 };
 
-export const getAlgoOperation = async (workflowID: string, step: string) => {
+export const getAlgoOperation = async (workflowID: string) => {
   const query = qs.stringify(
     {
       sort: ['createdAt:desc'],
@@ -131,11 +131,6 @@ export const getAlgoOperation = async (workflowID: string, step: string) => {
           {
             workflowID: {
               $eq: workflowID,
-            },
-          },
-          {
-            step: {
-              $eq: step,
             },
           },
           {

@@ -6,7 +6,10 @@ interface LoginInfo {
   remember: boolean;
 }
 export interface State {
-  user?: object;
+  user?: {
+    email: string;
+    username: string;
+  };
   token?: string;
   loginInfo?: LoginInfo;
 }
@@ -29,6 +32,9 @@ export const slice = createSlice({
     },
     setLoginInfo(state, action: PayloadAction<LoginInfo | undefined>) {
       state.loginInfo = action.payload;
+    },
+    reset() {
+      return initialState;
     },
   },
 });
