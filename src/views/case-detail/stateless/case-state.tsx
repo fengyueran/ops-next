@@ -3,24 +3,24 @@ import styled from 'styled-components';
 import { Badge } from 'antd';
 import { FormattedMessage } from 'react-intl';
 
-import { CaseStatus, StatusColorMap } from 'src/type';
+import { CaseProgress, StatusColorMap } from 'src/type';
 
-export const caseStatusText: Record<CaseStatus, React.ReactElement> = {
-  [CaseStatus.WAITING_QC]: <FormattedMessage defaultMessage="待质检" />,
-  [CaseStatus.WAITING_SEGMENT]: <FormattedMessage defaultMessage="待粗分" />,
-  [CaseStatus.WAITING_RIFINE]: <FormattedMessage defaultMessage="待精分" />,
-  [CaseStatus.WAITING_REVIEW]: <FormattedMessage defaultMessage="待审查" />,
-  [CaseStatus.WAITING_REPORT]: <FormattedMessage defaultMessage="待报告" />,
-  [CaseStatus.WAITING_RETURN]: <FormattedMessage defaultMessage="待返还" />,
-  [CaseStatus.COMPLETED]: <FormattedMessage defaultMessage="已返回" />,
+export const caseStatusText: Record<CaseProgress, React.ReactElement> = {
+  [CaseProgress.WAITING_QC]: <FormattedMessage defaultMessage="待质检" />,
+  [CaseProgress.WAITING_SEGMENT]: <FormattedMessage defaultMessage="待粗分" />,
+  [CaseProgress.WAITING_RIFINE]: <FormattedMessage defaultMessage="待精分" />,
+  [CaseProgress.WAITING_REVIEW]: <FormattedMessage defaultMessage="待审查" />,
+  [CaseProgress.WAITING_REPORT]: <FormattedMessage defaultMessage="待报告" />,
+  [CaseProgress.WAITING_RETURN]: <FormattedMessage defaultMessage="待返还" />,
+  [CaseProgress.RETURNED]: <FormattedMessage defaultMessage="已返回" />,
 };
 
-export const getCaseStatusText = (state: CaseStatus): React.ReactElement => {
+export const getCaseStatusText = (state: CaseProgress): React.ReactElement => {
   return caseStatusText[state];
 };
 
 export interface Props {
-  state: CaseStatus;
+  state: CaseProgress;
 }
 
 const Container = styled.div<{ color: string }>`

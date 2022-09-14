@@ -9,7 +9,7 @@ export interface State {
     PatientID?: string;
     ffrAccessionNumber?: string;
     dateRange?: [string, string];
-    statusList?: CaseStatus[];
+    statusList?: CaseProgress[];
     priorityList?: Priority[];
   };
   pagination: Pagination;

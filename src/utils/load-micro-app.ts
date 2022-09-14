@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 
-import { fetchFileWithCache, getThumbnailPath, uploadFiles } from 'src/api';
+import { fetchFile, fetchFileWithCache, getThumbnailPath, uploadFiles } from 'src/api';
 import { MaskEditType, microAppMgr, findFileByName } from 'src/utils';
-import { CaseStatus, NodeOutput, NodeStep } from 'src/type';
+import { CaseProgress, NodeOutput, NodeStep } from 'src/type';
 
 type Submit = (output: ToolOutput, makeSubmitInput: (output: any) => Promise<any>) => void;
 
@@ -223,7 +223,7 @@ const makeReportToolInput = (
   const getCenterlines = async () => {
     const vtpTasks = ['leftMeshVtp', 'rightMeshVtp'].map((name) => {
       const node = findFileByName(name, inputs);
-      return fetchFileWithCache<ArrayBuffer>(node.value, 'arraybuffer');
+      return fetchFile(node.value, 'arraybuffer');
     });
     const vtps = await Promise.all(vtpTasks);
     return vtps;
@@ -298,11 +298,11 @@ export const loadMicroAppByStatus = (
   submit: Submit,
 ) => {
   const loadMicroAppMap: { [key: string]: Function } = {
-    [CaseStatus.WAITING_QC]: () => loadQCTool(operation, submit),
-    [CaseStatus.WAITING_SEGMENT]: () => loadSegMaskEditTool(operation, submit),
-    [CaseStatus.WAITING_RIFINE]: () => loadRefineMaskEditTool(operation, submit),
-    [CaseStatus.WAITING_REVIEW]: () => loadReviewTool(caseInfo, operation, submit),
-    [CaseStatus.WAITING_REPORT]: () => loadReportTool(caseInfo, operation, submit),
+    [CaseProgress.WAITING_QC]: () => loadQCTool(operation, submit),
+    [CaseProgress.WAITING_SEGMENT]: () => loadSegMaskEditTool(operation, submit),
+    [CaseProgress.WAITING_RIFINE]: () => loadRefineMaskEditTool(operation, submit),
+    [CaseProgress.WAITING_REVIEW]: () => loadReviewTool(caseInfo, operation, submit),
+    [CaseProgress.WAITING_REPORT]: () => loadReportTool(caseInfo, operation, submit),
   };
 
   const load = loadMicroAppMap[caseInfo.progress];

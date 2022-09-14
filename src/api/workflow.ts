@@ -61,7 +61,7 @@ const fetchCompressedFile = async (filePath: string) => {
   return data;
 };
 
-const fetchFile = async (filePath: string, responseType?: ResponseType) => {
+export const fetchFile = async (filePath: string, responseType?: ResponseType) => {
   let data;
   if (filePath.endsWith('.tgz') || filePath.endsWith('.gz')) {
     data = await fetchCompressedFile(filePath);

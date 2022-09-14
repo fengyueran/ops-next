@@ -11,7 +11,7 @@ import { OpenDetailButton } from 'src/views/open-detail-btn';
 import { StatusTag } from 'src/views/status-tag';
 import { ErrorHint } from 'src/views/error-hint';
 import { OpenLogBtn } from 'src/views/open-log-btn';
-import { CaseStatus, Priority } from 'src/type';
+import { CaseStatus, CaseProgress, Priority } from 'src/type';
 import { TagList } from './tag-list';
 
 const PatientIDContainer = styled.div`
@@ -128,7 +128,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
     title: formatMessage({ defaultMessage: '阴阳性' }),
     render: (caseIno: CaseInfo) => {
       const { isPositive, status } = caseIno;
-      if (status !== CaseStatus.COMPLETED) return null;
+      if (status !== CaseStatus.COMPLETED && status !== CaseStatus.QCFAILED) return null;
       if (isPositive) {
         return <ColorTag tip={formatMessage({ defaultMessage: '阳性' })} color="red" />;
       }
@@ -139,7 +139,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
     width: 100,
     title: formatMessage({ defaultMessage: '状态' }),
     dataIndex: ['progress'],
-    render: (status: CaseStatus) => {
+    render: (status: CaseProgress) => {
       return <StatusTag status={status} />;
     },
   },

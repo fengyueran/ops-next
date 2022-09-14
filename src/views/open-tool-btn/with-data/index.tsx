@@ -5,7 +5,7 @@ import { loadMicroAppByStatus } from 'src/utils';
 import { microApp, cases, other } from 'src/redux';
 import { AppDispatch } from 'src/store';
 import { getOperationByID, tagCaseReaded } from 'src/api';
-import { CaseStatus, ErrorType } from 'src/type';
+import { CaseProgress, ErrorType } from 'src/type';
 
 interface Props {
   caseInfo: CaseInfo & { id: string };
@@ -23,10 +23,10 @@ export const withData =
         dispatch(cases.actions.setOpenCaseID(caseInfo.id));
         dispatch(microApp.actions.toggleMicroAppVisible(true));
         dispatch(microApp.actions.toggleCanSubmit(true));
-        const canGotoSeg = caseInfo.progress === CaseStatus.WAITING_RIFINE;
+        const canGotoSeg = caseInfo.progress === CaseProgress.WAITING_RIFINE;
         dispatch(microApp.actions.toggleCanGotoSeg(canGotoSeg));
 
-        if (caseInfo.progress === CaseStatus.WAITING_QC && !caseInfo.readed) {
+        if (caseInfo.progress === CaseProgress.WAITING_QC && !caseInfo.readed) {
           await tagCaseReaded(caseInfo.id);
         }
 

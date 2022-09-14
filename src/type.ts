@@ -16,13 +16,19 @@ export enum NodeStep {
 }
 
 export enum CaseStatus {
+  'SCHEDULED' = 'SCHEDULED',
+  'COMPLETED' = 'COMPLETED',
+  'QCFAILED' = 'Invalid Data',
+}
+
+export enum CaseProgress {
   WAITING_QC = 'waiting-qc',
   WAITING_SEGMENT = 'waiting-rough-seg',
   WAITING_RIFINE = 'waiting-exact-seg',
   WAITING_REVIEW = 'waiting-review',
   WAITING_REPORT = 'waiting-report',
   WAITING_RETURN = 'waiting-return',
-  COMPLETED = 'COMPLETED',
+  RETURNED = 'returned',
 }
 
 export enum Priority {
@@ -55,11 +61,11 @@ export enum ErrorType {
 }
 
 export const StatusColorMap = {
-  [CaseStatus.WAITING_QC]: 'rgba(0,0,0,0.25)',
-  [CaseStatus.WAITING_SEGMENT]: '#40A9FF',
-  [CaseStatus.WAITING_RIFINE]: '#FD7943',
-  [CaseStatus.WAITING_REVIEW]: '#6236FF',
-  [CaseStatus.WAITING_REPORT]: '#177DDC',
-  [CaseStatus.WAITING_RETURN]: '#F5A623',
-  [CaseStatus.COMPLETED]: '#52C41A',
+  [CaseProgress.WAITING_QC]: 'rgba(0,0,0,0.25)',
+  [CaseProgress.WAITING_SEGMENT]: '#40A9FF',
+  [CaseProgress.WAITING_RIFINE]: '#FD7943',
+  [CaseProgress.WAITING_REVIEW]: '#6236FF',
+  [CaseProgress.WAITING_REPORT]: '#177DDC',
+  [CaseProgress.WAITING_RETURN]: '#F5A623',
+  [CaseProgress.RETURNED]: '#52C41A',
 };

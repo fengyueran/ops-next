@@ -11,14 +11,14 @@ interface Window {
   showSaveFilePicker: (data: any) => Promise<any>;
 }
 
-enum CaseStatus {
+enum CaseProgress {
   'WAITING_QC' = 'waiting-qc',
   'WAITING_SEGMENT' = 'waiting-rough-seg',
   'WAITING_RIFINE' = 'waiting-exact-seg',
   'WAITING_REVIEW' = 'waiting-review',
   'WAITING_REPORT' = 'waiting-report',
   'WAITING_RETURN' = 'waiting-return',
-  'COMPLETED' = 'COMPLETED',
+  RETURNED = 'returned',
 }
 
 enum Priority {
@@ -27,12 +27,17 @@ enum Priority {
   Low = 'Low',
 }
 
+enum CaseStatus {
+  'SCHEDULED' = 'SCHEDULED',
+  'COMPLETED' = 'COMPLETED',
+  'QCFAILED' = 'Invalid Data',
+}
 interface CaseBaseInfo {
   uploadAt: string; //number?
   returnEndAt?: string;
   tags?: string[];
   narrowDegree?: number; //狭窄程度
-  status: string;
+  status: CaseStatus;
   step: Step;
   readed: boolean; //是否已读，默认false
   priority: Priority;
@@ -44,7 +49,7 @@ interface CaseBaseInfo {
   enableEdit: boolean;
   editID?: string;
   workflowFailed: boolean;
-  progress: CaseStatus;
+  progress: CaseProgress;
   thumbnail?: string;
 }
 

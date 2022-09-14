@@ -1,42 +1,42 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { CaseStatus, StatusColorMap } from 'src/type';
+import { CaseProgress, StatusColorMap } from 'src/type';
 import { ColorTag } from 'src/components';
 
 const TagMap = {
-  [CaseStatus.WAITING_QC]: {
+  [CaseProgress.WAITING_QC]: {
     tag: <FormattedMessage defaultMessage="待质检" />,
-    color: StatusColorMap[CaseStatus.WAITING_QC],
+    color: StatusColorMap[CaseProgress.WAITING_QC],
   },
-  [CaseStatus.WAITING_SEGMENT]: {
+  [CaseProgress.WAITING_SEGMENT]: {
     tag: <FormattedMessage defaultMessage="待粗分" />,
-    color: StatusColorMap[CaseStatus.WAITING_SEGMENT],
+    color: StatusColorMap[CaseProgress.WAITING_SEGMENT],
   },
-  [CaseStatus.WAITING_RIFINE]: {
+  [CaseProgress.WAITING_RIFINE]: {
     tag: <FormattedMessage defaultMessage="待精分" />,
-    color: StatusColorMap[CaseStatus.WAITING_RIFINE],
+    color: StatusColorMap[CaseProgress.WAITING_RIFINE],
   },
-  [CaseStatus.WAITING_REVIEW]: {
+  [CaseProgress.WAITING_REVIEW]: {
     tag: <FormattedMessage defaultMessage="待审查" />,
-    color: StatusColorMap[CaseStatus.WAITING_REVIEW],
+    color: StatusColorMap[CaseProgress.WAITING_REVIEW],
   },
-  [CaseStatus.WAITING_REPORT]: {
+  [CaseProgress.WAITING_REPORT]: {
     tag: <FormattedMessage defaultMessage="待报告" />,
-    color: StatusColorMap[CaseStatus.WAITING_REPORT],
+    color: StatusColorMap[CaseProgress.WAITING_REPORT],
   },
-  [CaseStatus.WAITING_RETURN]: {
+  [CaseProgress.WAITING_RETURN]: {
     tag: <FormattedMessage defaultMessage="待返还" />,
-    color: StatusColorMap[CaseStatus.WAITING_RETURN],
+    color: StatusColorMap[CaseProgress.WAITING_RETURN],
   },
-  [CaseStatus.COMPLETED]: {
+  [CaseProgress.RETURNED]: {
     tag: <FormattedMessage defaultMessage="已返还" />,
-    color: StatusColorMap[CaseStatus.COMPLETED],
+    color: StatusColorMap[CaseProgress.RETURNED],
   },
 };
 
 interface Props {
-  status: CaseStatus;
+  status: CaseProgress;
 }
 
 export const StatusTag: React.FC<Props> = ({ status }) => {
