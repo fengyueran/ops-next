@@ -105,7 +105,7 @@ export const uploadFiles = async (files: { path: string; data: ArrayBuffer | str
 };
 
 export const getLog = async (workflowID: string, algoOperationID: string) => {
-  const url = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${algoOperationID}/log?all=true`;
+  const url = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${algoOperationID}/log`;
   const { data } = await fetcher.axios.get(url);
   return data;
 };
