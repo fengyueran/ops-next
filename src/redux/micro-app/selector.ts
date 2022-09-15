@@ -12,6 +12,7 @@ const microAppVisible = createSelector(selector, (microApp) => microApp.microApp
 const canSubmit = createSelector(selector, (microApp) => microApp.canSubmit);
 const canGotoSeg = createSelector(selector, (microApp) => microApp.canGotoSeg);
 const currentOperation = createSelector(selector, (microApp) => microApp.currentOperation);
+const canCloseMicroApp = createSelector(selector, (microApp) => microApp.canCloseMicroApp);
 
 export const selectors = {
   canSubmit,
@@ -21,4 +22,5 @@ export const selectors = {
   microAppVisible,
   gotoSegLoading,
   currentOperation,
+  canCloseMicroApp,
 };

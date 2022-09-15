@@ -37,6 +37,11 @@ export enum MaskEditType {
   Refine = 'Refine',
 }
 
+export enum LoadStatus {
+  NOT_MOUNTED,
+  MOUNTED,
+}
+
 const getMicroAppHost = (name: MicroApp) => {
   const hostMap = {
     [MicroApp.QC]: window.QC_TOOL_HOST || MicroAppEntry.QC,
@@ -57,6 +62,9 @@ export const MessageType = {
 class MicroAppMgr {
   private currentTool?: MicroApp;
   private microApp?: MicroAppInstance;
+  private onStatusChange?: (status: LoadStatus) => void;
+
+  private _status = LoadStatus.NOT_MOUNTED;
 
   actions: MicroAppStateActions = initGlobalState({});
 
@@ -66,6 +74,7 @@ class MicroAppMgr {
 
   private loadMicroApp = (name: MicroApp, props: any) => {
     this.currentTool = name;
+    this.status = LoadStatus.NOT_MOUNTED;
     const options =
       process.env.NODE_ENV === 'development'
         ? {
@@ -95,7 +104,17 @@ class MicroAppMgr {
       },
       options,
     );
+    this.microApp.mountPromise.then((data) => {
+      this.status = LoadStatus.MOUNTED;
+    });
   };
+
+  set status(status: LoadStatus) {
+    this._status = status;
+    if (this.onStatusChange) {
+      this.onStatusChange(status);
+    }
+  }
 
   loadQCTool = (props: QCToolInput) => {
     this.loadMicroApp(MicroApp.QC, props);
@@ -124,10 +143,16 @@ class MicroAppMgr {
     this.actions.offGlobalStateChange();
   };
 
-  unmount = () => {
+  unmount = async () => {
     if (this.microApp?.getStatus() === 'MOUNTED') {
-      this.microApp?.unmount();
+      console.log('start');
+      await this.microApp?.unmount();
+      console.log('end');
     }
+  };
+
+  subscribeStatusChange = (onStatusChange: (status: LoadStatus) => void) => {
+    this.onStatusChange = onStatusChange;
   };
 }
 

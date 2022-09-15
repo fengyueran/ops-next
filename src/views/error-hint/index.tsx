@@ -26,6 +26,7 @@ const getErrorHintByStep = (step: NodeStep) => {
       hint = <FormattedMessage defaultMessage="转换失败，重新QC" />;
       break;
     case NodeStep.SEGMENT:
+    case NodeStep.SEGMENT_EDIT:
     case NodeStep.REFINE:
       hint = <FormattedMessage defaultMessage="计算失败，脚本处理" />;
       break;

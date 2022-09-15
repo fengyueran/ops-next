@@ -8,6 +8,7 @@ export interface State {
   canSubmit: boolean;
   canGotoSeg: boolean;
   gotoSegLoading: boolean;
+  canCloseMicroApp: boolean;
   currentOperation?: DetailOperation;
 }
 
@@ -17,6 +18,7 @@ const initialState: State = {
   submitPending: false,
   microAppVisible: false,
   canGotoSeg: false,
+  canCloseMicroApp: false,
   gotoSegLoading: false,
 };
 
@@ -49,6 +51,7 @@ export const slice = createSlice({
       state.microAppVisible = action.payload;
       if (state.microAppVisible) {
         state.microAppReady = false;
+        state.canCloseMicroApp = false;
       } else {
         state.submitPending = false;
         state.canGotoSeg = false;
@@ -69,6 +72,9 @@ export const slice = createSlice({
     },
     setCurrentOperation(state, action: PayloadAction<DetailOperation | undefined>) {
       state.currentOperation = action.payload;
+    },
+    toggleCanCloseMicroApp(state, action: PayloadAction<boolean>) {
+      state.canCloseMicroApp = action.payload;
     },
   },
   extraReducers: (builder) => {

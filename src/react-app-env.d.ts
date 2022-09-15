@@ -1,6 +1,7 @@
 /// <reference types="react-scripts" />
 
 interface Window {
+  SC_DISABLE_SPEEDY: boolean;
   STRAPI_CMS_HOST?: string;
   WORKFLOW_SERVER_URL?: string;
   QC_TOOL_HOST?: string;

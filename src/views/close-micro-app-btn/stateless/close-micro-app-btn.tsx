@@ -13,14 +13,16 @@ const CloseButton = styled(Button)`
 
 interface Props {
   onClick: () => void;
+  disabled: boolean;
 }
 
-export const CloseMicroAppBtn: React.FC<Props> = ({ onClick }) => {
+export const CloseMicroAppBtn: React.FC<Props> = ({ onClick, disabled }) => {
   return (
     <CloseButton
       shape="circle"
-      icon={<CloseOutlined style={{ color: '#fff' }} />}
+      icon={<CloseOutlined style={{ color: disabled ? '#999090' : '#fff' }} />}
       onClick={onClick}
+      disabled={disabled}
     />
   );
 };
