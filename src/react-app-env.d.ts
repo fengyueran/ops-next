@@ -238,6 +238,7 @@ type MakeSubmit =
 
 interface QCToolInput {
   getDicom: GetDicom;
+  targetSeries?: string;
   seriesList: string[];
   thumbnailList: string[];
   getAutoQCResultFile: GetAutoQCResultFile;

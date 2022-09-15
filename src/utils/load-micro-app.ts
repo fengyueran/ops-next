@@ -17,7 +17,7 @@ const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) 
   };
 
   const getAutoQCResultFile = async () => {
-    const node = findFileByName('dicom_info', inputs);
+    const node = findFileByName(NodeOutput.DICOM_INFO, inputs);
     const data = await fetchFileWithCache<AutoQCInfo>(node.value);
     return data;
   };
@@ -27,9 +27,13 @@ const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) 
     (thumbPath: string) => getThumbnailPath(thumbPath),
   );
 
+  const targetSeries =
+    operation.output && findFileByName(NodeOutput.TARGET_SERIES, operation.output)?.value;
+
   return {
     getDicom,
     seriesList,
+    targetSeries,
     thumbnailList,
     getAutoQCResultFile,
     submit,
