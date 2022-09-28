@@ -61,14 +61,14 @@ const fetchCompressedFile = async (filePath: string) => {
   return data;
 };
 
-export const fetchFile = async (filePath: string, responseType?: ResponseType) => {
+export const fetchFile = async <T = any>(filePath: string, responseType?: ResponseType) => {
   let data;
   if (filePath.endsWith('.tgz') || filePath.endsWith('.gz')) {
     data = await fetchCompressedFile(filePath);
   } else {
     data = await fetchCommonFile(filePath, responseType);
   }
-  return data;
+  return data as T;
 };
 
 export const fetchFileWithCache = withCache(fetchFile);
@@ -105,7 +105,7 @@ export const uploadFiles = async (files: { path: string; data: ArrayBuffer | str
 };
 
 export const getLog = async (workflowID: string, algoOperationID: string) => {
-  const url = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${algoOperationID}/log`;
+  const url = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${algoOperationID}/log?all=true`;
   const { data } = await fetcher.axios.get(url);
   return data;
 };
@@ -120,9 +120,13 @@ export const getThumbnailPath = (path: string) => {
   return `${fileUrl}/${path}`;
 };
 
-export const downloadFile = async (filePath: string) => {
-  const url = fullPath(filePath);
-  download('data', url);
+export const downloadFile = async (filePath: string, name?: string) => {
+  const data = await fetchCommonFile(filePath, 'blob');
+  const blob = new Blob([data]);
+  const url = URL.createObjectURL(blob);
+  const fileExt = filePath.split('.').pop();
+  const fileName = name || `data.${fileExt}`;
+  download(fileName, url);
 };
 
 window.downloadFile = downloadFile;

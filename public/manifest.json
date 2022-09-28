@@ -1,5 +1,6 @@
 {
-  "short_name": "React App",
+  "short_name": "OPS",
+  "version": "0.0.1",
   "name": "Create React App Sample",
   "icons": [
     {

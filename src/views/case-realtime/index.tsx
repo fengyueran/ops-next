@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { io } from 'socket.io-client';
 
-import { STRAPI_CMS_HOST } from 'src/api';
+import { STRAPI_CMS_HOST, PREFIX } from 'src/api';
 import { cases, user } from 'src/redux';
 
 export const CaseRealtime = () => {
@@ -35,6 +35,7 @@ export const CaseRealtime = () => {
         auth: {
           token,
         },
+        path: `${PREFIX}/socket.io`,
       });
       socket.on('connect', () => {
         console.log('connect success');

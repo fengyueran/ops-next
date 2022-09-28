@@ -29,6 +29,7 @@ export const slice = createSlice({
   initialState,
   reducers: {
     updateFilter(state, action: PayloadAction<object>) {
+      state.pagination = { ...state.pagination, page: 0 };
       state.filters = { ...state.filters, ...action.payload };
     },
     setPagination(state, action: PayloadAction<Pagination>) {
@@ -36,6 +37,9 @@ export const slice = createSlice({
     },
     setSort(state, action: PayloadAction<string | undefined>) {
       state.sort = action.payload;
+    },
+    reset() {
+      return initialState;
     },
   },
 });

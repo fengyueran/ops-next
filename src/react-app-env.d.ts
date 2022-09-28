@@ -9,7 +9,7 @@ interface Window {
   Review_TOOL_HOST?: string;
   Report_TOOL_HOST?: string;
   downloadFile: (filePath: string) => void;
-  showSaveFilePicker: (data: any) => Promise<any>;
+  showSaveFilePicker?: (data: any) => Promise<any>;
 }
 
 enum CaseProgress {
@@ -163,9 +163,11 @@ type GetCenterlineBuffers = () => Promise<ArrayBuffer[]>;
 
 type GetCPR = (path: string) => Promise<ArrayBuffer>;
 
-type GetSphere = () => Promise<ArrayBuffer>;
+type GetSphere = () => Promise<ArrayBuffer | null>;
 
 type GetAutoQCResultFile = () => Promise<AutoQCInfo>;
+
+type GetReportJson = () => Promise<ArrayBuffer>;
 
 interface QCSubmitInput {
   pdf_json: string;
@@ -288,6 +290,8 @@ interface ReportToolInput {
   getPly: GetPlyBuffer;
   getCPR: GetCPR;
   getSphere: GetSphere;
+  getReportJson?: GetReportJson;
+  readonly: boolean;
   getCenterlines: GetCenterlineBuffers;
   submit?: ReportSubmit;
 }

@@ -208,7 +208,7 @@ const makeReportToolInput = (
   const inputs = operation.input;
 
   const getPly = async () => {
-    const node = findFileByName('ply', inputs);
+    const node = findFileByName(NodeOutput.PLY, inputs);
     const data = await fetchFileWithCache<ArrayBuffer>(node.value, 'arraybuffer');
     return data;
   };
@@ -219,9 +219,17 @@ const makeReportToolInput = (
   };
 
   const getSphere = async () => {
-    const node = findFileByName('cprSphere', inputs);
-    const data = await fetchFileWithCache<ArrayBuffer>(node.value);
+    const cprFile = inputs[NodeOutput.CPR_SPHERE]?.value;
+    if (!cprFile) return null;
+    const data = await fetchFileWithCache<ArrayBuffer>(cprFile);
     return data;
+  };
+
+  const getReportJson = async () => {
+    const node = findFileByName(NodeOutput.REPORT_JSON, operation.output!);
+    const data = await fetchFileWithCache<UntarFile[]>(node.value);
+
+    return data[0].buffer;
   };
 
   const getCenterlines = async () => {
@@ -233,7 +241,7 @@ const makeReportToolInput = (
     return vtps;
   };
 
-  const cprFilePathList = JSON.parse(findFileByName('cprs', inputs)?.value);
+  const cprFilePathList = JSON.parse(findFileByName(NodeOutput.CPRS, inputs)?.value);
 
   return {
     caseInfo: {
@@ -253,6 +261,8 @@ const makeReportToolInput = (
     getCenterlines,
     cprFilePathList,
     submit,
+    readonly: !!operation.output,
+    getReportJson: operation.output && getReportJson,
   };
 };
 

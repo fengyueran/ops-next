@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { caseFilter } from 'src/redux';
@@ -14,6 +14,12 @@ export const withData =
       },
       [dispatch],
     );
+
+    useEffect(() => {
+      return () => {
+        dispatch(caseFilter.actions.reset());
+      };
+    }, [dispatch]);
 
     return <WrappedComponent {...(props as P)} onSearch={onSearch} />;
   };

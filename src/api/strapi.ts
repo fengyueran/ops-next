@@ -4,7 +4,7 @@ import qs from 'qs';
 import { withInfiniteFetch } from 'src/utils';
 import { fetcher, STRAPI_CMS_HOST } from './fetcher';
 
-const PREFIX = '/v1/ops-strapi';
+export const PREFIX = '/v1/ops-strapi';
 export const FETCH_CASE_PATH = `${PREFIX}/api/cases`;
 
 const FETCH_OPERATION_PATH = `${PREFIX}/api/operations`;

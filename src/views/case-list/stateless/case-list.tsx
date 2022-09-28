@@ -131,8 +131,10 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
       if (status !== CaseStatus.COMPLETED) return null;
       if (isPositive) {
         return <ColorTag tip={formatMessage({ defaultMessage: '阳性' })} color="red" />;
+      } else if (isPositive !== null) {
+        return <ColorTag tip={formatMessage({ defaultMessage: '阴性' })} color="green" />;
       }
-      return <ColorTag tip={formatMessage({ defaultMessage: '阴性' })} color="green" />;
+      return null;
     },
   },
   {
