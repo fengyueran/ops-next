@@ -4,7 +4,10 @@ import { fetchFile, fetchFileWithCache, getThumbnailPath, uploadFiles } from 'sr
 import { MaskEditType, microAppMgr, findFileByName } from 'src/utils';
 import { CaseProgress, NodeOutput, NodeStep } from 'src/type';
 
-type Submit = (output: ToolOutput, makeSubmitInput: (output: any) => Promise<any>) => void;
+type Submit = (
+  output: ToolOutput,
+  makeSubmitInput: (output: any, operation: any) => Promise<any>,
+) => void;
 
 const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) => {
   const inputs = operation.input;
@@ -93,11 +96,33 @@ const makeQCSubmitInput = async (data: QCToolOutput) => {
   return { qcf: 'false', pdf_json: '', ...res };
 };
 
-const makeReviewSubmitInput = async (data: ReviewToolOutput) => {
+const makeReviewSubmitInput = async (
+  data: ReviewToolOutput,
+  operation: OperationDataAttributes,
+) => {
   const { leftMeshVtp, rightMeshVtp } = data;
-  //   const { path } = await uploadFile('leftMeshVtp.vtp', leftMeshVtp);
-  //   const { path } = await uploadFile('rightMeshVtp.vtp', rightMeshVtp);
-  return { left_vtp: leftMeshVtp, right_vtp: rightMeshVtp };
+  const inputs = operation.input;
+
+  const leftMeshVtpInput = findFileByName('left_vtp', inputs)?.value;
+  const rightMeshVtpInput = findFileByName('right_vtp', inputs)?.value;
+
+  if (leftMeshVtp && rightMeshVtp) {
+    const files = [
+      { path: 'leftMeshVtp.vtp', data: leftMeshVtp },
+      { path: 'rightMeshVtp.vtp', data: rightMeshVtp },
+    ];
+    const uploadTask = files.map((file) => uploadFiles([file]));
+    const [left_vtp, right_vtp] = await Promise.all(uploadTask);
+    return { left_vtp: left_vtp.path, right_vtp: right_vtp.path };
+  } else if (leftMeshVtp) {
+    const left_vtp = await uploadFiles([{ path: 'leftMeshVtp.vtp', data: leftMeshVtp }]);
+    return { left_vtp: left_vtp.path, right_vtp: rightMeshVtpInput };
+  } else if (rightMeshVtp) {
+    const right_vtp = await uploadFiles([{ path: 'rightMeshVtp.vtp', data: rightMeshVtp }]);
+    return { left_vtp: leftMeshVtpInput, right_vtp: right_vtp.path };
+  }
+
+  return { left_vtp: leftMeshVtpInput, right_vtp: rightMeshVtpInput };
 };
 
 const makeReportSubmitInput = async (data: ReportToolOutput) => {
@@ -148,15 +173,16 @@ const makeReivewToolInput = (
   submit?: ReviewSubmit,
 ) => {
   const inputs = operation.input;
+  const outputs = operation.output;
 
   const getNifti = async () => {
-    const node = findFileByName('nifti', inputs);
+    const node = findFileByName(NodeOutput.NIFTI, inputs);
     const data = await fetchFileWithCache<ArrayBuffer>(node.value);
     return data;
   };
 
   const getMask = async () => {
-    const node = findFileByName('refine_aorta_and_arteries', inputs);
+    const node = findFileByName(NodeOutput.REFINE_MASK, inputs);
     const maskBuffer = await fetchFileWithCache<ArrayBuffer>(node.value);
     return maskBuffer;
   };
@@ -169,11 +195,17 @@ const makeReivewToolInput = (
 
   const getCenterlines = async () => {
     const vtpTasks = ['left_vtp', 'right_vtp'].map((name) => {
-      const node = findFileByName(name, inputs);
-      return fetchFileWithCache<string>(node.value);
+      const node = findFileByName(name, outputs || inputs);
+      return fetchFileWithCache<string | UntarFile[]>(node.value);
     });
     const vtps = await Promise.all(vtpTasks);
-    return vtps;
+    const newVTPs = vtps.map((vtp) => {
+      if (Array.isArray(vtp)) {
+        return new TextDecoder('utf-8').decode(vtp[0].buffer);
+      }
+      return vtp;
+    });
+    return newVTPs;
   };
 
   return {
@@ -189,14 +221,7 @@ const makeReivewToolInput = (
     getMask,
     getPly,
     getCenterlines,
-    submit:
-      submit &&
-      (() => {
-        const leftMeshVtp = findFileByName('left_vtp', inputs)?.value;
-        const rightMeshVtp = findFileByName('right_vtp', inputs)?.value;
-
-        submit({ leftMeshVtp, rightMeshVtp });
-      }),
+    submit,
   };
 };
 

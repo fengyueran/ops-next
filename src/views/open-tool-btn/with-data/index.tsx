@@ -35,7 +35,7 @@ export const withData =
 
         const submit = async (
           output: ToolOutput,
-          makeSubmitInput: (output: ToolOutput) => Promise<any>,
+          makeSubmitInput: (output: ToolOutput, operation: OperationDataAttributes) => Promise<any>,
         ) => {
           try {
             if (caseInfo.workflowFailed) {

@@ -24,19 +24,19 @@ const initialState: State = {
 
 interface SubmitData {
   operation: OperationDataAttributes;
-  makeSubmitInput: (output: ToolOutput) => any;
+  makeSubmitInput: (output: ToolOutput, operation: OperationDataAttributes) => any;
   output: ToolOutput;
 }
 
 export const submit = createAsyncThunk<void, SubmitData>('MicroApp/submit', async (data) => {
   const { operation, makeSubmitInput, output } = data;
-  const submitInput = await makeSubmitInput(output);
+  const submitInput = await makeSubmitInput(output, operation);
   await completeNode(operation.workflowID, operation.activityID, submitInput);
 });
 
 export const patch = createAsyncThunk<void, SubmitData>('MicroApp/patch', async (data) => {
   const { operation, makeSubmitInput, output } = data;
-  const submitInput = await makeSubmitInput(output);
+  const submitInput = await makeSubmitInput(output, operation);
   await patchNode(operation.workflowID, operation.step, submitInput);
 });
 

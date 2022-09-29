@@ -198,8 +198,8 @@ interface RefineSubmitInput {
 }
 
 interface ReviewToolOutput {
-  leftMeshVtp: string;
-  rightMeshVtp: string;
+  leftMeshVtp?: string;
+  rightMeshVtp?: string;
 }
 
 type ReportOutputData = {

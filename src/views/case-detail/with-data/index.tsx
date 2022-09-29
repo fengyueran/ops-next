@@ -55,7 +55,7 @@ export const withData =
         dispatch(microApp.actions.toggleCanSubmit(canSubmit));
         const submit = async (
           output: ToolOutput,
-          makeSubmitInput: (output: ToolOutput) => Promise<any>,
+          makeSubmitInput: (output: ToolOutput, operation: OperationDataAttributes) => Promise<any>,
         ) => {
           try {
             await dispatch(microApp.actions.patch({ operation, output, makeSubmitInput })).unwrap();
