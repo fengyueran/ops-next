@@ -149,6 +149,12 @@ const expandIcon = ({ isActive }: { isActive?: boolean }) => {
   );
 };
 
+const PatchBtnNameMap = {
+  [NodeStep.QC]: <FormattedMessage defaultMessage="重新QC" />,
+  [NodeStep.REFINE_EDIT]: <FormattedMessage defaultMessage="重新精分" />,
+  [NodeStep.REPORT]: <FormattedMessage defaultMessage="重新报告" />,
+};
+
 const Operations: React.FC<Props> = ({
   ffrModelThumbnail,
   operations,
@@ -179,6 +185,8 @@ const Operations: React.FC<Props> = ({
           const title = `${o.step} ${
             arr.slice(index + 1).filter((d) => d.step === o.step).length + 1
           }`;
+
+          const patchBtnName = PatchBtnNameMap[o.step as keyof typeof PatchBtnNameMap];
           return (
             <Information key={o.id}>
               <ResultContent>
@@ -198,14 +206,9 @@ const Operations: React.FC<Props> = ({
                 </ResultCenter>
               </ResultContent>
               <ResultRight>
-                {o.step === NodeStep.QC && (
+                {patchBtnName && (
                   <Button size="small" style={{ marginRight: 10 }} onClick={() => patchNode(o)}>
-                    <FormattedMessage defaultMessage="重新QC" />
-                  </Button>
-                )}
-                {o.step === NodeStep.REFINE_EDIT && (
-                  <Button size="small" style={{ marginRight: 10 }} onClick={() => patchNode(o)}>
-                    <FormattedMessage defaultMessage="重新精分" />
+                    {patchBtnName}
                   </Button>
                 )}
                 {o.step === NodeStep.QC && (

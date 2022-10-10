@@ -51,8 +51,7 @@ export const withData =
           dispatch(microApp.actions.setCurrentOperation(operation));
         }
         readyToOpenMicroApp();
-        const canSubmit = operation.step === NodeStep.QC || operation.step === NodeStep.REFINE_EDIT;
-        dispatch(microApp.actions.toggleCanSubmit(canSubmit));
+        dispatch(microApp.actions.toggleCanSubmit(true));
         const submit = async (
           output: ToolOutput,
           makeSubmitInput: (output: ToolOutput, operation: OperationDataAttributes) => Promise<any>,
@@ -70,7 +69,7 @@ export const withData =
             );
           }
         };
-        loadMicroAppByStep(caseInfo, operation, submit);
+        loadMicroAppByStep(caseInfo, operation, submit, false);
       },
       [caseInfo, dispatch, readyToOpenMicroApp],
     );

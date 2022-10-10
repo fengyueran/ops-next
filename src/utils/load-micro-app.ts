@@ -229,6 +229,7 @@ const makeReportToolInput = (
   operation: OperationDataAttributes,
   caseInfo: CaseInfo,
   submit?: ReportSubmit,
+  readonly?: boolean,
 ) => {
   const inputs = operation.input;
 
@@ -286,7 +287,7 @@ const makeReportToolInput = (
     getCenterlines,
     cprFilePathList,
     submit,
-    readonly: !!operation.output,
+    readonly: readonly === undefined ? !!operation.output : readonly,
     getReportJson: operation.output && getReportJson,
   };
 };
@@ -325,10 +326,15 @@ const loadReviewTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?:
   microAppMgr.loadReviewTool(makeReivewToolInput(operation, caseInfo, reviewSubmit));
 };
 
-const loadReportTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?: Submit) => {
+const loadReportTool = (
+  caseInfo: CaseInfo,
+  operation: DetailOperation,
+  submit?: Submit,
+  readonly?: boolean,
+) => {
   const reportSubmit =
     submit && ((output: ReportToolOutput) => submit(output, makeReportSubmitInput));
-  microAppMgr.loadReportTool(makeReportToolInput(operation, caseInfo, reportSubmit));
+  microAppMgr.loadReportTool(makeReportToolInput(operation, caseInfo, reportSubmit, readonly));
 };
 
 export const loadMicroAppByStatus = (
@@ -356,6 +362,7 @@ export const loadMicroAppByStep = (
   caseInfo: CaseInfo,
   operation: DetailOperation,
   submit?: Submit,
+  readonly?: boolean,
 ) => {
   console.log('operation', operation.step);
   const loadMicroAppMap: { [key: string]: Function } = {
@@ -363,7 +370,7 @@ export const loadMicroAppByStep = (
     [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation, submit),
     [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation, submit),
     [NodeStep.VALIDATE_FFR]: () => loadReviewTool(caseInfo, operation, submit),
-    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation, submit),
+    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation, submit, readonly),
   };
 
   const load = loadMicroAppMap[operation.step];
