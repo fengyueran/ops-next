@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { loadMicroAppByStatus } from 'src/utils';
 import { microApp, cases, other } from 'src/redux';
 import { AppDispatch } from 'src/store';
 import { getOperationByID, tagCaseReaded } from 'src/api';
-import { CaseProgress, ErrorType } from 'src/type';
+import { CaseProgress, ErrorType, NodeStep } from 'src/type';
 
 interface Props {
   caseInfo: CaseInfo & { id: string };
@@ -71,5 +71,23 @@ export const withData =
       }
     }, [dispatch, caseInfo]);
 
-    return <WrappedComponent {...(props as P)} disabled={!caseInfo.enableEdit} onClick={onClick} />;
+    const loading = useMemo(() => {
+      const editingStep = [
+        NodeStep.QC,
+        NodeStep.SEGMENT_EDIT,
+        NodeStep.REFINE_EDIT,
+        NodeStep.VALIDATE_FFR,
+        NodeStep.REPORT,
+      ];
+      return !editingStep.includes(caseInfo.step) && caseInfo.step !== NodeStep.RETURNED;
+    }, [caseInfo.step]);
+
+    return (
+      <WrappedComponent
+        {...(props as P)}
+        disabled={!caseInfo.enableEdit}
+        loading={loading}
+        onClick={onClick}
+      />
+    );
   };

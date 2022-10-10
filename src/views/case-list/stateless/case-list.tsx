@@ -162,7 +162,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
     },
   },
   {
-    width: 80,
+    width: 100,
     title: '',
     render: (caseInfo: CaseInfo & { id: string }) => {
       return <OpenToolBtn caseInfo={caseInfo} />;

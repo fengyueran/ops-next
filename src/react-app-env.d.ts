@@ -323,7 +323,7 @@ enum NodeStep {
   VALIDATE_FFR = 'validate-ffr',
   GEN_CPR_PLY = 'gen-cpr-ply',
   REPORT = 'report',
-  RETURNED = 'returned',
+  RETURNED = 'completed-return',
 }
 
 interface OperationDataAttributes {
