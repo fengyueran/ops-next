@@ -13,6 +13,7 @@ export enum NodeStep {
   GEN_CPR_PLY = 'gen-cpr-ply',
   REPORT = 'report',
   RETURNED = 'completed-return',
+  QCF_RETURNED = 'qcf-return',
 }
 
 export enum CaseStatus {
