@@ -173,9 +173,7 @@ const Operations: React.FC<Props> = ({
       <ScrollContainer>
         {operations.map((o, index, arr) => {
           let thumbnail = '';
-          if (o.step === NodeStep.QC && !o.passed) {
-            thumbnail = qcfImage;
-          } else if (o.step === NodeStep.REPORT) {
+          if (o.step === NodeStep.REPORT) {
             thumbnail = reportImage;
           } else if (o.thumbnail) {
             thumbnail = o.thumbnail;
