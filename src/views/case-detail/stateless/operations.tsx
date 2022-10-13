@@ -6,7 +6,6 @@ import { FormattedMessage } from 'react-intl';
 import { format } from 'date-fns';
 
 import { NodeStep } from 'src/type';
-import qcfImage from 'src/assets/images/qcf.png';
 import reportImage from 'src/assets/images/report.png';
 import SeriesInfo from './series-info';
 import TaskState from './case-task-state';
