@@ -6,7 +6,6 @@ import { FormattedMessage } from 'react-intl';
 import { format } from 'date-fns';
 
 import { NodeStep } from 'src/type';
-import qcfImage from 'src/assets/images/qcf.png';
 import reportImage from 'src/assets/images/report.png';
 import SeriesInfo from './series-info';
 import TaskState from './case-task-state';
@@ -173,9 +172,7 @@ const Operations: React.FC<Props> = ({
       <ScrollContainer>
         {operations.map((o, index, arr) => {
           let thumbnail = '';
-          if (o.step === NodeStep.QC && !o.passed) {
-            thumbnail = qcfImage;
-          } else if (o.step === NodeStep.REPORT) {
+          if (o.step === NodeStep.REPORT) {
             thumbnail = reportImage;
           } else if (o.thumbnail) {
             thumbnail = o.thumbnail;

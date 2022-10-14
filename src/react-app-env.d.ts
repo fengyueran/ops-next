@@ -320,7 +320,7 @@ enum NodeStep {
   LUMEN_REFINEMENT_CL = 'lumen-refinement-cl',
   SZ_FFR = 'sz-ffr',
   GEN_THUMBNAIL = 'gen-thumbnail',
-  VALIDATE_FFR = 'validate-ffr',
+  VALIDATE_FFR = 'review',
   GEN_CPR_PLY = 'gen-cpr-ply',
   REPORT = 'report',
   RETURNED = 'completed-return',

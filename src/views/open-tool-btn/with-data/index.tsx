@@ -72,6 +72,7 @@ export const withData =
     }, [dispatch, caseInfo]);
 
     const loading = useMemo(() => {
+      if (caseInfo.workflowFailed) return false;
       const editingStep = [
         NodeStep.QC,
         NodeStep.SEGMENT_EDIT,
@@ -79,8 +80,12 @@ export const withData =
         NodeStep.VALIDATE_FFR,
         NodeStep.REPORT,
       ];
-      return !editingStep.includes(caseInfo.step) && caseInfo.step !== NodeStep.RETURNED;
-    }, [caseInfo.step]);
+      return (
+        !editingStep.includes(caseInfo.step) &&
+        caseInfo.step !== NodeStep.RETURNED &&
+        caseInfo.step !== NodeStep.QCF_RETURNED
+      );
+    }, [caseInfo.step, caseInfo.workflowFailed]);
 
     return (
       <WrappedComponent
