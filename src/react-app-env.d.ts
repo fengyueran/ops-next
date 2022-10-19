@@ -187,10 +187,12 @@ interface SegSubmitInput {
 
 interface SegToolOutput {
   mask: ArrayBuffer;
+  thumbnail: ArrayBuffer;
 }
 
 interface RefineToolOutput {
   mask: ArrayBuffer;
+  thumbnail: ArrayBuffer;
 }
 
 interface RefineSubmitInput {
@@ -200,6 +202,7 @@ interface RefineSubmitInput {
 interface ReviewToolOutput {
   leftMeshVtp?: string;
   rightMeshVtp?: string;
+  thumbnail: ArrayBuffer;
 }
 
 type ReportOutputData = {

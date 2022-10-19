@@ -87,6 +87,7 @@ const Thumbnail = styled.img`
   height: 100px;
   margin-right: 16px;
   cursor: pointer;
+  object-fit: cover;
 `;
 
 const ThumbnailHolder = styled.div`

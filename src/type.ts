@@ -42,6 +42,7 @@ export enum NodeOutput {
   DICOM_INFO = 'dicom_info',
   NIFTI = 'nifti',
   PLY = 'ply',
+  THUMBNAIL = 'thumbnail',
   THUMBNAILS = 'thumbnails',
   TARGET_SERIES = 'targetSeries',
   QC_FAILED = 'qcf',

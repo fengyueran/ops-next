@@ -31,15 +31,14 @@ const formatOperations = (operations: OperationData[]) => {
     return;
   };
 
-  const getCompleteThumbnail = () => {
-    const completeOp = operations.find(({ attributes }) => attributes.step === NodeStep.RETURNED);
-    const thumbnail =
-      completeOp?.attributes.output &&
-      findFileByName(NodeOutput.THUMBNAILS, completeOp?.attributes.output)?.value;
-    return thumbnail ? getThumbnailPath(thumbnail) : undefined;
+  const getThumbnail = (output: { [key: string]: NodeInput }) => {
+    try {
+      const res = findFileByName(NodeOutput.THUMBNAIL, output);
+      return getThumbnailPath(res.value);
+    } catch (error) {
+      return undefined;
+    }
   };
-
-  const modelThumbnail = getCompleteThumbnail();
 
   const formatted = operations.map((operation) => {
     const { id, attributes } = operation;
@@ -60,7 +59,7 @@ const formatOperations = (operations: OperationData[]) => {
       step === NodeStep.REFINE_EDIT ||
       step === NodeStep.VALIDATE_FFR
     ) {
-      newOperation.thumbnail = modelThumbnail;
+      newOperation.thumbnail = output && getThumbnail(output);
     }
 
     return newOperation;

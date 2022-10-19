@@ -104,6 +104,19 @@ export const uploadFiles = async (files: { path: string; data: ArrayBuffer | str
   }
 };
 
+export const uploadImage = async (ab: ArrayBuffer) => {
+  const uploadUrl = `${WORKFLOW_HOST}${UPLOAD_PATH}`;
+
+  const blob = new Blob([ab], { type: 'application/octet-stream' });
+  const { data } = await fetcher.axios.post<UploadFileResponse>(uploadUrl, blob, {
+    headers: {
+      'Content-Type': 'image/png',
+      'Content-Disposition': 'inline;filename=thumbnail.png',
+    },
+  });
+  return data;
+};
+
 export const getLog = async (workflowID: string, algoOperationID: string) => {
   const url = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${algoOperationID}/log?all=true`;
   const { data } = await fetcher.axios.get(url);

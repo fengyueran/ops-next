@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-import { fetchFile, fetchFileWithCache, getThumbnailPath, uploadFiles } from 'src/api';
+import { fetchFile, fetchFileWithCache, getThumbnailPath, uploadFiles, uploadImage } from 'src/api';
 import { MaskEditType, microAppMgr, findFileByName } from 'src/utils';
 import { CaseProgress, NodeOutput, NodeStep } from 'src/type';
 
@@ -100,29 +100,41 @@ const makeReviewSubmitInput = async (
   data: ReviewToolOutput,
   operation: OperationDataAttributes,
 ) => {
-  const { leftMeshVtp, rightMeshVtp } = data;
+  const { leftMeshVtp, rightMeshVtp, thumbnail } = data;
   const inputs = operation.input;
 
   const leftMeshVtpInput = findFileByName('left_vtp', inputs)?.value;
   const rightMeshVtpInput = findFileByName('right_vtp', inputs)?.value;
-
+  const uploadThumbnail = uploadImage(thumbnail);
   if (leftMeshVtp && rightMeshVtp) {
     const files = [
       { path: 'leftMeshVtp.vtp', data: leftMeshVtp },
       { path: 'rightMeshVtp.vtp', data: rightMeshVtp },
     ];
-    const uploadTask = files.map((file) => uploadFiles([file]));
-    const [left_vtp, right_vtp] = await Promise.all(uploadTask);
-    return { left_vtp: left_vtp.path, right_vtp: right_vtp.path };
+    const uploadVTPTasks = files.map((file) => uploadFiles([file]));
+    const [left_vtp, right_vtp, thumbnailRes] = await Promise.all([
+      ...uploadVTPTasks,
+      uploadThumbnail,
+    ]);
+    return { left_vtp: left_vtp.path, right_vtp: right_vtp.path, thumbnail: thumbnailRes.path };
   } else if (leftMeshVtp) {
-    const left_vtp = await uploadFiles([{ path: 'leftMeshVtp.vtp', data: leftMeshVtp }]);
-    return { left_vtp: left_vtp.path, right_vtp: rightMeshVtpInput };
+    const [left_vtp, thumbnailRes] = await Promise.all([
+      uploadFiles([{ path: 'leftMeshVtp.vtp', data: leftMeshVtp }]),
+      uploadThumbnail,
+    ]);
+    return { left_vtp: left_vtp.path, right_vtp: rightMeshVtpInput, thumbnail: thumbnailRes.path };
   } else if (rightMeshVtp) {
-    const right_vtp = await uploadFiles([{ path: 'rightMeshVtp.vtp', data: rightMeshVtp }]);
-    return { left_vtp: leftMeshVtpInput, right_vtp: right_vtp.path };
+    const [right_vtp, thumbnailRes] = await Promise.all([
+      uploadFiles([{ path: 'rightMeshVtp.vtp', data: rightMeshVtp }]),
+      uploadThumbnail,
+    ]);
+
+    return { left_vtp: leftMeshVtpInput, right_vtp: right_vtp.path, thumbnail: thumbnailRes.path };
   }
 
-  return { left_vtp: leftMeshVtpInput, right_vtp: rightMeshVtpInput };
+  const thumbnailRes = await uploadThumbnail;
+
+  return { left_vtp: leftMeshVtpInput, right_vtp: rightMeshVtpInput, thumbnail: thumbnailRes.path };
 };
 
 const makeReportSubmitInput = async (data: ReportToolOutput) => {
@@ -297,10 +309,20 @@ const loadQCTool = (operation: DetailOperation, submit?: Submit) => {
   microAppMgr.loadQCTool(makeQCToolInput(operation, qcSubmit));
 };
 
-const makeSegSubmitInput = async (data: SegToolOutput) => {
-  const { mask } = data;
-  const { path } = await uploadFiles([{ path: 'segMask.nii.gz', data: mask }]);
-  return { [NodeOutput.EDITED_SEGMENT_MASK]: path };
+const makeMaskOutput = async (data: SegToolOutput, editType: MaskEditType) => {
+  const { mask, thumbnail } = data;
+  const maskName = editType === MaskEditType.Segment ? 'segMask.nii.gz' : 'refineMask.nii.gz';
+
+  const uploadTasks = [uploadFiles([{ path: maskName, data: mask }]), uploadImage(thumbnail)];
+  const [maskRes, thumbnailRes] = await Promise.all(uploadTasks);
+  if (editType === MaskEditType.Segment) {
+    return { [NodeOutput.EDITED_SEGMENT_MASK]: maskRes.path, thumbnail: thumbnailRes.path };
+  }
+  return { [NodeOutput.EDITED_REFINE_MASK]: maskRes.path, thumbnail: thumbnailRes.path };
+};
+
+const makeSegSubmitInput = (data: SegToolOutput) => {
+  return makeMaskOutput(data, MaskEditType.Segment);
 };
 
 const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
@@ -309,9 +331,7 @@ const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
 };
 
 const makeRefineSubmitInput = async (data: RefineToolOutput) => {
-  const { mask } = data;
-  const { path } = await uploadFiles([{ path: 'refineMask.nii.gz', data: mask }]);
-  return { [NodeOutput.EDITED_REFINE_MASK]: path };
+  return makeMaskOutput(data, MaskEditType.Refine);
 };
 
 const loadRefineMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
