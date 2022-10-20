@@ -1,19 +1,26 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 
 import { STRAPI_CMS_HOST, PREFIX } from 'src/api';
-import { cases, user } from 'src/redux';
+import { cases, user, caseFilter } from 'src/redux';
 
 export const CaseRealtime = () => {
+  const socketRef = useRef<Socket>();
+  const filterRef = useRef<Filters>({});
   const dispatch = useDispatch();
   const token = useSelector(user.selectors.token);
+  const filters = useSelector(caseFilter.selectors.filters);
+
+  useMemo(() => {
+    filterRef.current = filters;
+  }, [filters]);
 
   const handleCaseCreated = useCallback(
     (data: { data: CaseData }) => {
       console.log('case:created', data);
       if (data.data) {
-        dispatch(cases.actions.addCase(data.data));
+        dispatch(cases.actions.addCase({ caseData: data.data, filters: filterRef.current }));
       }
     },
     [dispatch],
@@ -31,16 +38,19 @@ export const CaseRealtime = () => {
 
   useEffect(() => {
     if (token) {
-      const socket = io(STRAPI_CMS_HOST, {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+      socketRef.current = io(STRAPI_CMS_HOST, {
         auth: {
           token,
         },
         path: `${PREFIX}/socket.io`,
       });
-      socket.on('connect', () => {
+      socketRef.current.on('connect', () => {
         console.log('connect success');
-        socket.on('case:create', handleCaseCreated);
-        socket.on('case:update', handleCaseUpdated);
+        socketRef.current!.on('case:create', handleCaseCreated);
+        socketRef.current!.on('case:update', handleCaseUpdated);
       });
     }
   }, [handleCaseCreated, handleCaseUpdated, token]);

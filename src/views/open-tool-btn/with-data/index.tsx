@@ -56,6 +56,7 @@ export const withData =
                 detail: (error as Error).message,
               }),
             );
+            return error;
           }
         };
 
