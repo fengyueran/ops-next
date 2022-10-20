@@ -45,6 +45,7 @@ export const withData =
                 detail: (error as Error).message,
               }),
             );
+            return error;
           }
         };
         await delay(40);
