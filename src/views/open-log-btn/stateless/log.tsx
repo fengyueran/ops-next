@@ -4,7 +4,7 @@ import { Button, Empty } from 'antd';
 import { DownloadOutlined, CloseOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 
-import { Row, Col, ElasticBox, SpaceX } from 'src/components';
+import { Row, Col, ElasticBox } from 'src/components';
 
 const ModalContainer = styled(Col)`
   width: 100vw;
@@ -22,6 +22,11 @@ const StyledButton = styled(Button)`
   text-align: center;
   line-height: 22px;
   font-weight: 400;
+`;
+
+const CloseBtn = styled(CloseOutlined)`
+  margin-right: 12px;
+  width: 16px;
 `;
 
 const Header = styled(Row)`
@@ -72,13 +77,12 @@ export const Log: React.FC<Props> = ({ onClose, onClick, onSave, visible, log })
       {visible && (
         <ModalContainer>
           <Header>
+            <CloseBtn onClick={onClose} />
             <Title>
               <FormattedMessage defaultMessage="查看日志" />
             </Title>
             <ElasticBox />
             <StyledBtn icon={<DownloadOutlined />} type="text" onClick={onSave} disabled={!log} />
-            <SpaceX size={16} />
-            <CloseOutlined style={{ width: 16 }} onClick={onClose} />
           </Header>
           <Content>{renderLog()}</Content>
         </ModalContainer>
