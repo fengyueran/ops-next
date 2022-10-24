@@ -1,6 +1,6 @@
 //@ts-ignore
 import untar from 'js-untar';
-import { ResponseType } from 'axios';
+import axios, { ResponseType } from 'axios';
 
 import { decompress, withCache, download } from 'src/utils';
 import { NodeStep } from 'src/type';
@@ -19,6 +19,7 @@ const FILE_PATH = `${PREFIX}/files/download`;
 const UPLOAD_PATH = `${PREFIX}/files/upload`;
 const THUMBNAIL_PATH = `${PREFIX}/files/thumbnail`;
 const CASE_PATH = `${PREFIX}/case`;
+const VERSION_PATH = `${PREFIX}/bundle/version`;
 
 export const fetchCommonFile = async (
   filePath: string,
@@ -121,6 +122,12 @@ export const getLog = async (workflowID: string, algoOperationID: string) => {
   const url = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/${algoOperationID}/log?all=true`;
   const { data } = await fetcher.axios.get(url);
   return data;
+};
+
+export const getVersion = async () => {
+  const url = `${WORKFLOW_HOST}${VERSION_PATH}`;
+  const { data } = await axios.get<{ version: string }>(url);
+  return data.version;
 };
 
 export const fullPath = (path: string) => {

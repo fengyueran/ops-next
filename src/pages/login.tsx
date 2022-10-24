@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { Col, Row, SpaceY } from 'src/components';
 import { LoginForm } from 'src/views/login-form';
+import { Version } from 'src/views/version';
 import logoImg from 'src/assets/icons/logo.svg';
 
 const Container = styled(Row)`
@@ -92,6 +93,7 @@ export const LoginPage = () => {
           </StatementLink>
         </StatementContainer>
       </Col>
+      <Version />
     </Container>
   );
 };
