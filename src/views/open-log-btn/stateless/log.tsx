@@ -25,8 +25,9 @@ const StyledButton = styled(Button)`
 `;
 
 const CloseBtn = styled(CloseOutlined)`
-  margin-right: 12px;
+  margin: 0 16px 0 8px;
   width: 16px;
+  font-size: 16px;
 `;
 
 const Header = styled(Row)`
@@ -53,6 +54,7 @@ const Content = styled.div`
 
 const StyledBtn = styled(Button)`
   width: 16px;
+  margin-right: 10px;
 `;
 
 interface Props {
