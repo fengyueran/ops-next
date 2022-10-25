@@ -5,13 +5,21 @@ import versionImg from 'src/assets/icons/version.svg';
 
 const Container = styled.div`
   position: absolute;
-  top: 10px;
-  right: 12px;
+  top: 18px;
+  right: 24px;
   display: flex;
+  opacity: 0.65;
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: #000000;
+  font-weight: 400;
+  align-items: center;
 `;
 
 const VersionImg = styled.img`
-  margin-right: 2px;
+  margin-right: 4px;
+  width: 16px;
+  height: 16px;
 `;
 
 interface Props {
