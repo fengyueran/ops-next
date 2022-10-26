@@ -12,13 +12,17 @@ const convertLocalDateToTimestamp = (localDateStr: string) => {
 };
 
 const shouldAddCase = (caseData: CaseData, filters: Filters) => {
-  const { PatientID, ffrAccessionNumber, dateRange, statusList, priorityList } = filters;
+  const { caseID, PatientID, ffrAccessionNumber, dateRange, statusList, priorityList } = filters;
 
   let isAddCase = true;
 
   if (PatientID) {
     isAddCase = !!caseData.attributes.PatientID?.includes(PatientID);
   }
+  if (caseID) {
+    isAddCase = !!caseData.attributes.caseID?.includes(caseID);
+  }
+
   if (ffrAccessionNumber) {
     isAddCase = !!caseData.attributes.ffrAccessionNumber?.includes(ffrAccessionNumber);
   }

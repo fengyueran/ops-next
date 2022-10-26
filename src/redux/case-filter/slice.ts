@@ -7,6 +7,7 @@ interface Pagination {
 export interface State {
   filters: {
     PatientID?: string;
+    caseID?: string;
     ffrAccessionNumber?: string;
     dateRange?: [string, string];
     statusList?: CaseProgress[];

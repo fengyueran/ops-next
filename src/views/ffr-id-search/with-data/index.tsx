@@ -10,7 +10,7 @@ export const withData =
 
     const onSearch = useCallback(
       (v?: string) => {
-        dispatch(caseFilter.actions.updateFilter({ ffrAccessionNumber: v }));
+        dispatch(caseFilter.actions.updateFilter({ caseID: v }));
       },
       [dispatch],
     );
