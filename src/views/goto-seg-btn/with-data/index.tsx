@@ -25,10 +25,10 @@ export const withData =
         dispatch(microApp.actions.toggleGotoSegLoading(true));
         const { id, attributes } = await getOperation(caseInfo.workflowID, NodeStep.SEGMENT_EDIT);
         const operation = { id, ...attributes };
-        if (currentOperation?.output) {
-          const segOutput = operation.output || {};
-          operation.output = { ...segOutput, ...currentOperation.output };
-        }
+        // if (currentOperation?.output) {//disable refine output
+        //   const segOutput = operation.output || {};
+        //   operation.output = { ...segOutput, ...currentOperation.output };
+        // }
         dispatch(microApp.actions.toggleMicroAppVisible(false));
 
         const submit = async (
