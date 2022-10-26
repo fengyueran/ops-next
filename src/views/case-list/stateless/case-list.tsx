@@ -36,13 +36,10 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
     width: 140,
     field: 'CaseID',
     render: (caseInfo: CaseInfo) => {
+      const caseShortID = caseInfo.caseID?.slice(0, 9) || '-';
       return (
         <CaseIDContainer>
-          {caseInfo.readed ? (
-            caseInfo.PatientID
-          ) : (
-            <ColorTag tip={caseInfo.PatientID || '-'} color="red" />
-          )}
+          {caseInfo.readed ? caseShortID : <ColorTag tip={caseShortID} color="red" />}
         </CaseIDContainer>
       );
     },

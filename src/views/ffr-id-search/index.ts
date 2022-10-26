@@ -1,4 +1,4 @@
 import { withData } from './with-data';
-import { FFRIDSearch as C } from './stateless/ffr-id-search';
+import { CaseIDSearch as C } from './stateless/ffr-id-search';
 
-export const FFRIDSearch = withData(C);
+export const CaseIDSearch = withData(C);
