@@ -336,6 +336,7 @@ interface OperationDataAttributes {
   createdAt: string;
   updatedAt: string;
   runID: string;
+  uuid: string;
   input: { [key: string]: NodeInput };
   output?: { [key: string]: NodeInput };
   operatorInfo?: {
@@ -420,4 +421,13 @@ interface LoginResponse {
     email: string;
     username: string;
   };
+}
+
+interface Filters {
+  caseID?: string;
+  PatientID?: string;
+  ffrAccessionNumber?: string;
+  dateRange?: [string, string];
+  statusList?: CaseProgress[];
+  priorityList?: Priority[];
 }

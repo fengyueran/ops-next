@@ -14,7 +14,7 @@ import { OpenLogBtn } from 'src/views/open-log-btn';
 import { CaseStatus, CaseProgress, Priority } from 'src/type';
 import { TagList } from './tag-list';
 
-const PatientIDContainer = styled.div`
+const CaseIDContainer = styled.div`
   margin-left: 16px;
 `;
 
@@ -31,28 +31,25 @@ const getTagMaxLength = (cases?: CaseInfo[]) => {
 };
 const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases?: CaseInfo[]) => [
   {
-    title: 'PatientID',
+    title: 'CaseID',
     sorter: true,
-    width: 120,
-    field: 'PatientID',
+    width: 140,
+    field: 'CaseID',
     render: (caseInfo: CaseInfo) => {
+      const caseShortID = caseInfo.caseID?.slice(0, 9) || '-';
       return (
-        <PatientIDContainer>
-          {caseInfo.readed ? (
-            caseInfo.PatientID
-          ) : (
-            <ColorTag tip={caseInfo.PatientID || '-'} color="red" />
-          )}
-        </PatientIDContainer>
+        <CaseIDContainer>
+          {caseInfo.readed ? caseShortID : <ColorTag tip={caseShortID} color="red" />}
+        </CaseIDContainer>
       );
     },
   },
   {
-    width: 160,
+    title: 'PatientID',
     sorter: true,
-    field: 'ffrAccessionNumber',
-    title: formatMessage({ defaultMessage: 'CTFFR检查号' }),
-    dataIndex: ['ffrAccessionNumber'],
+    width: 120,
+    field: 'PatientID',
+    dataIndex: ['PatientID'],
   },
   {
     width: 120,

@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { Col, Row, SpaceY } from 'src/components';
 import { LoginForm } from 'src/views/login-form';
+import { Version } from 'src/views/version';
 import logoImg from 'src/assets/icons/logo.svg';
 
 const Container = styled(Row)`
@@ -36,9 +37,11 @@ const Slogan = styled.div`
   font-family: PingFangSC-Regular;
   font-size: 14px;
   color: #000000;
+  text-align: center;
   line-height: 22px;
   font-weight: 400;
-  margin: 12px 0 32px 0;
+  margin: 12px 0 32px 12px;
+  letter-spacing: 4px;
 `;
 
 const LoginContainer = styled.div`
@@ -92,6 +95,7 @@ export const LoginPage = () => {
           </StatementLink>
         </StatementContainer>
       </Col>
+      <Version />
     </Container>
   );
 };

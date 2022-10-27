@@ -37,7 +37,7 @@ export const withData =
       (operation: DetailOperation) => {
         readyToOpenMicroApp();
         dispatch(microApp.actions.toggleCanSubmit(false));
-        loadMicroAppByStep(caseInfo, operation);
+        loadMicroAppByStep(caseInfo, operation, undefined, true);
       },
       [caseInfo, dispatch, readyToOpenMicroApp],
     );
@@ -67,6 +67,7 @@ export const withData =
                 detail: (error as Error).message,
               }),
             );
+            return error;
           }
         };
         loadMicroAppByStep(caseInfo, operation, submit, false);

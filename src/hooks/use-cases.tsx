@@ -15,12 +15,16 @@ const makeQuery = (caseQueryState: caseFilter.State) => {
   const { pagination, sort } = caseQueryState;
 
   const makeFilter = () => {
-    const { PatientID, ffrAccessionNumber, dateRange, statusList, priorityList } =
+    const { caseID, PatientID, ffrAccessionNumber, dateRange, statusList, priorityList } =
       caseQueryState.filters;
     const fields = [];
     if (PatientID) {
       fields.push({ PatientID: { $contains: PatientID } });
     }
+    if (caseID) {
+      fields.push({ caseID: { $contains: caseID } });
+    }
+
     if (ffrAccessionNumber) {
       fields.push({ ffrAccessionNumber: { $contains: ffrAccessionNumber } });
     }

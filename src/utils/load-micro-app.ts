@@ -47,8 +47,9 @@ const makeMaskEditToolInput = (
   operation: OperationDataAttributes,
   editType: MaskEditType,
   submit?: SegSubmit,
+  readonly?: boolean,
 ) => {
-  const { input, output } = operation;
+  const { input, output, uuid } = operation;
 
   const getNifti = async () => {
     const node = findFileByName(NodeOutput.NIFTI, input);
@@ -84,6 +85,7 @@ const makeMaskEditToolInput = (
     getMask,
     editType,
     submit,
+    maskCacheID: !readonly && uuid,
   };
 };
 
@@ -325,19 +327,27 @@ const makeSegSubmitInput = (data: SegToolOutput) => {
   return makeMaskOutput(data, MaskEditType.Segment);
 };
 
-const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
+const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit, readonly?: boolean) => {
   const segSubmit = submit && ((output: SegToolOutput) => submit(output, makeSegSubmitInput));
-  microAppMgr.loadMaskEditTool(makeMaskEditToolInput(operation, MaskEditType.Segment, segSubmit));
+  microAppMgr.loadMaskEditTool(
+    makeMaskEditToolInput(operation, MaskEditType.Segment, segSubmit, readonly),
+  );
 };
 
 const makeRefineSubmitInput = async (data: RefineToolOutput) => {
   return makeMaskOutput(data, MaskEditType.Refine);
 };
 
-const loadRefineMaskEditTool = (operation: DetailOperation, submit?: Submit) => {
+const loadRefineMaskEditTool = (
+  operation: DetailOperation,
+  submit?: Submit,
+  readonly?: boolean,
+) => {
   const refineSubmit =
     submit && ((output: RefineToolOutput) => submit(output, makeRefineSubmitInput));
-  microAppMgr.loadMaskEditTool(makeMaskEditToolInput(operation, MaskEditType.Refine, refineSubmit));
+  microAppMgr.loadMaskEditTool(
+    makeMaskEditToolInput(operation, MaskEditType.Refine, refineSubmit, readonly),
+  );
 };
 
 const loadReviewTool = (caseInfo: CaseInfo, operation: DetailOperation, submit?: Submit) => {
@@ -387,8 +397,8 @@ export const loadMicroAppByStep = (
   console.log('operation', operation.step);
   const loadMicroAppMap: { [key: string]: Function } = {
     [NodeStep.QC]: () => loadQCTool(operation, submit),
-    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation, submit),
-    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation, submit),
+    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation, submit, readonly),
+    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation, submit, readonly),
     [NodeStep.VALIDATE_FFR]: () => loadReviewTool(caseInfo, operation, submit),
     [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation, submit, readonly),
   };

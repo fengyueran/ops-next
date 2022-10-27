@@ -17,6 +17,12 @@
       "value": "上传时间:"
     }
   ],
+  "0bBO2n": [
+    {
+      "type": 0,
+      "value": "版本"
+    }
+  ],
   "1TF9b/": [
     {
       "type": 0,
@@ -83,6 +89,12 @@
       "value": "退出登录"
     }
   ],
+  "CKArGw": [
+    {
+      "type": 0,
+      "value": "CaseID"
+    }
+  ],
   "CLqPBU": [
     {
       "type": 0,
@@ -93,12 +105,6 @@
     {
       "type": 0,
       "value": "返还时间:"
-    }
-  ],
-  "D8tPZv": [
-    {
-      "type": 0,
-      "value": "CTFFR检查号"
     }
   ],
   "DLNq1y": [

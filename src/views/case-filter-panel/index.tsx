@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 
 import { Row, SpaceX } from 'src/components';
-import { FFRIDSearch } from '../ffr-id-search';
+import { CaseIDSearch } from '../ffr-id-search';
 import { PatientIDSearch } from '../patient-id-search';
 import { UploadDatePicker } from '../upload-date-picker';
 import { StatusBar } from '../status-bar';
@@ -39,7 +39,7 @@ export const CaseFilterPanel = () => {
           <FormattedMessage defaultMessage="任务属性：" />
         </Title>
         <SpaceX size={24} />
-        <FFRIDSearch />
+        <CaseIDSearch />
         <PatientIDSearch />
         <UploadDatePicker />
       </StyledRow>

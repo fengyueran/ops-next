@@ -161,8 +161,8 @@ const CaseInfo: React.FC<Props> = ({ caseInfo, series }) => {
           </Content>
           <Content>
             <WordBreak>
-              <Inline>CaseID:</Inline>
-              {caseInfo.caseID.slice(0, 9)}
+              <Inline>CTFFR检查号:</Inline>
+              {caseInfo.ffrAccessionNumber}
             </WordBreak>
           </Content>
         </Parse>
