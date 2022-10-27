@@ -7,8 +7,6 @@ interface Props {
   onSearch: (v?: string) => void;
 }
 
-export const FFRIDSearch: React.FC<Props> = ({ onSearch }) => {
-  return (
-    <SearchInput name={<FormattedMessage defaultMessage="CTFFR检查号" />} onSearch={onSearch} />
-  );
+export const CaseIDSearch: React.FC<Props> = ({ onSearch }) => {
+  return <SearchInput name={<FormattedMessage defaultMessage="CaseID" />} onSearch={onSearch} />;
 };

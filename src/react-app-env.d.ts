@@ -424,9 +424,10 @@ interface LoginResponse {
 }
 
 interface Filters {
-  PatientID?: string | undefined;
-  ffrAccessionNumber?: string | undefined;
-  dateRange?: [string, string] | undefined;
-  statusList?: CaseProgress[] | undefined;
-  priorityList?: Priority[] | undefined;
+  caseID?: string;
+  PatientID?: string;
+  ffrAccessionNumber?: string;
+  dateRange?: [string, string];
+  statusList?: CaseProgress[];
+  priorityList?: Priority[];
 }

@@ -318,9 +318,9 @@ const makeMaskOutput = async (data: SegToolOutput, editType: MaskEditType) => {
   const uploadTasks = [uploadFiles([{ path: maskName, data: mask }]), uploadImage(thumbnail)];
   const [maskRes, thumbnailRes] = await Promise.all(uploadTasks);
   if (editType === MaskEditType.Segment) {
-    return { [NodeOutput.EDITED_SEGMENT_MASK]: maskRes.path };
+    return { [NodeOutput.EDITED_SEGMENT_MASK]: maskRes.path, thumbnail: thumbnailRes.path };
   }
-  return { [NodeOutput.EDITED_REFINE_MASK]: maskRes.path };
+  return { [NodeOutput.EDITED_REFINE_MASK]: maskRes.path, thumbnail: thumbnailRes.path };
 };
 
 const makeSegSubmitInput = (data: SegToolOutput) => {

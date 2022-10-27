@@ -37,9 +37,11 @@ const Slogan = styled.div`
   font-family: PingFangSC-Regular;
   font-size: 14px;
   color: #000000;
+  text-align: center;
   line-height: 22px;
   font-weight: 400;
-  margin: 12px 0 32px 0;
+  margin: 12px 0 32px 12px;
+  letter-spacing: 4px;
 `;
 
 const LoginContainer = styled.div`
