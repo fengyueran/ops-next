@@ -34,7 +34,7 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
     title: 'CaseID',
     sorter: true,
     width: 140,
-    field: 'CaseID',
+    field: 'caseID',
     render: (caseInfo: CaseInfo) => {
       const caseShortID = caseInfo.caseID?.slice(0, 9) || '-';
       return (
