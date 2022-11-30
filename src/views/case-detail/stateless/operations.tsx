@@ -9,6 +9,7 @@ import { NodeStep } from 'src/type';
 import reportImage from 'src/assets/images/report.png';
 import SeriesInfo from './series-info';
 import TaskState from './case-task-state';
+import DownloadResultBtn from '../download-result-btn';
 
 const { Panel } = Collapse;
 export interface Props {
@@ -17,6 +18,7 @@ export interface Props {
   operations: DetailOperation[];
   onOperationClick: (operation: DetailOperation) => void;
   patchNode: (operation: DetailOperation) => void;
+  caseInfo: CaseInfo;
 }
 
 const Container = styled.div`
@@ -161,6 +163,7 @@ const Operations: React.FC<Props> = ({
   series,
   onOperationClick,
   patchNode,
+  caseInfo,
 }) => {
   const passedSeries = series.filter((s) => s.passed);
   const failedSeries = series.filter((s) => !s.passed);
@@ -204,6 +207,9 @@ const Operations: React.FC<Props> = ({
                 </ResultCenter>
               </ResultContent>
               <ResultRight>
+                {o.step === NodeStep.REFINE_EDIT && (
+                  <DownloadResultBtn operation={o} patientID={caseInfo.PatientID!} />
+                )}
                 {patchBtnName && (
                   <Button size="small" style={{ marginRight: 10 }} onClick={() => patchNode(o)}>
                     {patchBtnName}

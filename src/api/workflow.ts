@@ -73,6 +73,7 @@ export const fetchFile = async <T = any>(filePath: string, responseType?: Respon
 };
 
 export const fetchFileWithCache = withCache(fetchFile);
+export const fetchCommonFileWithCache = withCache(fetchCommonFile);
 
 export const patchNode = async (workflowID: string, step: NodeStep, results: object) => {
   const resetUrl = `${WORKFLOW_HOST}${CASE_PATH}/${workflowID}/reset/${step}/complete`;

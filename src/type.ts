@@ -63,6 +63,8 @@ export enum ErrorType {
   LoadLogError = 'LoadLog error',
   LoginError = 'Login error',
   DownloadLogError = 'Download log error',
+  DownloadResultError = 'Download error',
+  ZipFileError = 'Zip file error',
 }
 
 export const StatusColorMap = {
