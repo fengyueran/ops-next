@@ -11,11 +11,12 @@ export const withData =
     const submitPending = useSelector(microApp.selectors.submitPending);
     const gotoSegLoading = useSelector(microApp.selectors.gotoSegLoading);
 
-    const loading = globalLoading || gotoSegLoading || submitPending;
+    const loading = globalLoading.visible || gotoSegLoading || submitPending;
     const tip = useMemo(() => {
+      if (globalLoading.tip) return globalLoading.tip;
       if (submitPending) return <FormattedMessage defaultMessage="提交中..." />;
       return <FormattedMessage defaultMessage="加载中..." />;
-    }, [submitPending]);
+    }, [submitPending, globalLoading]);
 
     return <WrappedComponent {...(props as P)} loading={loading} tip={tip} />;
   };

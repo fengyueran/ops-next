@@ -20,7 +20,7 @@ export const withData =
     const onClick = useCallback(async () => {
       try {
         setIsModalVisible(true);
-        dispatch(other.actions.toggleLoading(true));
+        dispatch(other.actions.toggleLoading({ visible: true }));
         const algoOp = await getAlgoOperation(caseInfo.workflowID);
 
         if (algoOp) {
@@ -38,7 +38,7 @@ export const withData =
           }),
         );
       } finally {
-        dispatch(other.actions.toggleLoading(false));
+        dispatch(other.actions.toggleLoading({ visible: false }));
       }
     }, [caseInfo.workflowID, dispatch]);
 
