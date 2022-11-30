@@ -7,3 +7,9 @@ export const download = (name: string, href: string) => {
   element.click();
   document.body.removeChild(element);
 };
+
+export const downloadByBuffer = (name: string, data: ArrayBuffer) => {
+  const blob = new Blob([data]);
+  const url = URL.createObjectURL(blob);
+  download(name, url);
+};

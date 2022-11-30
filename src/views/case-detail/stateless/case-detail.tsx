@@ -35,6 +35,7 @@ export const CaseDetail: React.FC<Props> = ({
       <CaseInfo series={series} caseInfo={caseInfo} />
       <Operations
         series={series}
+        caseInfo={caseInfo}
         operations={operations}
         onOperationClick={onOperationClick}
         patchNode={patchNode}
