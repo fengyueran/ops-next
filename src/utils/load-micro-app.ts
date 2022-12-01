@@ -1,6 +1,12 @@
 import { format } from 'date-fns';
 
-import { fetchFile, fetchFileWithCache, getThumbnailPath, uploadFiles, uploadImage } from 'src/api';
+import {
+  fetchFile,
+  fetchFileWithCache,
+  getThumbnailPath,
+  uploadFilesWithFormData,
+  uploadImage,
+} from 'src/api';
 import { MaskEditType, microAppMgr, findFileByName } from 'src/utils';
 import { CaseProgress, NodeOutput, NodeStep } from 'src/type';
 
@@ -92,7 +98,7 @@ const makeMaskEditToolInput = (
 const makeQCSubmitInput = async (data: QCToolOutput) => {
   const { qcf, pdf_json, ...res } = data;
   if (qcf) {
-    const { path } = await uploadFiles([{ path: 'qcReport.json', data: pdf_json }]);
+    const { path } = await uploadFilesWithFormData([{ path: 'qcReport.json', data: pdf_json }]);
     return { qcf: 'true', pdf_json: path, ...res };
   }
   return { qcf: 'false', pdf_json: '', ...res };
@@ -113,7 +119,7 @@ const makeReviewSubmitInput = async (
       { path: 'leftMeshVtp.vtp', data: leftMeshVtp },
       { path: 'rightMeshVtp.vtp', data: rightMeshVtp },
     ];
-    const uploadVTPTasks = files.map((file) => uploadFiles([file]));
+    const uploadVTPTasks = files.map((file) => uploadFilesWithFormData([file]));
     const [left_vtp, right_vtp, thumbnailRes] = await Promise.all([
       ...uploadVTPTasks,
       uploadThumbnail,
@@ -121,13 +127,13 @@ const makeReviewSubmitInput = async (
     return { left_vtp: left_vtp.path, right_vtp: right_vtp.path, thumbnail: thumbnailRes.path };
   } else if (leftMeshVtp) {
     const [left_vtp, thumbnailRes] = await Promise.all([
-      uploadFiles([{ path: 'leftMeshVtp.vtp', data: leftMeshVtp }]),
+      uploadFilesWithFormData([{ path: 'leftMeshVtp.vtp', data: leftMeshVtp }]),
       uploadThumbnail,
     ]);
     return { left_vtp: left_vtp.path, right_vtp: rightMeshVtpInput, thumbnail: thumbnailRes.path };
   } else if (rightMeshVtp) {
     const [right_vtp, thumbnailRes] = await Promise.all([
-      uploadFiles([{ path: 'rightMeshVtp.vtp', data: rightMeshVtp }]),
+      uploadFilesWithFormData([{ path: 'rightMeshVtp.vtp', data: rightMeshVtp }]),
       uploadThumbnail,
     ]);
 
@@ -165,7 +171,7 @@ const makeReportSubmitInput = async (data: ReportToolOutput) => {
   ].map((fileName) => {
     const file = (data as any)[fileName];
     const uploadData = makeUploadData(file);
-    return uploadFiles(uploadData);
+    return uploadFilesWithFormData(uploadData);
   });
 
   const res = await Promise.all(uploadTasks);
@@ -315,7 +321,10 @@ const makeMaskOutput = async (data: SegToolOutput, editType: MaskEditType) => {
   const { mask, thumbnail } = data;
   const maskName = editType === MaskEditType.Segment ? 'segMask.nii.gz' : 'refineMask.nii.gz';
 
-  const uploadTasks = [uploadFiles([{ path: maskName, data: mask }]), uploadImage(thumbnail)];
+  const uploadTasks = [
+    uploadFilesWithFormData([{ path: maskName, data: mask }]),
+    uploadImage(thumbnail),
+  ];
   const [maskRes, thumbnailRes] = await Promise.all(uploadTasks);
   if (editType === MaskEditType.Segment) {
     return { [NodeOutput.EDITED_SEGMENT_MASK]: maskRes.path, thumbnail: thumbnailRes.path };
