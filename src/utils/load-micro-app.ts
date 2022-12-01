@@ -5,7 +5,7 @@ import {
   fetchFileWithCache,
   getThumbnailPath,
   uploadFilesWithFormData,
-  uploadImage,
+  uploadFile,
 } from 'src/api';
 import { MaskEditType, microAppMgr, findFileByName } from 'src/utils';
 import { CaseProgress, NodeOutput, NodeStep } from 'src/type';
@@ -113,7 +113,7 @@ const makeReviewSubmitInput = async (
 
   const leftMeshVtpInput = findFileByName('left_vtp', inputs)?.value;
   const rightMeshVtpInput = findFileByName('right_vtp', inputs)?.value;
-  const uploadThumbnail = uploadImage(thumbnail);
+  const uploadThumbnail = uploadFile(thumbnail, 'thumbnail.png');
   if (leftMeshVtp && rightMeshVtp) {
     const files = [
       { path: 'leftMeshVtp.vtp', data: leftMeshVtp },
@@ -323,7 +323,7 @@ const makeMaskOutput = async (data: SegToolOutput, editType: MaskEditType) => {
 
   const uploadTasks = [
     uploadFilesWithFormData([{ path: maskName, data: mask }]),
-    uploadImage(thumbnail),
+    uploadFile(thumbnail, 'thumbnail.png'),
   ];
   const [maskRes, thumbnailRes] = await Promise.all(uploadTasks);
   if (editType === MaskEditType.Segment) {
