@@ -7,4 +7,5 @@ export * from './micro-app-mgr';
 export * from './save-to-local';
 export * from './load-micro-app';
 export * from './node-parse-helper';
+export * from './download-case-data';
 export * from './with-infinite-fetch';

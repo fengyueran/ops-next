@@ -13,6 +13,7 @@ import { ErrorHint } from 'src/views/error-hint';
 import { OpenLogBtn } from 'src/views/open-log-btn';
 import { CaseStatus, CaseProgress, Priority } from 'src/type';
 import { TagList } from './tag-list';
+import Dropdown from '../dropdown';
 
 const CaseIDContainer = styled.div`
   margin-left: 16px;
@@ -142,14 +143,13 @@ const createCaseColumns = (formatMessage: IntlFormatters['formatMessage'], cases
       return <StatusTag status={status} />;
     },
   },
-  // {
-  //   width: 50,
-  //   title: formatMessage({ defaultMessage: '操作' }),
-  //   dataIndex: ['attributes'],
-  //   render: (status: string) => {
-  //     return '...';
-  //   },
-  // },
+  {
+    width: 50,
+    title: formatMessage({ defaultMessage: '操作' }),
+    render: (caseInfo: CaseInfo) => {
+      return <Dropdown caseInfo={caseInfo} />;
+    },
+  },
   {
     width: 80,
     title: '',

@@ -10,7 +10,7 @@ const Container = styled.div`
   justify-content: center;
   position: absolute;
   top: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.2);
   position: absolute;
   z-index: 99999;
 `;

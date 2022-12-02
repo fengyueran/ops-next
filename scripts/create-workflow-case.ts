@@ -66,7 +66,7 @@ const createCases = async () => {
   try {
     const URI = `${HOST}:${PORT}${CREATE_CASE_PATH}`;
     const cases = makeCases();
-    const { jwt } = await login('xinghunm', '12345678');
+    const { jwt } = await login('xinghunm', '123456');
     const createCasesBatchToBatch = async () => {
       const tasks: any[] = [];
       const MAX_TASK_COUNT = 6;
