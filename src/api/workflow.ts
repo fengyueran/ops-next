@@ -12,6 +12,13 @@ interface UploadFileResponse {
   path: string;
 }
 
+export enum ContentType {
+  Image = 'image/png',
+  XML = 'text/xml',
+  PDF = 'application/pdf',
+  JSON = 'application/json',
+}
+
 const WORKFLOW_HOST = process.env.REACT_APP_WORKFLOW_SERVER_URL || '';
 
 const PREFIX = '/v1/ops';
@@ -89,7 +96,9 @@ export const completeNode = async (workflowID: string, activityID: string, resul
   });
 };
 
-export const uploadFiles = async (files: { path: string; data: ArrayBuffer | string }[]) => {
+export const uploadFilesWithFormData = async (
+  files: { path: string; data: ArrayBuffer | string }[],
+) => {
   const uploadUrl = `${WORKFLOW_HOST}${UPLOAD_PATH}`;
   try {
     const formData = new FormData();
@@ -106,14 +115,18 @@ export const uploadFiles = async (files: { path: string; data: ArrayBuffer | str
   }
 };
 
-export const uploadImage = async (ab: ArrayBuffer) => {
+export const uploadFile = async (
+  ab: ArrayBuffer,
+  fileName: string,
+  contentType = ContentType.Image,
+) => {
   const uploadUrl = `${WORKFLOW_HOST}${UPLOAD_PATH}`;
 
   const blob = new Blob([ab], { type: 'application/octet-stream' });
   const { data } = await fetcher.axios.post<UploadFileResponse>(uploadUrl, blob, {
     headers: {
-      'Content-Type': 'image/png',
-      'Content-Disposition': 'inline;filename=thumbnail.png',
+      'Content-Type': contentType,
+      'Content-Disposition': `inline;filename=${fileName}`,
     },
   });
   return data;
