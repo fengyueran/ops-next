@@ -1,11 +1,11 @@
 import { format } from 'date-fns';
 
 import {
-  fetchFile,
   fetchFileWithCache,
   getThumbnailPath,
   uploadFilesWithFormData,
   uploadFile,
+  ContentType,
 } from 'src/api';
 import { MaskEditType, microAppMgr, findFileByName } from 'src/utils';
 import { CaseProgress, NodeOutput, NodeStep } from 'src/type';
@@ -145,7 +145,8 @@ const makeReviewSubmitInput = async (
   return { left_vtp: leftMeshVtpInput, right_vtp: rightMeshVtpInput, thumbnail: thumbnailRes.path };
 };
 
-const makeReportSubmitInput = async (data: ReportToolOutput) => {
+const makeReportSubmitInput = async (output: ReportToolOutput) => {
+  const { isPositive, ...data } = output;
   const makeUploadData = (file: ReportOutputData | ReportOutputData[]) => {
     if (Array.isArray(file)) {
       return file.map(({ path, data }) => ({
@@ -162,14 +163,19 @@ const makeReportSubmitInput = async (data: ReportToolOutput) => {
   };
 
   const uploadTasks = [
-    'reportData',
-    'cprPlane',
-    'leftMeshVtp',
-    'rightMeshVtp',
-    'reportPdf',
-    'reportJson',
-  ].map((fileName) => {
-    const file = (data as any)[fileName];
+    { key: 'reportData' },
+    { key: 'cprPlane' },
+    { key: 'leftMeshVtp', fileName: 'leftMesh.vtp', type: ContentType.XML },
+    { key: 'rightMeshVtp', fileName: 'rightMesh.vtp', type: ContentType.XML },
+    { key: 'reportPdf', fileName: 'report.pdf', type: ContentType.PDF },
+    { key: 'reportJson', fileName: 'report.json', type: ContentType.JSON },
+  ].map(({ key, fileName, type }) => {
+    const fileKey = key as keyof typeof data;
+    const file = data[fileKey];
+    if (fileName) {
+      const fileData = file as ReportOutputData;
+      return uploadFile(fileData.data.buffer, fileName, type);
+    }
     const uploadData = makeUploadData(file);
     return uploadFilesWithFormData(uploadData);
   });
@@ -177,7 +183,7 @@ const makeReportSubmitInput = async (data: ReportToolOutput) => {
   const res = await Promise.all(uploadTasks);
 
   return {
-    isPositive: data.isPositive,
+    isPositive,
     reportData: res[0].path,
     cprPlane: res[1].path,
     leftMeshVtp: res[2].path,
@@ -273,16 +279,29 @@ const makeReportToolInput = (
 
   const getReportJson = async () => {
     const node = findFileByName(NodeOutput.REPORT_JSON, operation.output!);
+    if (node.value.endsWith('json')) {
+      const data = await fetchFileWithCache<ArrayBuffer>(node.value, 'arraybuffer');
+      return data;
+    }
     const data = await fetchFileWithCache<UntarFile[]>(node.value);
-
     return data[0].buffer;
   };
 
   const getCenterlines = async () => {
+    const getVTP = async (node: any) => {
+      if (node.value.endsWith('vtp')) {
+        const data = await fetchFileWithCache<ArrayBuffer>(node.value, 'arraybuffer');
+        return data;
+      }
+      const data = await fetchFileWithCache<UntarFile[]>(node.value);
+      return data[0].buffer;
+    };
+
     const vtpTasks = ['leftMeshVtp', 'rightMeshVtp'].map((name) => {
-      const node = findFileByName(name, inputs);
-      return fetchFile(node.value, 'arraybuffer');
+      const node = findFileByName(name, operation.output || inputs);
+      return getVTP(node);
     });
+
     const vtps = await Promise.all(vtpTasks);
     return vtps;
   };
