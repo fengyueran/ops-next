@@ -12,9 +12,11 @@ interface UploadFileResponse {
   path: string;
 }
 
-enum ContentType {
+export enum ContentType {
   Image = 'image/png',
   XML = 'text/xml',
+  PDF = 'application/pdf',
+  JSON = 'application/json',
 }
 
 const WORKFLOW_HOST = process.env.REACT_APP_WORKFLOW_SERVER_URL || '';
