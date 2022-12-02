@@ -5,32 +5,33 @@ import { NodeStep, NodeOutput } from 'src/type';
 import { getOperationsByWFID, fetchCommonFileWithCache } from 'src/api';
 
 export const downloadCaseData = async (caseID: string, workflowID: string) => {
+  const caseShortID = caseID.slice(0, 9);
   const targetFiles = [
-    { fileKey: NodeOutput.NIFTI, fileName: `${caseID}_iso.nii.gz`, step: NodeStep.REPORT },
+    { fileKey: NodeOutput.NIFTI, fileName: `${caseShortID}_iso.nii.gz`, step: NodeStep.REPORT },
     {
       fileKey: NodeOutput.LEFT_MESH_VTP,
-      fileName: `${caseID}_Left_cl_1Dmesh.vtp`,
+      fileName: `${caseShortID}_Left_cl_1Dmesh.vtp`,
       step: NodeStep.REPORT,
     },
     {
       fileKey: NodeOutput.RIGHT_MESH_VTP,
-      fileName: `${caseID}_Right_cl_1Dmesh.vtp`,
+      fileName: `${caseShortID}_Right_cl_1Dmesh.vtp`,
       step: NodeStep.REPORT,
     },
-    { fileKey: NodeOutput.PLY, fileName: `${caseID}_aorta+both.ply`, step: NodeStep.REPORT },
+    { fileKey: NodeOutput.PLY, fileName: `${caseShortID}_aorta+both.ply`, step: NodeStep.REPORT },
     {
       fileKey: NodeOutput.REPORT_EDITED_REFINE_MASK,
-      fileName: `${caseID}_edited_refine_aorta_and_arteries.nii.gz`,
+      fileName: `${caseShortID}_edited_refine_aorta_and_arteries.nii.gz`,
       step: NodeStep.REPORT,
     },
     {
       fileKey: NodeOutput.REFINE_MASK,
-      fileName: `${caseID}_refine_aorta_and_arteries.nii.gz`,
+      fileName: `${caseShortID}_refine_aorta_and_arteries.nii.gz`,
       step: NodeStep.REFINE_EDIT,
     },
     {
       fileKey: NodeOutput.SEGMENT_MASK,
-      fileName: `${caseID}_aorta_and_arteries_comp.nii.gz`,
+      fileName: `${caseShortID}_aorta_and_arteries_comp.nii.gz`,
       step: NodeStep.SEGMENT_EDIT,
     },
   ];
@@ -67,7 +68,7 @@ export const downloadCaseData = async (caseID: string, workflowID: string) => {
       if (error) {
         reject(error);
       } else {
-        downloadByBuffer(`${caseID}.zip`, data.buffer);
+        downloadByBuffer(`${caseShortID}.zip`, data.buffer);
         reslove(1);
       }
     });
