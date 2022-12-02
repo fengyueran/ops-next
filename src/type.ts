@@ -49,10 +49,13 @@ export enum NodeOutput {
   REPORT_JSON = 'reportJson',
   CPR_SPHERE = 'cprSphere',
   CPRS = 'cprs',
+  LEFT_MESH_VTP = 'leftMeshVtp',
+  RIGHT_MESH_VTP = 'rightMeshVtp',
   SEGMENT_MASK = 'aorta_and_arteries_comp',
   REFINE_MASK = 'refine_aorta_and_arteries',
   EDITED_SEGMENT_MASK = 'edited_aorta_and_arteries_comp',
   EDITED_REFINE_MASK = 'edited_refine_aorta_and_arteries',
+  REPORT_EDITED_REFINE_MASK = 'seg',
 }
 
 export enum ErrorType {
