@@ -22,7 +22,6 @@ export const StatusBar: React.FC<Props> = ({ onClick }) => {
       { status: Status.WAITING_QC, name: intl.formatMessage({ defaultMessage: '待质检' }) },
       { status: Status.WAITING_SEGMENT, name: intl.formatMessage({ defaultMessage: '待粗分' }) },
       { status: Status.WAITING_RIFINE, name: intl.formatMessage({ defaultMessage: '待精分' }) },
-      { status: Status.WAITING_REVIEW, name: intl.formatMessage({ defaultMessage: '待审查' }) },
       { status: Status.WAITING_REPORT, name: intl.formatMessage({ defaultMessage: '待报告' }) },
       { status: Status.WAITING_RETURN, name: intl.formatMessage({ defaultMessage: '待返还' }) },
       { status: Status.RETURNED, name: intl.formatMessage({ defaultMessage: '已返还' }) },
