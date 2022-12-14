@@ -161,6 +161,12 @@
       "value": "PatientID"
     }
   ],
+  "Iypvsk": [
+    {
+      "type": 0,
+      "value": "废弃"
+    }
+  ],
   "LesASB": [
     {
       "type": 0,
@@ -277,6 +283,12 @@
     {
       "type": 0,
       "value": "已返还"
+    }
+  ],
+  "a2JyVE": [
+    {
+      "type": 0,
+      "value": "下载数据"
     }
   ],
   "aK2BAL": [

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { FormattedMessage } from 'react-intl';
 
 const TagContainer = styled.div`
   display: flex;
@@ -23,11 +24,14 @@ interface Props {
 export const TagList: React.FC<Props> = ({ tags }) => {
   return (
     <TagContainer>
-      {tags.map((tagName) => (
-        <Tag key={tagName} highlight={tagName === 'QCF'}>
-          {tagName}
-        </Tag>
-      ))}
+      {tags.map((tagName) => {
+        const name = tagName === 'cancel' ? <FormattedMessage defaultMessage="废弃" /> : tagName;
+        return (
+          <Tag key={tagName} highlight={tagName === 'QCF'}>
+            {name}
+          </Tag>
+        );
+      })}
     </TagContainer>
   );
 };

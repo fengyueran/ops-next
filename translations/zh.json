@@ -80,6 +80,9 @@
   "IOQECZ": {
     "defaultMessage": "PatientID"
   },
+  "Iypvsk": {
+    "defaultMessage": "废弃"
+  },
   "LesASB": {
     "defaultMessage": "点击登录，则表示您同意我们的"
   },
@@ -136,6 +139,9 @@
   },
   "ZRIpuA": {
     "defaultMessage": "已返还"
+  },
+  "a2JyVE": {
+    "defaultMessage": "下载数据"
   },
   "aK2BAL": {
     "defaultMessage": "用户名或密码错误"
