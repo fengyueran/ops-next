@@ -138,6 +138,7 @@ export const useOperationsAndSeries = (workflowID?: string) => {
             step !== NodeStep.DICOM_PARSE &&
             step !== NodeStep.RETURNED &&
             step !== NodeStep.GEN_THUMBNAIL &&
+            step !== NodeStep.VALIDATE_FFR &&
             output,
         );
         setData({ operations: validOperaions, series });
