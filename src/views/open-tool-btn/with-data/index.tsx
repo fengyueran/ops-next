@@ -91,7 +91,7 @@ export const withData =
     return (
       <WrappedComponent
         {...(props as P)}
-        disabled={!caseInfo.enableEdit}
+        disabled={!caseInfo.enableEdit || caseInfo.step === NodeStep.VALIDATE_FFR}
         loading={loading}
         onClick={onClick}
       />

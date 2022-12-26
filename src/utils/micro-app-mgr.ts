@@ -104,6 +104,7 @@ class MicroAppMgr {
       },
       options,
     );
+
     this.microApp.mountPromise.then((data) => {
       this.status = LoadStatus.MOUNTED;
     });
@@ -125,7 +126,7 @@ class MicroAppMgr {
   };
 
   loadReviewTool = (props: ReviewToolInput) => {
-    this.loadMicroApp(MicroApp.Review, props);
+    // this.loadMicroApp(MicroApp.Review, props);
   };
 
   loadReportTool = (props: ReportToolInput) => {
