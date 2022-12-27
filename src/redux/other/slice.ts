@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface State {
-  loading: boolean;
+  loading: {
+    tip?: string;
+    visible: boolean;
+  };
   error?: {
     type: string;
     detail: string;
@@ -9,14 +12,16 @@ export interface State {
 }
 
 const initialState: State = {
-  loading: false,
+  loading: {
+    visible: false,
+  },
 };
 
 export const slice = createSlice({
   name: 'Other',
   initialState,
   reducers: {
-    toggleLoading(state, action: PayloadAction<boolean>) {
+    toggleLoading(state, action: PayloadAction<{ tip?: string; visible: boolean }>) {
       state.loading = action.payload;
     },
     setError(state, action: PayloadAction<{ type: string; detail: string } | undefined>) {

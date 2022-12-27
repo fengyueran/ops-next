@@ -2530,6 +2530,11 @@
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
 
+"@xinghunm/babel-plugin-await-add-try-catch@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@xinghunm/babel-plugin-await-add-try-catch/-/babel-plugin-await-add-try-catch-0.0.5.tgz#0dd2166e8370947b62b889ba2a3700943f814a8d"
+  integrity sha512-jJ5GbMdRgvhbbvgHquc1Zqv7MziBCIHwbtG4/64+HjIfBwR5Ep/PDVdfVxBw3EElctKzlNbat2dv2oQFi5dGIQ==
+
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"
@@ -3597,6 +3602,14 @@ cosmiconfig@^7, cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.10.0"
+
+craco-plugin-env@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/craco-plugin-env/-/craco-plugin-env-1.0.5.tgz#4367a1dcf207e9443a2cf19b8a770f73a302cf26"
+  integrity sha512-Y6wgOHrWZy0y3yI0Mgi+6Xd14QYhTq6TLucnyossVmYgMgQBikh3GETiO7s2qKzJGVYhM7OkF9AFmkWN9PTEfA==
+  dependencies:
+    dotenv "^10.0.0"
+    dotenv-expand "^5.1.0"
 
 create-require@^1.1.0:
   version "1.1.1"

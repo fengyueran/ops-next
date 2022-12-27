@@ -35,6 +35,7 @@ export const withData =
 
     const onOperationClick = useCallback(
       (operation: DetailOperation) => {
+        if (operation.step === NodeStep.VALIDATE_FFR) return;
         readyToOpenMicroApp();
         dispatch(microApp.actions.toggleCanSubmit(false));
         loadMicroAppByStep(caseInfo, operation, undefined, true);

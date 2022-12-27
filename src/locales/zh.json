@@ -161,6 +161,12 @@
       "value": "PatientID"
     }
   ],
+  "Iypvsk": [
+    {
+      "type": 0,
+      "value": "废弃"
+    }
+  ],
   "LesASB": [
     {
       "type": 0,
@@ -227,6 +233,12 @@
       "value": "任务属性："
     }
   ],
+  "UtE0dS": [
+    {
+      "type": 0,
+      "value": "操作"
+    }
+  ],
   "VFCgro": [
     {
       "type": 0,
@@ -237,6 +249,12 @@
     {
       "type": 0,
       "value": "隐私、服务条款。"
+    }
+  ],
+  "Xw4zyZ": [
+    {
+      "type": 0,
+      "value": "下载中..."
     }
   ],
   "Y6U+ki": [
@@ -265,6 +283,12 @@
     {
       "type": 0,
       "value": "已返还"
+    }
+  ],
+  "a2JyVE": [
+    {
+      "type": 0,
+      "value": "下载数据"
     }
   ],
   "aK2BAL": [
@@ -373,6 +397,12 @@
     {
       "type": 0,
       "value": "重新QC"
+    }
+  ],
+  "ulDnG1": [
+    {
+      "type": 0,
+      "value": "下载精分后数据"
     }
   ],
   "unb8so": [

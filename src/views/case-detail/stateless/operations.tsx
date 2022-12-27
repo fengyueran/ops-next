@@ -9,6 +9,7 @@ import { NodeStep } from 'src/type';
 import reportImage from 'src/assets/images/report.png';
 import SeriesInfo from './series-info';
 import TaskState from './case-task-state';
+import DownloadResultBtn from '../download-result-btn';
 
 const { Panel } = Collapse;
 export interface Props {
@@ -17,6 +18,7 @@ export interface Props {
   operations: DetailOperation[];
   onOperationClick: (operation: DetailOperation) => void;
   patchNode: (operation: DetailOperation) => void;
+  caseInfo: CaseInfo;
 }
 
 const Container = styled.div`
@@ -82,11 +84,11 @@ const OperationText = styled.span`
   margin-right: 4px;
 `;
 
-const Thumbnail = styled.img`
+const Thumbnail = styled.img<{ disabled: boolean }>`
   width: 100px;
   height: 100px;
   margin-right: 16px;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   object-fit: cover;
 `;
 
@@ -161,6 +163,7 @@ const Operations: React.FC<Props> = ({
   series,
   onOperationClick,
   patchNode,
+  caseInfo,
 }) => {
   const passedSeries = series.filter((s) => s.passed);
   const failedSeries = series.filter((s) => !s.passed);
@@ -189,7 +192,11 @@ const Operations: React.FC<Props> = ({
             <Information key={o.id}>
               <ResultContent>
                 {thumbnail ? (
-                  <Thumbnail onClick={() => onOperationClick(o)} src={thumbnail} />
+                  <Thumbnail
+                    disabled={o.step === NodeStep.VALIDATE_FFR}
+                    onClick={() => onOperationClick(o)}
+                    src={thumbnail}
+                  />
                 ) : (
                   <ThumbnailHolder onClick={() => onOperationClick(o)} />
                 )}
@@ -204,6 +211,9 @@ const Operations: React.FC<Props> = ({
                 </ResultCenter>
               </ResultContent>
               <ResultRight>
+                {o.step === NodeStep.REFINE_EDIT && (
+                  <DownloadResultBtn operation={o} patientID={caseInfo.PatientID!} />
+                )}
                 {patchBtnName && (
                   <Button size="small" style={{ marginRight: 10 }} onClick={() => patchNode(o)}>
                     {patchBtnName}

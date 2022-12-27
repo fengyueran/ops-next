@@ -9,7 +9,7 @@ const Container = styled(Row)`
   height: 100vh;
   width: 100vw;
   left: 0;
-  z-index: 10000;
+  z-index: 1000;
   display: flex;
 `;
 

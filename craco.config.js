@@ -8,6 +8,7 @@ module.exports = {
           ast: true,
         },
       ],
+      '@xinghunm/babel-plugin-await-add-try-catch',
     ],
   },
   devServer: {

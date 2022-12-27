@@ -1,6 +1,6 @@
 {
   "name": "ops-next",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
     "@formatjs/cli": "^5.0.6",
@@ -68,6 +68,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/styled-components": "^5.1.25",
     "@types/uuid": "^8.3.4",
+    "@xinghunm/babel-plugin-await-add-try-catch": "^0.0.5",
     "babel-plugin-formatjs": "^10.3.25",
     "craco-plugin-env": "^1.0.5",
     "crypto": "^1.0.1",
