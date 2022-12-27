@@ -84,11 +84,11 @@ const OperationText = styled.span`
   margin-right: 4px;
 `;
 
-const Thumbnail = styled.img`
+const Thumbnail = styled.img<{ disabled: boolean }>`
   width: 100px;
   height: 100px;
   margin-right: 16px;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   object-fit: cover;
 `;
 
@@ -192,7 +192,11 @@ const Operations: React.FC<Props> = ({
             <Information key={o.id}>
               <ResultContent>
                 {thumbnail ? (
-                  <Thumbnail onClick={() => onOperationClick(o)} src={thumbnail} />
+                  <Thumbnail
+                    disabled={o.step === NodeStep.VALIDATE_FFR}
+                    onClick={() => onOperationClick(o)}
+                    src={thumbnail}
+                  />
                 ) : (
                   <ThumbnailHolder onClick={() => onOperationClick(o)} />
                 )}
