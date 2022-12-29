@@ -21,7 +21,7 @@ export const downloadCaseData = async (caseID: string, workflowID: string) => {
     { fileKey: NodeOutput.PLY, fileName: `${caseShortID}_aorta+both.ply`, step: NodeStep.REPORT },
     {
       fileKey: NodeOutput.REPORT_EDITED_REFINE_MASK,
-      fileName: `${caseShortID}_edited_refine_aorta_and_arteries.nii.gz`,
+      fileName: `${caseShortID}_edited_refine_aorta_and_arteries.nii.tgz`,
       step: NodeStep.REPORT,
     },
     {
