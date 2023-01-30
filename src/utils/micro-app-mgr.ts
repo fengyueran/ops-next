@@ -49,7 +49,7 @@ const getMicroAppHost = (name: MicroApp) => {
     [MicroApp.Review]: window.Review_TOOL_HOST || MicroAppEntry.Review,
     [MicroApp.Report]: window.Report_TOOL_HOST || MicroAppEntry.Report,
   };
-  return hostMap[name];
+  return `${hostMap[name]}?now=${Date.now()}`;
 };
 
 const MOUNT_NODE = '#tool-mount-node';
@@ -82,7 +82,9 @@ class MicroAppMgr {
             //   experimentalStyleIsolation: true,
             // },
             getPublicPath: (entry: Entry) => {
-              const key = entry as keyof typeof MicroAppDevHostMap;
+              const entryWithTime = entry as string;
+              const key = entryWithTime.split('?now=')[0] as keyof typeof MicroAppDevHostMap;
+
               return MicroAppDevHostMap[key];
             },
           }
