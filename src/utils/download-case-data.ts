@@ -1,37 +1,38 @@
+//@ts-ignore
+import untar from 'js-untar';
 import { zip } from 'fflate';
 
-import { downloadByBuffer } from 'src/utils';
+import { downloadByBuffer, decompress } from 'src/utils';
 import { NodeStep, NodeOutput } from 'src/type';
 import { getOperationsByWFID, fetchCommonFileWithCache } from 'src/api';
 
-export const downloadCaseData = async (caseID: string, workflowID: string) => {
-  const caseShortID = caseID.slice(0, 9);
+export const downloadCaseData = async (workflowID: string, PatientID: string = '-') => {
   const targetFiles = [
-    { fileKey: NodeOutput.NIFTI, fileName: `${caseShortID}_iso.nii.gz`, step: NodeStep.REPORT },
+    { fileKey: NodeOutput.NIFTI, fileName: `${PatientID}_iso.nii.gz`, step: NodeStep.REPORT },
     {
       fileKey: NodeOutput.LEFT_MESH_VTP,
-      fileName: `${caseShortID}_Left_cl_1Dmesh.vtp`,
+      fileName: `${PatientID}_Left_cl_1Dmesh.vtp`,
       step: NodeStep.REPORT,
     },
     {
       fileKey: NodeOutput.RIGHT_MESH_VTP,
-      fileName: `${caseShortID}_Right_cl_1Dmesh.vtp`,
+      fileName: `${PatientID}_Right_cl_1Dmesh.vtp`,
       step: NodeStep.REPORT,
     },
-    { fileKey: NodeOutput.PLY, fileName: `${caseShortID}_aorta+both.ply`, step: NodeStep.REPORT },
+    { fileKey: NodeOutput.PLY, fileName: `${PatientID}_aorta+both.ply`, step: NodeStep.REPORT },
     {
       fileKey: NodeOutput.REPORT_EDITED_REFINE_MASK,
-      fileName: `${caseShortID}_edited_refine_aorta_and_arteries.nii.gz`,
+      fileName: `${PatientID}_edited_refine_aorta_and_arteries.nii.gz`,
       step: NodeStep.REPORT,
     },
     {
       fileKey: NodeOutput.REFINE_MASK,
-      fileName: `${caseShortID}_refine_aorta_and_arteries.nii.gz`,
+      fileName: `${PatientID}_refine_aorta_and_arteries.nii.gz`,
       step: NodeStep.REFINE_EDIT,
     },
     {
       fileKey: NodeOutput.SEGMENT_MASK,
-      fileName: `${caseShortID}_aorta_and_arteries_comp.nii.gz`,
+      fileName: `${PatientID}_aorta_and_arteries_comp.nii.gz`,
       step: NodeStep.SEGMENT_EDIT,
     },
   ];
@@ -42,14 +43,22 @@ export const downloadCaseData = async (caseID: string, workflowID: string) => {
     return { fileName, data: new Uint8Array(buffer) };
   };
 
+  const getFileAndUntar = async (fileName: string, filePath: string) => {
+    const { data, ...res } = await getFile(fileName, filePath);
+    const decompressed = await decompress(data.buffer);
+    const untarFiles: UntarFile[] = await untar(decompressed.buffer);
+
+    return { data: new Uint8Array(untarFiles[0].buffer), ...res };
+  };
+
   const tasks = targetFiles
     .map(({ step, fileKey, fileName }) => {
       const found = originOperations.find(({ attributes }) => attributes.step === step);
       const file = found?.attributes.input[fileKey]?.value;
-      if (file) {
-        return getFile(fileName, file);
-      }
-      return null;
+      if (!file) return null;
+      if (file.endsWith('tgz')) return getFileAndUntar(fileName, file);
+
+      return getFile(fileName, file);
     })
     .filter((v) => !!v);
 
@@ -68,7 +77,7 @@ export const downloadCaseData = async (caseID: string, workflowID: string) => {
       if (error) {
         reject(error);
       } else {
-        downloadByBuffer(`${caseShortID}.zip`, data.buffer);
+        downloadByBuffer(`${PatientID}.zip`, data.buffer);
         reslove(1);
       }
     });
