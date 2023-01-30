@@ -15,7 +15,7 @@ interface Props {
 const DownloadDataMenuContainer: React.FC<Props> = (props) => {
   const intl = useIntl();
   const { caseInfo } = props;
-  const { caseID, workflowID, step, PatientID } = caseInfo;
+  const { workflowID, step, PatientID } = caseInfo;
   const dispatch = useDispatch();
 
   const disabled = step !== NodeStep.REPORT && step !== NodeStep.RETURNED;
@@ -27,7 +27,7 @@ const DownloadDataMenuContainer: React.FC<Props> = (props) => {
           tip: intl.formatMessage({ defaultMessage: '下载中...' }),
         }),
       );
-      await downloadCaseData(caseID, workflowID, PatientID);
+      await downloadCaseData(workflowID, PatientID);
     } catch (error) {
       dispatch(
         other.actions.setError({
@@ -38,7 +38,7 @@ const DownloadDataMenuContainer: React.FC<Props> = (props) => {
     } finally {
       dispatch(other.actions.toggleLoading({ visible: false }));
     }
-  }, [caseID, dispatch, intl, workflowID, PatientID]);
+  }, [dispatch, intl, workflowID, PatientID]);
 
   return <DownloadDataMenu disabled={disabled} onClick={onClick} />;
 };
