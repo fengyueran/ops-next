@@ -4,7 +4,7 @@ import { downloadByBuffer } from 'src/utils';
 import { NodeStep, NodeOutput } from 'src/type';
 import { getOperationsByWFID, fetchCommonFileWithCache } from 'src/api';
 
-export const downloadCaseData = async (caseID: string, workflowID: string) => {
+export const downloadCaseData = async (caseID: string, workflowID: string, PatientID?: string) => {
   const caseShortID = caseID.slice(0, 9);
   const targetFiles = [
     { fileKey: NodeOutput.NIFTI, fileName: `${caseShortID}_iso.nii.gz`, step: NodeStep.REPORT },
@@ -68,7 +68,7 @@ export const downloadCaseData = async (caseID: string, workflowID: string) => {
       if (error) {
         reject(error);
       } else {
-        downloadByBuffer(`${caseShortID}.zip`, data.buffer);
+        downloadByBuffer(`${PatientID}.zip`, data.buffer);
         reslove(1);
       }
     });
