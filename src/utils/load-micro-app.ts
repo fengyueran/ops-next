@@ -46,6 +46,7 @@ const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) 
     thumbnailList,
     getAutoQCResultFile,
     submit,
+    lang: 'zh',
   };
 };
 
@@ -328,6 +329,7 @@ const makeReportToolInput = (
     submit,
     readonly: readonly === undefined ? !!operation.output : readonly,
     getReportJson: operation.output && getReportJson,
+    lang: 'zh',
   };
 };
 
