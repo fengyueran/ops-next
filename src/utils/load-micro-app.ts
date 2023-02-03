@@ -312,7 +312,7 @@ const makeReportToolInput = (
   return {
     caseInfo: {
       caseId: caseInfo.caseID,
-      reportId: caseInfo.caseID.slice(0, 9),
+      reportId: caseInfo.PatientID!,
       id: caseInfo.PatientID!,
       checkDate: caseInfo.StudyDate!,
       reportDate: format(new Date(caseInfo.uploadAt), 'yyyy-MM-dd HH:mm:ss'),
