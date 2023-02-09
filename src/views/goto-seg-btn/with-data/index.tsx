@@ -49,6 +49,7 @@ export const withData =
           }
         };
         await delay(40);
+        dispatch(cases.actions.setOpenCaseID(caseInfo.id));
         dispatch(microApp.actions.toggleMicroAppVisible(true));
         loadMicroAppByStep(caseInfo, operation, submit);
       } catch (error) {
