@@ -15,6 +15,11 @@ type Submit = (
   makeSubmitInput: (output: any, operation: any) => Promise<any>,
 ) => void;
 
+const getLang = (language?: string) => {
+  if (language === 'en') return 'en';
+  return 'zh';
+};
+
 const makeQCToolInput = (
   operation: OperationDataAttributes,
   submit?: QCSubmit,
@@ -50,7 +55,7 @@ const makeQCToolInput = (
     thumbnailList,
     getAutoQCResultFile,
     submit,
-    lang: language || 'zh',
+    lang: getLang(language),
   };
 };
 
@@ -98,7 +103,7 @@ const makeMaskEditToolInput = (
     editType,
     submit,
     maskCacheID: !readonly && uuid,
-    lang: language || 'zh',
+    lang: getLang(language),
   };
 };
 
@@ -336,7 +341,7 @@ const makeReportToolInput = (
     submit,
     readonly: readonly === undefined ? !!operation.output : readonly,
     getReportJson: operation.output && getReportJson,
-    lang: language || 'zh',
+    lang: getLang(language),
   };
 };
 
