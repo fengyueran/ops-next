@@ -420,6 +420,7 @@ interface LoginResponse {
   user: {
     email: string;
     username: string;
+    language?: string;
   };
 }
 

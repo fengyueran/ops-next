@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { loadMicroAppByStatus } from 'src/utils';
-import { microApp, cases, other } from 'src/redux';
+import { microApp, cases, other, user } from 'src/redux';
 import { AppDispatch } from 'src/store';
 import { getOperationByID, tagCaseReaded } from 'src/api';
 import { CaseProgress, ErrorType, NodeStep } from 'src/type';
@@ -17,6 +17,7 @@ export const withData =
     const { caseInfo } = props;
 
     const dispatch = useDispatch<AppDispatch>();
+    const language = useSelector(user.selectors.user)?.language;
 
     const onClick = useCallback(async () => {
       try {
@@ -60,7 +61,7 @@ export const withData =
           }
         };
 
-        loadMicroAppByStatus(caseInfo, { id, ...operation }, submit);
+        loadMicroAppByStatus(caseInfo, { id, ...operation }, submit, language);
       } catch (error) {
         console.error('Open tool error', error);
         dispatch(
@@ -70,7 +71,7 @@ export const withData =
           }),
         );
       }
-    }, [dispatch, caseInfo]);
+    }, [dispatch, caseInfo, language]);
 
     const loading = useMemo(() => {
       if (caseInfo.workflowFailed) return false;

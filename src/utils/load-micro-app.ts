@@ -15,7 +15,11 @@ type Submit = (
   makeSubmitInput: (output: any, operation: any) => Promise<any>,
 ) => void;
 
-const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) => {
+const makeQCToolInput = (
+  operation: OperationDataAttributes,
+  submit?: QCSubmit,
+  language?: string,
+) => {
   const inputs = operation.input;
   const getDicom = async (dicomPath: string) => {
     const fileList = await fetchFileWithCache<UntarFile[]>(dicomPath);
@@ -46,7 +50,7 @@ const makeQCToolInput = (operation: OperationDataAttributes, submit?: QCSubmit) 
     thumbnailList,
     getAutoQCResultFile,
     submit,
-    lang: 'zh',
+    lang: language || 'zh',
   };
 };
 
@@ -55,6 +59,7 @@ const makeMaskEditToolInput = (
   editType: MaskEditType,
   submit?: SegSubmit,
   readonly?: boolean,
+  language?: string,
 ) => {
   const { input, output, uuid } = operation;
 
@@ -93,6 +98,7 @@ const makeMaskEditToolInput = (
     editType,
     submit,
     maskCacheID: !readonly && uuid,
+    lang: language || 'zh',
   };
 };
 
@@ -257,6 +263,7 @@ const makeReportToolInput = (
   caseInfo: CaseInfo,
   submit?: ReportSubmit,
   readonly?: boolean,
+  language?: string,
 ) => {
   const inputs = operation.input;
 
@@ -329,13 +336,13 @@ const makeReportToolInput = (
     submit,
     readonly: readonly === undefined ? !!operation.output : readonly,
     getReportJson: operation.output && getReportJson,
-    lang: 'zh',
+    lang: language || 'zh',
   };
 };
 
-const loadQCTool = (operation: DetailOperation, submit?: Submit) => {
+const loadQCTool = (operation: DetailOperation, submit?: Submit, language?: string) => {
   const qcSubmit = submit && ((output: QCToolOutput) => submit(output, makeQCSubmitInput));
-  microAppMgr.loadQCTool(makeQCToolInput(operation, qcSubmit));
+  microAppMgr.loadQCTool(makeQCToolInput(operation, qcSubmit, language));
 };
 
 const makeMaskOutput = async (data: SegToolOutput, editType: MaskEditType) => {
@@ -357,10 +364,15 @@ const makeSegSubmitInput = (data: SegToolOutput) => {
   return makeMaskOutput(data, MaskEditType.Segment);
 };
 
-const loadSegMaskEditTool = (operation: DetailOperation, submit?: Submit, readonly?: boolean) => {
+const loadSegMaskEditTool = (
+  operation: DetailOperation,
+  submit?: Submit,
+  readonly?: boolean,
+  language?: string,
+) => {
   const segSubmit = submit && ((output: SegToolOutput) => submit(output, makeSegSubmitInput));
   microAppMgr.loadMaskEditTool(
-    makeMaskEditToolInput(operation, MaskEditType.Segment, segSubmit, readonly),
+    makeMaskEditToolInput(operation, MaskEditType.Segment, segSubmit, readonly, language),
   );
 };
 
@@ -372,11 +384,12 @@ const loadRefineMaskEditTool = (
   operation: DetailOperation,
   submit?: Submit,
   readonly?: boolean,
+  language?: string,
 ) => {
   const refineSubmit =
     submit && ((output: RefineToolOutput) => submit(output, makeRefineSubmitInput));
   microAppMgr.loadMaskEditTool(
-    makeMaskEditToolInput(operation, MaskEditType.Refine, refineSubmit, readonly),
+    makeMaskEditToolInput(operation, MaskEditType.Refine, refineSubmit, readonly, language),
   );
 };
 
@@ -391,23 +404,28 @@ const loadReportTool = (
   operation: DetailOperation,
   submit?: Submit,
   readonly?: boolean,
+  language?: string,
 ) => {
   const reportSubmit =
     submit && ((output: ReportToolOutput) => submit(output, makeReportSubmitInput));
-  microAppMgr.loadReportTool(makeReportToolInput(operation, caseInfo, reportSubmit, readonly));
+  microAppMgr.loadReportTool(
+    makeReportToolInput(operation, caseInfo, reportSubmit, readonly, language),
+  );
 };
 
 export const loadMicroAppByStatus = (
   caseInfo: CaseInfo,
   operation: DetailOperation,
   submit: Submit,
+  language?: string,
 ) => {
   const loadMicroAppMap: { [key: string]: Function } = {
-    [CaseProgress.WAITING_QC]: () => loadQCTool(operation, submit),
-    [CaseProgress.WAITING_SEGMENT]: () => loadSegMaskEditTool(operation, submit),
-    [CaseProgress.WAITING_RIFINE]: () => loadRefineMaskEditTool(operation, submit),
+    [CaseProgress.WAITING_QC]: () => loadQCTool(operation, submit, language),
+    [CaseProgress.WAITING_SEGMENT]: () => loadSegMaskEditTool(operation, submit, false, language),
+    [CaseProgress.WAITING_RIFINE]: () => loadRefineMaskEditTool(operation, submit, false, language),
     [CaseProgress.WAITING_REVIEW]: () => loadReviewTool(caseInfo, operation, submit),
-    [CaseProgress.WAITING_REPORT]: () => loadReportTool(caseInfo, operation, submit),
+    [CaseProgress.WAITING_REPORT]: () =>
+      loadReportTool(caseInfo, operation, submit, false, language),
   };
 
   const load = loadMicroAppMap[caseInfo.progress];
@@ -423,14 +441,15 @@ export const loadMicroAppByStep = (
   operation: DetailOperation,
   submit?: Submit,
   readonly?: boolean,
+  language?: string,
 ) => {
   console.log('operation', operation.step);
   const loadMicroAppMap: { [key: string]: Function } = {
-    [NodeStep.QC]: () => loadQCTool(operation, submit),
-    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation, submit, readonly),
-    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation, submit, readonly),
+    [NodeStep.QC]: () => loadQCTool(operation, submit, language),
+    [NodeStep.SEGMENT_EDIT]: () => loadSegMaskEditTool(operation, submit, readonly, language),
+    [NodeStep.REFINE_EDIT]: () => loadRefineMaskEditTool(operation, submit, readonly, language),
     [NodeStep.VALIDATE_FFR]: () => loadReviewTool(caseInfo, operation, submit),
-    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation, submit, readonly),
+    [NodeStep.REPORT]: () => loadReportTool(caseInfo, operation, submit, readonly, language),
   };
 
   const load = loadMicroAppMap[operation.step];

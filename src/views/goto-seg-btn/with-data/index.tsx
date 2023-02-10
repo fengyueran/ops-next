@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { cases, microApp, other } from 'src/redux';
+import { cases, microApp, other, user } from 'src/redux';
 import { RootState, AppDispatch } from 'src/store';
 import { getOperation } from 'src/api';
 import { loadMicroAppByStep, delay } from 'src/utils';
@@ -13,7 +13,7 @@ export const withData =
   <P extends object>(WrappedComponent: React.ComponentType<P>): React.FC<Props> =>
   ({ ...props }) => {
     const dispatch = useDispatch<AppDispatch>();
-
+    const language = useSelector(user.selectors.user)?.language;
     const microAppReady = useSelector(microApp.selectors.microAppReady);
     const visible = useSelector(microApp.selectors.canGotoSeg);
     const id = useSelector(cases.selectors.openCaseID);
@@ -51,11 +51,11 @@ export const withData =
         await delay(40);
         dispatch(cases.actions.setOpenCaseID(caseInfo.id));
         dispatch(microApp.actions.toggleMicroAppVisible(true));
-        loadMicroAppByStep(caseInfo, operation, submit);
+        loadMicroAppByStep(caseInfo, operation, submit, false, language);
       } catch (error) {
         console.error('Goto seg error', error);
       }
-    }, [caseInfo, dispatch]);
+    }, [caseInfo, dispatch, language]);
 
     if (!visible) return null;
 
