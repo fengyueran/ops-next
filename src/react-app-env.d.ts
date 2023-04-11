@@ -288,6 +288,7 @@ interface ReportToolInput {
     gender: string;
     age: string;
     accessionNumber: string;
+    hospital: string;
   };
   cprFilePathList: string[];
   getPly: GetPlyBuffer;

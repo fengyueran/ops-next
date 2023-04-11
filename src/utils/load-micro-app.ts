@@ -332,6 +332,7 @@ const makeReportToolInput = (
       gender: caseInfo.PatientSex!,
       age: caseInfo.PatientAge!,
       accessionNumber: caseInfo.AccessionNumber!,
+      hospital: caseInfo.InstitutionName!,
     },
     getPly,
     getCPR,
