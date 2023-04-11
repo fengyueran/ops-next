@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Spin } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { cases, caseDetail, microApp, other } from 'src/redux';
+import { cases, caseDetail, microApp, other, user } from 'src/redux';
 import { useOperationsAndSeries } from 'src/hooks';
 import { loadMicroAppByStep } from 'src/utils';
 import { RootState, AppDispatch } from 'src/store';
@@ -25,6 +25,7 @@ export const withData =
     const dispatch = useDispatch<AppDispatch>();
     const id = useSelector(cases.selectors.openCaseID);
     const caseInfo = useSelector((state: RootState) => cases.selectors.getCaseByID(state, id!));
+    const language = useSelector(user.selectors.user)?.language;
 
     const { data, error } = useOperationsAndSeries(caseInfo?.workflowID);
 
@@ -38,9 +39,9 @@ export const withData =
         if (operation.step === NodeStep.VALIDATE_FFR) return;
         readyToOpenMicroApp();
         dispatch(microApp.actions.toggleCanSubmit(false));
-        loadMicroAppByStep(caseInfo, operation, undefined, true);
+        loadMicroAppByStep(caseInfo, operation, undefined, true, language);
       },
-      [caseInfo, dispatch, readyToOpenMicroApp],
+      [caseInfo, dispatch, readyToOpenMicroApp, language],
     );
 
     const patchNode = useCallback(
@@ -71,9 +72,9 @@ export const withData =
             return error;
           }
         };
-        loadMicroAppByStep(caseInfo, operation, submit, false);
+        loadMicroAppByStep(caseInfo, operation, submit, false, language);
       },
-      [caseInfo, dispatch, readyToOpenMicroApp],
+      [caseInfo, dispatch, readyToOpenMicroApp, language],
     );
 
     useEffect(() => {

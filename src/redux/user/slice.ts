@@ -9,6 +9,7 @@ export interface State {
   user?: {
     email: string;
     username: string;
+    language?: string;
   };
   token?: string;
   loginInfo?: LoginInfo;
