@@ -14,7 +14,7 @@ export const withData =
     useEffect(() => {
       microAppMgr.subscribe((state) => {
         const { type } = state;
-        if (type === MessageType.TOOL_READY) {
+        if (type === MessageType.TOOL_READY || type === MessageType.QC_LOAD_ERROR) {
           dispatch(microApp.actions.toggleMicroAppReady(true));
         } else if (type === MessageType.SERIES_CHANGE) {
           dispatch(microApp.actions.toggleMicroAppReady(false));

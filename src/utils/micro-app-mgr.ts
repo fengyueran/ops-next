@@ -56,6 +56,7 @@ const MOUNT_NODE = '#tool-mount-node';
 
 export const MessageType = {
   TOOL_READY: 'TOOL_READY',
+  QC_LOAD_ERROR: 'QC_LOAD_ERROR',
   SERIES_CHANGE: 'SERIES_CHANGE',
 };
 
